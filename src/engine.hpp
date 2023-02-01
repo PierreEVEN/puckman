@@ -1,12 +1,11 @@
 #pragma once
-#include <memory>
 #include <string>
 #include <chrono>
 
 struct SDL_Window;
 struct SDL_Surface;
 
-namespace pc
+namespace pm
 {
 class Engine
 {

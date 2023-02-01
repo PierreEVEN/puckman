@@ -5,9 +5,9 @@
 
 #include "logger.hpp"
 
-namespace pc
+namespace pm
 {
-static std::unique_ptr<Engine> ENGINE_SINGLETON = nullptr;
+static Engine* ENGINE_SINGLETON = nullptr;
 
 bool Engine::next_frame()
 {
@@ -22,6 +22,7 @@ bool Engine::next_frame()
 void Engine::shutdown()
 {
     close = true;
+    INFO("Request shutdown");
 }
 
 Engine::Engine(const std::string& app_name, uint32_t width, uint32_t height)
@@ -32,7 +33,7 @@ Engine::Engine(const std::string& app_name, uint32_t width, uint32_t height)
     if (SDL_Init(SDL_INIT_VIDEO) != 0)
     {
         char error_msg[512];
-        FATAL("Failed to initialize SDL (%d) : %s", SDL_GetError(), SDL_GetErrorMsg(error_msg, sizeof(error_msg)));
+        FATAL("Failed to initialize SDL ({}) : {}", SDL_GetError(), SDL_GetErrorMsg(error_msg, sizeof(error_msg)));
     }
 
     window_handle  = SDL_CreateWindow(app_name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_SHOWN);
@@ -44,13 +45,14 @@ Engine::~Engine()
 {
     SDL_Quit();
     ENGINE_SINGLETON = nullptr;
+    INFO("Engine closed");
 }
 
 Engine& Engine::init(const std::string& app_name, uint32_t width, uint32_t height)
 {
     if (ENGINE_SINGLETON)
         FATAL("cannot create multiple engine instances");
-    ENGINE_SINGLETON = std::unique_ptr<Engine>(new Engine(app_name, width, height));
+    ENGINE_SINGLETON = new Engine(app_name, width, height);
     return *ENGINE_SINGLETON;
 }
 

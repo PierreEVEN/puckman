@@ -5,6 +5,7 @@
 
 #include "engine.hpp"
 #include "logger.hpp"
+#include "terrain.hpp"
 
 SDL_Surface* plancheSprites = nullptr;
 
@@ -24,7 +25,7 @@ int count;
 void draw()
 {
     SDL_SetColorKey(plancheSprites, false, 0);
-    SDL_BlitScaled(plancheSprites, &src_bg, pc::Engine::get().get_surface_handle(), &bg);
+    SDL_BlitScaled(plancheSprites, &src_bg, pm::Engine::get().get_surface_handle(), &bg);
 
     // petit truc pour faire tourner le fantome
     SDL_Rect* ghost_in = nullptr;
@@ -57,30 +58,31 @@ void draw()
     // couleur transparente
     SDL_SetColorKey(plancheSprites, true, 0);
     // copie du sprite zoomé
-    SDL_BlitScaled(plancheSprites, &ghost_in2, pc::Engine::get().get_surface_handle(), &ghost);
+    SDL_BlitScaled(plancheSprites, &ghost_in2, pm::Engine::get().get_surface_handle(), &ghost);
 }
 
 
 int main(int argc, char** argv)
 {
-    auto engine = pc::Engine::init("PucMan", 700, 900);
+    auto engine = pm::Engine::init("PucMan", 700, 900);
+
+    pm::Terrain terrain;
+    terrain.load_from_file("./resources/level.map");
 
     if (!std::filesystem::exists("./resources/pacman_sprites.bmp"))
         FATAL("sprite not found");
     plancheSprites = SDL_LoadBMP("./resources/pacman_sprites.bmp");
     count          = 0;
 
-    // BOUCLE PRINCIPALE
-    bool quit = false;
-    while (!quit)
+    while (pm::Engine::get().next_frame())
     {
         SDL_Event event;
-        while (!quit && SDL_PollEvent(&event))
+        while (SDL_PollEvent(&event))
         {
             switch (event.type)
             {
             case SDL_QUIT:
-                quit = true;
+                pm::Engine::get().shutdown();
                 break;
             default:
                 break;
@@ -91,7 +93,7 @@ int main(int argc, char** argv)
         int          nbk;
         const Uint8* keys = SDL_GetKeyboardState(&nbk);
         if (keys[SDL_SCANCODE_ESCAPE])
-            quit = true;
+            pm::Engine::get().shutdown();
         if (keys[SDL_SCANCODE_LEFT])
             puts("LEFT");
         if (keys[SDL_SCANCODE_RIGHT])
@@ -99,8 +101,6 @@ int main(int argc, char** argv)
 
         // AFFICHAGE
         draw();
-
-        pc::Engine::get().next_frame();
     }
     return 0;
 }
