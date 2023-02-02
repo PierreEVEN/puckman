@@ -1,13 +1,12 @@
 #include <SDL.h>
 
-#include <iostream>
 #include <filesystem>
 
 #include "engine.hpp"
+#include "entity.hpp"
+#include "sprite_handler.hpp"
 #include "logger.hpp"
 #include "terrain.hpp"
-
-SDL_Surface* plancheSprites = nullptr;
 
 SDL_Rect src_bg = {200, 3, 168, 216}; // x,y, w,h (0,0) en haut a gauche
 SDL_Rect bg     = {4, 4, 672, 864};   // ici scale x4
@@ -18,61 +17,43 @@ SDL_Rect ghost_d = {105, 123, 16, 16};
 SDL_Rect ghost_u = {71, 123, 16, 16};
 SDL_Rect ghost   = {34, 34, 32, 32}; // ici scale x2
 
-int count;
-
-
-// fonction qui met à jour la surface de la fenetre "win_surf"
-void draw()
-{
-    SDL_SetColorKey(plancheSprites, false, 0);
-    SDL_BlitScaled(plancheSprites, &src_bg, pm::Engine::get().get_surface_handle(), &bg);
-
-    // petit truc pour faire tourner le fantome
-    SDL_Rect* ghost_in = nullptr;
-    switch (count / 128)
-    {
-    case 0:
-        ghost_in = &(ghost_r);
-        ghost.x++;
-        break;
-    case 1:
-        ghost_in = &(ghost_d);
-        ghost.y++;
-        break;
-    case 2:
-        ghost_in = &(ghost_l);
-        ghost.x--;
-        break;
-    case 3:
-        ghost_in = &(ghost_u);
-        ghost.y--;
-        break;
-    }
-    count = (count + 1) % (512);
-
-    // ici on change entre les 2 sprites sources pour une jolie animation.
-    SDL_Rect ghost_in2 = *ghost_in;
-    if ((count / 4) % 2)
-        ghost_in2.x += 17;
-
-    // couleur transparente
-    SDL_SetColorKey(plancheSprites, true, 0);
-    // copie du sprite zoomé
-    SDL_BlitScaled(plancheSprites, &ghost_in2, pm::Engine::get().get_surface_handle(), &ghost);
-}
-
 
 int main(int argc, char** argv)
 {
-    auto engine = pm::Engine::init("PucMan", 700, 900);
+    pm::Engine::init("PucMan", 700, 900);
 
     pm::Terrain terrain;
     terrain.load_from_file("./resources/level.map");
 
-    if (!std::filesystem::exists("./resources/pacman_sprites.bmp"))
-        FATAL("sprite not found");
-    plancheSprites = SDL_LoadBMP("./resources/pacman_sprites.bmp");
-    count          = 0;
+    pm::SpriteManager sprite_handler("./resources/pacman_sprites.bmp");
+
+    // Create background
+    auto background = sprite_handler.new_sprite("background", 10);
+    sprite_handler.add_sub_sprite(background, 200, 3, 168, 216);
+    sprite_handler.add_sub_sprite(background, 220, 50, 168, 216);
+
+    // Create ghost_a
+    const auto ghost_a_right = sprite_handler.new_sprite("ghost_a_right", 1.0);
+    sprite_handler.add_sub_sprite(ghost_a_right, 3, 123, 16, 16);
+    sprite_handler.add_sub_sprite(ghost_a_right, 20, 123, 16, 16);
+    
+    const auto ghost_a_left= sprite_handler.new_sprite("ghost_a_left", 1.0);
+    sprite_handler.add_sub_sprite(ghost_a_left, 37, 123, 16, 16);
+    sprite_handler.add_sub_sprite(ghost_a_left, 54, 123, 16, 16);
+    
+    const auto ghost_a_down= sprite_handler.new_sprite("ghost_a_down", 1.0);
+    sprite_handler.add_sub_sprite(ghost_a_down, 105, 123, 16, 16);
+    sprite_handler.add_sub_sprite(ghost_a_down, 122, 123, 16, 16);
+
+    const auto ghost_a_up= sprite_handler.new_sprite("ghost_a_up", 1.0);
+    sprite_handler.add_sub_sprite(ghost_a_up, 71, 123, 16, 16);
+    sprite_handler.add_sub_sprite(ghost_a_up, 88, 123, 16, 16);
+    
+    auto ghost_a = pm::Entity(ghost_a_right);
+    ghost_a.set_direction_sprite(pm::EDirection::Right, ghost_a_right);
+    ghost_a.set_direction_sprite(pm::EDirection::Left, ghost_a_left);
+    ghost_a.set_direction_sprite(pm::EDirection::Down, ghost_a_down);
+    ghost_a.set_direction_sprite(pm::EDirection::Up, ghost_a_up);
 
     while (pm::Engine::get().next_frame())
     {
@@ -99,8 +80,8 @@ int main(int argc, char** argv)
         if (keys[SDL_SCANCODE_RIGHT])
             puts("RIGHT");
 
-        // AFFICHAGE
-        draw();
+        background.draw(4, 4, 4.0, 4.0);
+        //ghost_a.draw();
     }
     return 0;
 }

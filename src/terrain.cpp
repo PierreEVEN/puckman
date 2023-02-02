@@ -31,7 +31,7 @@ void Terrain::load_from_file(const std::filesystem::path& path)
     while (std::getline(input, line))
     {
         if (new_width == -1)
-            new_width = line.length();
+            new_width = static_cast<int64_t>(line.length());
         else if (new_width != static_cast<int64_t>(line.length()))
         {
             ERROR("Wrong line length : {}", line);
@@ -49,9 +49,9 @@ void Terrain::load_from_file(const std::filesystem::path& path)
     width  = static_cast<uint32_t>(new_width);
     height = static_cast<uint32_t>(lines.size());
 
-    grid.reserve(width * height);
-    for (const auto& line : lines)
-        for (const auto& cell : line)
+    grid.reserve(static_cast<size_t>(width) * static_cast<size_t>(height));
+    for (const auto& s_line : lines)
+        for (const auto& cell : s_line)
             grid.emplace_back(cell);
     INFO("Successfully loaded {}", path.string());
 }

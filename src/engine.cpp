@@ -15,7 +15,7 @@ bool Engine::next_frame()
 
     delta_second    = static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - last_frame_time).count()) / 1000000.0;
     last_frame_time = std::chrono::steady_clock::now();
-
+    SDL_FillRect(surface_handle, nullptr, 0x000000);
     return !close;
 }
 
