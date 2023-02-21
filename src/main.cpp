@@ -2,21 +2,10 @@
 
 #include <filesystem>
 
-#include "engine.hpp"
-#include "entity.hpp"
-#include "sprite_handler.hpp"
-#include "logger.hpp"
-#include "terrain.hpp"
-
-SDL_Rect src_bg = {200, 3, 168, 216}; // x,y, w,h (0,0) en haut a gauche
-SDL_Rect bg     = {4, 4, 672, 864};   // ici scale x4
-
-SDL_Rect ghost_r = {3, 123, 16, 16};
-SDL_Rect ghost_l = {37, 123, 16, 16};
-SDL_Rect ghost_d = {105, 123, 16, 16};
-SDL_Rect ghost_u = {71, 123, 16, 16};
-SDL_Rect ghost   = {34, 34, 32, 32}; // ici scale x2
-
+#include "engine/engine.hpp"
+#include "engine/entity.hpp"
+#include "engine/sprite_sheet.hpp"
+#include "engine/terrain.hpp"
 
 int main(int argc, char** argv)
 {
@@ -25,35 +14,49 @@ int main(int argc, char** argv)
     pm::Terrain terrain;
     terrain.load_from_file("./resources/level.map");
 
-    pm::SpriteManager sprite_handler("./resources/pacman_sprites.bmp");
+    pm::SpriteSheet sprite_sheet("./resources/pacman_sprites.bmp");
 
     // Create background
-    auto background = sprite_handler.new_sprite("background", 10);
-    sprite_handler.add_sub_sprite(background, 200, 3, 168, 216);
-    sprite_handler.add_sub_sprite(background, 220, 50, 168, 216);
+    auto background = sprite_sheet.new_sprite("background", {200, 3, 168, 216});
 
     // Create ghost_a
-    const auto ghost_a_right = sprite_handler.new_sprite("ghost_a_right", 1.0);
-    sprite_handler.add_sub_sprite(ghost_a_right, 3, 123, 16, 16);
-    sprite_handler.add_sub_sprite(ghost_a_right, 20, 123, 16, 16);
+    auto ghost_a = pm::Entity();
+    ghost_a.set_direction_sprite(pm::EDirection::Idle, sprite_sheet.new_sprite("ghost_a_default", {3, 123, 16, 16}, 10, {{17, 0}}));
+    ghost_a.set_direction_sprite(pm::EDirection::Right, sprite_sheet.new_sprite("ghost_a_right", {3, 123, 16, 16}, 10, {{17, 0}}));
+    ghost_a.set_direction_sprite(pm::EDirection::Left, sprite_sheet.new_sprite("ghost_a_left", {37, 123, 16, 16}, 10, {{17, 0}}));
+    ghost_a.set_direction_sprite(pm::EDirection::Down, sprite_sheet.new_sprite("ghost_a_down", {105, 123, 16, 16}, 10, {{17, 0}}));
+    ghost_a.set_direction_sprite(pm::EDirection::Up, sprite_sheet.new_sprite("ghost_a_up", {71, 123, 16, 16}, 10, {{17, 0}}));
     
-    const auto ghost_a_left= sprite_handler.new_sprite("ghost_a_left", 1.0);
-    sprite_handler.add_sub_sprite(ghost_a_left, 37, 123, 16, 16);
-    sprite_handler.add_sub_sprite(ghost_a_left, 54, 123, 16, 16);
+    auto ghost_b = pm::Entity();
+    ghost_b.set_direction_sprite(pm::EDirection::Idle, sprite_sheet.new_sprite("ghost_b_default", {3, 142, 16, 16}, 10, {{17, 0}}));
+    ghost_b.set_direction_sprite(pm::EDirection::Right, sprite_sheet.new_sprite("ghost_b_right", {3, 142, 16, 16}, 10, {{17, 0}}));
+    ghost_b.set_direction_sprite(pm::EDirection::Left, sprite_sheet.new_sprite("ghost_b_left", {37, 142, 16, 16}, 10, {{17, 0}}));
+    ghost_b.set_direction_sprite(pm::EDirection::Down, sprite_sheet.new_sprite("ghost_b_down", {105, 142, 16, 16}, 10, {{17, 0}}));
+    ghost_b.set_direction_sprite(pm::EDirection::Up, sprite_sheet.new_sprite("ghost_b_up", {71, 142, 16, 16}, 10, {{17, 0}}));
     
-    const auto ghost_a_down= sprite_handler.new_sprite("ghost_a_down", 1.0);
-    sprite_handler.add_sub_sprite(ghost_a_down, 105, 123, 16, 16);
-    sprite_handler.add_sub_sprite(ghost_a_down, 122, 123, 16, 16);
+    auto ghost_c = pm::Entity();
+    ghost_c.set_direction_sprite(pm::EDirection::Idle, sprite_sheet.new_sprite("ghost_c_default", {3, 160, 16, 16}, 10, {{17, 0}}));
+    ghost_c.set_direction_sprite(pm::EDirection::Right, sprite_sheet.new_sprite("ghost_c_right", {3, 160, 16, 16}, 10, {{17, 0}}));
+    ghost_c.set_direction_sprite(pm::EDirection::Left, sprite_sheet.new_sprite("ghost_c_left", {37, 160, 16, 16}, 10, {{17, 0}}));
+    ghost_c.set_direction_sprite(pm::EDirection::Down, sprite_sheet.new_sprite("ghost_c_down", {105, 160, 16, 16}, 10, {{17, 0}}));
+    ghost_c.set_direction_sprite(pm::EDirection::Up, sprite_sheet.new_sprite("ghost_c_up", {71, 160, 16, 16}, 10, {{17, 0}}));
+    
+    auto ghost_d = pm::Entity();
+    ghost_d.set_direction_sprite(pm::EDirection::Idle, sprite_sheet.new_sprite("ghost_d_default", {3, 178, 16, 16}, 10, {{17, 0}}));
+    ghost_d.set_direction_sprite(pm::EDirection::Right, sprite_sheet.new_sprite("ghost_d_right", {3, 178, 16, 16}, 10, {{17, 0}}));
+    ghost_d.set_direction_sprite(pm::EDirection::Left, sprite_sheet.new_sprite("ghost_d_left", {37, 178, 16, 16}, 10, {{17, 0}}));
+    ghost_d.set_direction_sprite(pm::EDirection::Down, sprite_sheet.new_sprite("ghost_d_down", {105, 178, 16, 16}, 10, {{17, 0}}));
+    ghost_d.set_direction_sprite(pm::EDirection::Up, sprite_sheet.new_sprite("ghost_d_up", {71, 178, 16, 16}, 10, {{17, 0}}));
 
-    const auto ghost_a_up= sprite_handler.new_sprite("ghost_a_up", 1.0);
-    sprite_handler.add_sub_sprite(ghost_a_up, 71, 123, 16, 16);
-    sprite_handler.add_sub_sprite(ghost_a_up, 88, 123, 16, 16);
-    
-    auto ghost_a = pm::Entity(ghost_a_right);
-    ghost_a.set_direction_sprite(pm::EDirection::Right, ghost_a_right);
-    ghost_a.set_direction_sprite(pm::EDirection::Left, ghost_a_left);
-    ghost_a.set_direction_sprite(pm::EDirection::Down, ghost_a_down);
-    ghost_a.set_direction_sprite(pm::EDirection::Up, ghost_a_up);
+    // Create ghost_a
+    auto puckman = pm::Entity();
+    puckman.set_direction_sprite(pm::EDirection::Idle, sprite_sheet.new_sprite("puckman_default", {4, 90, 14, 14}, 10, {{17, 0}, {31, 0}, {17, 0}}));
+    puckman.set_direction_sprite(pm::EDirection::Right, sprite_sheet.new_sprite("puckman_right", {3, 90, 16, 16}, 10, {{17, 0}, {34, 0}, {17, 0}}));
+    puckman.set_direction_sprite(pm::EDirection::Left, sprite_sheet.new_sprite("puckman_left", {37, 90, 16, 16}, 10, {{17, 0}, {34, 0}, {17, 0}}));
+    puckman.set_direction_sprite(pm::EDirection::Down, sprite_sheet.new_sprite("puckman_down", {105, 90, 16, 16}, 10, {{17, 0}, {34, 0}, {17, 0}}));
+    puckman.set_direction_sprite(pm::EDirection::Up, sprite_sheet.new_sprite("puckcman_up", {71, 90, 16, 16}, 10, {{17, 0}, {34, 0}, {17, 0}}));
+
+    puckman.set_position(100, 20);
 
     while (pm::Engine::get().next_frame())
     {
@@ -80,8 +83,12 @@ int main(int argc, char** argv)
         if (keys[SDL_SCANCODE_RIGHT])
             puts("RIGHT");
 
-        background.draw(4, 4, 4.0, 4.0);
-        //ghost_a.draw();
+        background.draw(SDL_Point(4, 4), 4.0, 4.0);
+        ghost_a.draw();
+        ghost_b.draw();
+        ghost_c.draw();
+        ghost_d.draw();
+        puckman.draw();
     }
     return 0;
 }
