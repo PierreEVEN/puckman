@@ -44,18 +44,18 @@ int main(int argc, char** argv)
     ghost_d.set_direction_sprite(pm::EDirection::Left, sprite_sheet.new_sprite("ghost_d_left", {32, 80, 16, 16}, 10, {{16, 0}}));
     ghost_d.set_direction_sprite(pm::EDirection::Down, sprite_sheet.new_sprite("ghost_d_down", {96, 80, 16, 16}, 10, {{16, 0}}));
     ghost_d.set_direction_sprite(pm::EDirection::Up, sprite_sheet.new_sprite("ghost_d_up", {64, 80, 16, 16}, 10, {{16, 0}}));
-
+    
     // Create ghost_a
     auto puckman = pm::Entity();
-    puckman.set_direction_sprite(pm::EDirection::Idle, sprite_sheet.new_sprite("puckman_default", {0, 0, 16, 16}, 10, {{16, 0}, {32, 0}, {16, 0}}));
-    puckman.set_direction_sprite(pm::EDirection::Right, sprite_sheet.new_sprite("puckman_right", {0, 0, 16, 16}, 10, {{16, 0}, {32, 0}, {16, 0}}));
-    puckman.set_direction_sprite(pm::EDirection::Left, sprite_sheet.new_sprite("puckman_left", {0, 0, 16, 16}, 10, {{48, 0}, {64, 0}, {48, 0}}));
-    puckman.set_direction_sprite(pm::EDirection::Down, sprite_sheet.new_sprite("puckman_down", {0, 0, 16, 16}, 10, {{112, 0}, {128, 0}, {112, 0}}));
-    puckman.set_direction_sprite(pm::EDirection::Up, sprite_sheet.new_sprite("puckcman_up", {0, 0, 16, 16}, 10, {{80, 0}, {96, 0}, {80, 0}}));
+    puckman.set_direction_sprite(pm::EDirection::Idle, sprite_sheet.new_sprite("puckman_default", {0, 0, 16, 16}, 20, {{16, 0}, {32, 0}, {16, 0}}));
+    puckman.set_direction_sprite(pm::EDirection::Right, sprite_sheet.new_sprite("puckman_right", {0, 0, 16, 16}, 20, {{16, 0}, {32, 0}, {16, 0}}));
+    puckman.set_direction_sprite(pm::EDirection::Left, sprite_sheet.new_sprite("puckman_left", {0, 0, 16, 16}, 20, {{48, 0}, {64, 0}, {48, 0}}));
+    puckman.set_direction_sprite(pm::EDirection::Down, sprite_sheet.new_sprite("puckman_down", {0, 0, 16, 16}, 20, {{112, 0}, {128, 0}, {112, 0}}));
+    puckman.set_direction_sprite(pm::EDirection::Up, sprite_sheet.new_sprite("puckcman_up", {0, 0, 16, 16}, 20, {{80, 0}, {96, 0}, {80, 0}}));
 
     auto puckman_die = sprite_sheet.new_sprite("puckman_die", 
         {0, 0, 16, 16}, 
-        10, 
+        20, 
         {{80, 0}, {96, 0}, {0, 16}, {16, 16}, {32, 16}, {48, 16}, {64, 16}, {80, 16}, {96, 16}, {112, 16}, {128, 16}, {144, 16}});
     ghost_a.set_position(10, 20);
     ghost_b.set_position(30, 20);
@@ -100,7 +100,6 @@ int main(int argc, char** argv)
             change_dir(pm::EDirection::Up);
         if (keys[SDL_SCANCODE_DOWN])
             change_dir(pm::EDirection::Down);
-
 
         terrain.draw();
         ghost_a.draw();

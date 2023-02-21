@@ -32,8 +32,6 @@ void Cell::set_door()
 
 void Cell::draw()
 {
-
-
 }
 
 Cell Cell::from_char(char chr)

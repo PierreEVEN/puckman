@@ -26,7 +26,7 @@ SpriteHandle SpriteSheet::new_sprite(const std::string& name, SDL_Rect base_tran
     return handle;
 }
 
-void SpriteSheet::render_sprite(SpriteHandle sprite, SDL_Point pos, double scale_x, double scale_y) const
+void SpriteSheet::render_sprite(SpriteHandle sprite, SDL_Point pos, double scale_x, double scale_y)
 {
     const auto info = sprite_map.find(sprite);
     if (info == sprite_map.end())
@@ -36,7 +36,9 @@ void SpriteSheet::render_sprite(SpriteHandle sprite, SDL_Point pos, double scale
     }
 
     // Chose flip-book index based on world time and animation speed (0 is default offset)
-    const double time         = static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(pm::Engine::get().get_world_time()).count()) / 1000000.0;
+
+    const auto   last         = std::chrono::steady_clock::now() - last_time;
+    const double time         = static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - last_time).count()) / 1000000.0;
     const size_t sprite_index = static_cast<int64_t>(time * info->second.animation_speed) % (info->second.sprite_offsets.size() + 1);
 
     // If not 0, apply sub-sprite offset
@@ -60,3 +62,6 @@ std::optional<SpriteHandle> SpriteSheet::find_sprite_by_name(const std::string& 
     return SpriteHandle(this, name);
 }
 }
+
+
+

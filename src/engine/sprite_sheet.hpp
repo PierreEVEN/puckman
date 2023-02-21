@@ -44,6 +44,7 @@ public:
     }
 
     SpriteHandle& draw(const SDL_Point& pos, double scale_x = 1.0, double scale_y = 1.0);
+    SpriteHandle& set_paused(bool paused);
 
     SpriteHandle& operator=(const SpriteHandle& other) = default;
     SpriteHandle(const SpriteHandle& other)            = default;
@@ -55,7 +56,7 @@ public:
     }
 
 private:
-    std::string    handle;
+    std::string  handle;
     SpriteSheet* owner;
 };
 }
@@ -83,11 +84,19 @@ public:
 
     SpriteHandle new_sprite(const std::string& name, SDL_Rect base_transform, double animation_speed = 1.0, const std::vector<SDL_Point>& offsets = {});
 
-    void render_sprite(SpriteHandle sprite, SDL_Point pos, double scale_x = 1.0, double scale_y = 1.0) const;
+    void render_sprite(SpriteHandle sprite, SDL_Point pos, double scale_x = 1.0, double scale_y = 1.0);
 
     [[nodiscard]] std::optional<SpriteHandle> find_sprite_by_name(const std::string& name);
 
+    void set_paused(bool in_paused)
+    {
+        paused = in_paused;
+    }
+
 private:
+    double                                       internal_time = 0.0;
+    std::chrono::steady_clock::time_point        last_time;
+    bool                                         paused = false;
     std::unordered_map<SpriteHandle, SpriteInfo> sprite_map;
     SDL_Surface*                                 sprite_sheet_handle;
 };
