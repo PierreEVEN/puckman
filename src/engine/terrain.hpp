@@ -13,6 +13,8 @@ public:
 
     [[nodiscard]] Cell& get_cell(const uint32_t x, const uint32_t y);
 
+    void draw();
+
 private:
     uint32_t          width;
     uint32_t          height;

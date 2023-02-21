@@ -52,7 +52,7 @@ void Terrain::load_from_file(const std::filesystem::path& path)
     grid.reserve(static_cast<size_t>(width) * static_cast<size_t>(height));
     for (const auto& s_line : lines)
         for (const auto& cell : s_line)
-            grid.emplace_back(cell);
+            grid.emplace_back(Cell::from_char(cell));
     INFO("Successfully loaded {}", path.string());
 }
 
@@ -62,5 +62,11 @@ Cell& Terrain::get_cell(const uint32_t x, const uint32_t y)
         FATAL("Cannot read grid cell {}/{}", x, y);
 
     return grid[x + y * width];
+}
+
+void Terrain::draw()
+{
+    for (auto& cell : grid)
+        cell.draw();
 }
 }
