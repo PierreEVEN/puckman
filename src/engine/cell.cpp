@@ -29,7 +29,7 @@ void Cell::set_wall(WallMask in_wall_mask)
 
 void Cell::set_gum(bool big)
 {
-    type = big ? ECellType::Gum : ECellType::BiGum;
+    type = big ? ECellType::BiGum : ECellType::Gum;
 }
 
 void Cell::set_door()
