@@ -9,12 +9,11 @@ namespace pm
 {
 static std::unordered_map<SpriteHandle, SpriteInfo> sprite_map;
 
-SpriteHandle& SpriteHandle::draw(const SDL_Point& pos, double scale_x, double scale_y)
+void SpriteHandle::draw(const SDL_Point& pos, double scale_x, double scale_y) const
 {
     if (!*this)
         FATAL("invalid handle");
     owner->render_sprite(*this, pos, scale_x, scale_y);
-    return *this;
 }
 
 SpriteHandle& SpriteHandle::set_paused(bool paused)
@@ -48,7 +47,7 @@ SpriteHandle SpriteSheet::new_sprite(const std::string& name, SDL_Rect base_tran
     return handle;
 }
 
-void SpriteSheet::render_sprite(SpriteHandle sprite, SDL_Point pos, double scale_x, double scale_y, SDL_Surface* surface_override) const
+void SpriteSheet::render_sprite(const SpriteHandle& sprite, SDL_Point pos, double scale_x, double scale_y, SDL_Surface* surface_override) const
 {
     const auto info = sprite_map.find(sprite);
     if (info == sprite_map.end())

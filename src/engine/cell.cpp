@@ -61,7 +61,7 @@ void Cell::update_sprite_handle(
     }
 }
 
-void Cell::draw()
+void Cell::draw() const
 {
     if (sprite_handle){
         SDL_Point draw_pos{pos};
