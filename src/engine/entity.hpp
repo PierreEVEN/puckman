@@ -5,6 +5,8 @@
 
 namespace pm
 {
+class Terrain;
+
 enum class EDirection : uint8_t
 {
     Idle = 0,
@@ -18,28 +20,30 @@ enum class EDirection : uint8_t
 class Entity
 {
 public:
-    Entity();
+    Entity(const std::shared_ptr<Terrain>& terrain);
 
     void set_direction_sprite(const EDirection direction, const SpriteHandle& new_sprite);
 
     [[nodiscard]] double get_pos_x() const { return pos_x; }
     [[nodiscard]] double get_pos_y() const { return pos_y; }
 
-    void set_direction(const EDirection new_direction);
+    virtual void set_look_direction(const EDirection new_direction);
 
-    void draw();
+    virtual void draw();
 
-    void set_position(const double x, const double y)
+    virtual void set_position(const double x, const double y)
     {
         pos_x = x, pos_y = y;
     }
 
+    Terrain& get_terrain() const { return *terrain; }
+
 private:
     double pos_x;
     double pos_y;
-    
-    std::array<std::optional<SpriteHandle>, static_cast<size_t>(EDirection::MAX) + 1> direction_sprite;
 
-    EDirection current_direction;
+    std::array<std::optional<SpriteHandle>, static_cast<size_t>(EDirection::MAX) + 1> direction_sprite;
+    EDirection                                                                        looking_direction;
+    std::shared_ptr<Terrain>                                                          terrain;
 };
 }

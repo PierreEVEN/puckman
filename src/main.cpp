@@ -1,3 +1,5 @@
+#include "engine/character.hpp"
+
 #include <SDL.h>
 
 #include <filesystem>
@@ -11,34 +13,34 @@ int main(int argc, char** argv)
 {
     pm::Engine::init("PucMan", 700, 900);
 
-    pm::Terrain terrain;
-    terrain.load_from_file("./resources/level.map");
+    const auto terrain = std::make_shared<pm::Terrain>();
+    terrain->load_from_file("./resources/level.map");
 
     pm::SpriteSheet sprite_sheet("./resources/sprite_sheet.bmp");
     
     // Create ghost_a
-    auto ghost_a = pm::Entity();
+    auto ghost_a = pm::Character(terrain);
     ghost_a.set_direction_sprite(pm::EDirection::Idle, sprite_sheet.new_sprite("ghost_a_default", {0, 32, 16, 16}, 10, {{16, 0}}));
     ghost_a.set_direction_sprite(pm::EDirection::Right, sprite_sheet.new_sprite("ghost_a_right", {0, 32, 16, 16}, 10, {{16, 0}}));
     ghost_a.set_direction_sprite(pm::EDirection::Left, sprite_sheet.new_sprite("ghost_a_left", {32, 32, 16, 16}, 10, {{16, 0}}));
     ghost_a.set_direction_sprite(pm::EDirection::Down, sprite_sheet.new_sprite("ghost_a_down", {96, 32, 16, 16}, 10, {{16, 0}}));
     ghost_a.set_direction_sprite(pm::EDirection::Up, sprite_sheet.new_sprite("ghost_a_up", {64, 32, 16, 16}, 10, {{16, 0}}));
 
-    auto ghost_b = pm::Entity();
+    auto ghost_b = pm::Character(terrain);
     ghost_b.set_direction_sprite(pm::EDirection::Idle, sprite_sheet.new_sprite("ghost_b_default", {0, 48, 16, 16}, 10, {{16, 0}}));
     ghost_b.set_direction_sprite(pm::EDirection::Right, sprite_sheet.new_sprite("ghost_b_right", {0, 48, 16, 16}, 10, {{16, 0}}));
     ghost_b.set_direction_sprite(pm::EDirection::Left, sprite_sheet.new_sprite("ghost_b_left", {32, 48, 16, 16}, 10, {{16, 0}}));
     ghost_b.set_direction_sprite(pm::EDirection::Down, sprite_sheet.new_sprite("ghost_b_down", {96, 48, 16, 16}, 10, {{16, 0}}));
     ghost_b.set_direction_sprite(pm::EDirection::Up, sprite_sheet.new_sprite("ghost_b_up", {64, 48, 16, 16}, 10, {{16, 0}}));
 
-    auto ghost_c = pm::Entity();
+    auto ghost_c = pm::Character(terrain);
     ghost_c.set_direction_sprite(pm::EDirection::Idle, sprite_sheet.new_sprite("ghost_c_default", {0, 64, 16, 16}, 10, {{16, 0}}));
     ghost_c.set_direction_sprite(pm::EDirection::Right, sprite_sheet.new_sprite("ghost_c_right", {0, 64, 16, 16}, 10, {{16, 0}}));
     ghost_c.set_direction_sprite(pm::EDirection::Left, sprite_sheet.new_sprite("ghost_c_left", {32, 64, 16, 16}, 10, {{16, 0}}));
     ghost_c.set_direction_sprite(pm::EDirection::Down, sprite_sheet.new_sprite("ghost_c_down", {96, 64, 16, 16}, 10, {{16, 0}}));
     ghost_c.set_direction_sprite(pm::EDirection::Up, sprite_sheet.new_sprite("ghost_c_up", {64, 64, 16, 16}, 10, {{16, 0}}));
 
-    auto ghost_d = pm::Entity();
+    auto ghost_d = pm::Character(terrain);
     ghost_d.set_direction_sprite(pm::EDirection::Idle, sprite_sheet.new_sprite("ghost_d_default", {0, 80, 16, 16}, 10, {{16, 0}}));
     ghost_d.set_direction_sprite(pm::EDirection::Right, sprite_sheet.new_sprite("ghost_d_right", {0, 80, 16, 16}, 10, {{16, 0}}));
     ghost_d.set_direction_sprite(pm::EDirection::Left, sprite_sheet.new_sprite("ghost_d_left", {32, 80, 16, 16}, 10, {{16, 0}}));
@@ -46,7 +48,7 @@ int main(int argc, char** argv)
     ghost_d.set_direction_sprite(pm::EDirection::Up, sprite_sheet.new_sprite("ghost_d_up", {64, 80, 16, 16}, 10, {{16, 0}}));
     
     // Create ghost_a
-    auto puckman = pm::Entity();
+    auto puckman = pm::Character(terrain);
     puckman.set_direction_sprite(pm::EDirection::Idle, sprite_sheet.new_sprite("puckman_default", {0, 0, 16, 16}, 20, {{16, 0}, {32, 0}, {16, 0}}));
     puckman.set_direction_sprite(pm::EDirection::Right, sprite_sheet.new_sprite("puckman_right", {0, 0, 16, 16}, 20, {{16, 0}, {32, 0}, {16, 0}}));
     puckman.set_direction_sprite(pm::EDirection::Left, sprite_sheet.new_sprite("puckman_left", {0, 0, 16, 16}, 20, {{48, 0}, {64, 0}, {48, 0}}));
@@ -65,11 +67,11 @@ int main(int argc, char** argv)
 
     const auto change_dir = [&](pm::EDirection new_dir)
     {
-        ghost_a.set_direction(new_dir);
-        ghost_b.set_direction(new_dir);
-        ghost_c.set_direction(new_dir);
-        ghost_d.set_direction(new_dir);
-        puckman.set_direction(new_dir);
+        ghost_a.set_look_direction(new_dir);
+        ghost_b.set_look_direction(new_dir);
+        ghost_c.set_look_direction(new_dir);
+        ghost_d.set_look_direction(new_dir);
+        puckman.set_look_direction(new_dir);
     };
 
     while (pm::Engine::get().next_frame())
@@ -105,7 +107,7 @@ int main(int argc, char** argv)
         if (keys[SDL_SCANCODE_M])
             puckman_die.set_paused(false);
 
-        terrain.draw();
+        terrain->draw();
         ghost_a.draw();
         ghost_b.draw();
         ghost_c.draw();

@@ -15,6 +15,12 @@ public:
 
     void draw();
 
+    [[nodiscard]] bool is_free(const int32_t x, const int32_t y) const
+    {
+        //@TODO : Verify if cell is free (also handle negative values)
+        return true;
+    }
+
 private:
     uint32_t          width;
     uint32_t          height;

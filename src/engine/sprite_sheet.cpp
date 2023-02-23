@@ -48,7 +48,7 @@ SpriteHandle SpriteSheet::new_sprite(const std::string& name, SDL_Rect base_tran
     return handle;
 }
 
-void SpriteSheet::render_sprite(SpriteHandle sprite, SDL_Point pos, double scale_x, double scale_y)
+void SpriteSheet::render_sprite(SpriteHandle sprite, SDL_Point pos, double scale_x, double scale_y, SDL_Surface* surface_override) const
 {
     const auto info = sprite_map.find(sprite);
     if (info == sprite_map.end())
@@ -74,7 +74,7 @@ void SpriteSheet::render_sprite(SpriteHandle sprite, SDL_Point pos, double scale
     }
 
     SDL_Rect new_coords{pos.x, pos.y, static_cast<int>(selected_sprite.w * scale_x), static_cast<int>(selected_sprite.h * scale_y)};
-    SDL_BlitScaled(sprite_sheet_handle, &selected_sprite, pm::Engine::get().get_surface_handle(), &new_coords);
+    SDL_BlitScaled(sprite_sheet_handle, &selected_sprite, surface_override ? surface_override : pm::Engine::get().get_surface_handle(), &new_coords);
 }
 
 inline void SpriteSheet::set_paused(SpriteHandle sprite, bool in_paused)
