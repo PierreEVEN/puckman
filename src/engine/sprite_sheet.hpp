@@ -23,6 +23,9 @@ private:
     double                 animation_speed;
     SDL_Rect               sprite_base_pos;
     std::vector<SDL_Point> sprite_offsets;
+    bool                                  paused = false;
+    double                                internal_time = 0.0;
+    std::chrono::steady_clock::time_point last_time;
 };
 }
 
@@ -43,8 +46,14 @@ public:
     {
     }
 
-    SpriteHandle& draw(const SDL_Point& pos, double scale_x = 1.0, double scale_y = 1.0);
-    SpriteHandle& set_paused(bool paused);
+    SpriteHandle(std::string handle_name)
+        : handle(std::move(handle_name)), owner(nullptr)
+    {
+    }
+
+    SpriteHandle&      draw(const SDL_Point& pos, double scale_x = 1.0, double scale_y = 1.0);
+    SpriteHandle&      set_paused(bool paused);
+    [[nodiscard]] bool is_paused() const;
 
     SpriteHandle& operator=(const SpriteHandle& other) = default;
     SpriteHandle(const SpriteHandle& other)            = default;
@@ -53,6 +62,11 @@ public:
     bool operator==(const SpriteHandle& other) const
     {
         return handle == other.handle;
+    }
+
+    operator bool() const
+    {
+        return owner;
     }
 
 private:
@@ -86,18 +100,12 @@ public:
 
     void render_sprite(SpriteHandle sprite, SDL_Point pos, double scale_x = 1.0, double scale_y = 1.0);
 
-    [[nodiscard]] std::optional<SpriteHandle> find_sprite_by_name(const std::string& name);
+    [[nodiscard]] static std::optional<SpriteHandle> find_sprite_by_name(const std::string& name);
+    
+    void set_paused(SpriteHandle sprite, bool in_paused);
 
-    void set_paused(bool in_paused)
-    {
-        paused = in_paused;
-    }
-
+    [[nodiscard]] bool is_paused(SpriteHandle sprite) const;
 private:
-    double                                       internal_time = 0.0;
-    std::chrono::steady_clock::time_point        last_time;
-    bool                                         paused = false;
-    std::unordered_map<SpriteHandle, SpriteInfo> sprite_map;
-    SDL_Surface*                                 sprite_sheet_handle;
+    SDL_Surface*                          sprite_sheet_handle;
 };
 }

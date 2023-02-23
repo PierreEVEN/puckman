@@ -100,6 +100,10 @@ int main(int argc, char** argv)
             change_dir(pm::EDirection::Up);
         if (keys[SDL_SCANCODE_DOWN])
             change_dir(pm::EDirection::Down);
+        if (keys[SDL_SCANCODE_P])
+            puckman_die.set_paused(true);
+        if (keys[SDL_SCANCODE_M])
+            puckman_die.set_paused(false);
 
         terrain.draw();
         ghost_a.draw();
