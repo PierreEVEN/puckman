@@ -16,9 +16,9 @@ int main(int argc, char** argv)
     pm::SpriteSheet sprite_sheet("./resources/sprite_sheet.bmp");
 
     // Load terrain sprites
-    sprite_sheet.new_sprite("gum", {128, 32, 16, 16}, 10, {}); // I have no idea
-    sprite_sheet.new_sprite("bigum", {128, 32, 16, 16}, 10, {}); // I have no idea
-    sprite_sheet.new_sprite("door", {128, 96, 16, 16}, 10, {}); // needs realignment?
+    sprite_sheet.new_sprite("gum", {128, 32, 16, 16}, 10, {});
+    sprite_sheet.new_sprite("bigum", {144, 32, 16, 16}, 10, {});
+    sprite_sheet.new_sprite("door", {128, 96, 16, 16}, 10, {});
     sprite_sheet.new_sprite("cherry", {128, 64, 16, 16}, 10, {{0, -16}});
     sprite_sheet.new_sprite("strawberry", {144, 64, 16, 16}, 10, {{0, -16}});
     sprite_sheet.new_sprite("abricot", {160, 64, 16, 16}, 10, {{0, -16}});

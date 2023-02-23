@@ -5,7 +5,7 @@
 namespace pm
 {
 
-double Cell::draw_scale = 2.;
+double Cell::draw_scale = 1.;
 
 Cell::Cell() : type(ECellType::Void)
 {}
@@ -65,10 +65,10 @@ void Cell::draw()
 {
     if (sprite_handle){
         SDL_Point draw_pos{pos};
-        const int size = 8 * (1 + (type != ECellType::Wall));
-        draw_pos.x = static_cast<int>(8 * draw_pos.x * draw_scale);
-        draw_pos.y = static_cast<int>(8 * draw_pos.y * draw_scale);
-        sprite_handle.draw(draw_pos, draw_scale, draw_scale);
+        draw_pos.x = static_cast<int>(16 * draw_pos.x * draw_scale);
+        draw_pos.y = static_cast<int>(16 * draw_pos.y * draw_scale);
+        const double ds = draw_scale * (1 + (type == ECellType::Wall));
+        sprite_handle.draw(draw_pos, ds, ds);
     }
 }
 
