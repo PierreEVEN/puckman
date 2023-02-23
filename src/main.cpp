@@ -13,10 +13,39 @@ int main(int argc, char** argv)
 {
     pm::Engine::init("PucMan", 700, 900);
 
+    pm::SpriteSheet sprite_sheet("./resources/sprite_sheet.bmp");
+
+    // Load terrain sprites
+    sprite_sheet.new_sprite("gum", {128, 32, 16, 16}, 10, {}); // I have no idea
+    sprite_sheet.new_sprite("bigum", {128, 32, 16, 16}, 10, {}); // I have no idea
+    sprite_sheet.new_sprite("door", {128, 96, 16, 16}, 10, {}); // needs realignment?
+    sprite_sheet.new_sprite("cherry", {128, 64, 16, 16}, 10, {{0, -16}});
+    sprite_sheet.new_sprite("strawberry", {144, 64, 16, 16}, 10, {{0, -16}});
+    sprite_sheet.new_sprite("abricot", {160, 64, 16, 16}, 10, {{0, -16}});
+    sprite_sheet.new_sprite("apple", {176, 64, 16, 16}, 10, {{0, -16}});
+    sprite_sheet.new_sprite("wtfruit", {192, 64, 16, 16}, 10, {{0, -16}});
+    sprite_sheet.new_sprite("axe", {208, 64, 16, 16}, 10, {{0, -16}});
+    sprite_sheet.new_sprite("bell", {224, 64, 16, 16}, 10, {{0, -16}});
+    sprite_sheet.new_sprite("key", {240, 64, 16, 16}, 10, {{0, -16}});
+    sprite_sheet.new_sprite("wall_none", {184, 80, 8, 8}, 10, {});
+    sprite_sheet.new_sprite("wall_N", {176, 88, 8, 8}, 10, {});
+    sprite_sheet.new_sprite("wall_E", {176, 80, 8, 8}, 10, {});
+    sprite_sheet.new_sprite("wall_NE", {168, 80, 8, 8}, 10, {});
+    sprite_sheet.new_sprite("wall_W", {168, 88, 8, 8}, 10, {});
+    sprite_sheet.new_sprite("wall_NW", {160, 80, 8, 8}, 10, {});
+    sprite_sheet.new_sprite("wall_EW", {128, 80, 8, 8}, 10, {});
+    sprite_sheet.new_sprite("wall_NEW", {144, 88, 8, 8}, 10, {});
+    sprite_sheet.new_sprite("wall_S", {184, 80, 8, 8}, 10, {});
+    sprite_sheet.new_sprite("wall_NS", {136, 80, 8, 8}, 10, {});
+    sprite_sheet.new_sprite("wall_ES", {144, 80, 8, 8}, 10, {});
+    sprite_sheet.new_sprite("wall_NES", {152, 88, 8, 8}, 10, {});
+    sprite_sheet.new_sprite("wall_WS", {152, 80, 8, 8}, 10, {});
+    sprite_sheet.new_sprite("wall_NWS", {136, 88, 8, 8}, 10, {});
+    sprite_sheet.new_sprite("wall_EWS", {128, 88, 8, 8}, 10, {});
+    sprite_sheet.new_sprite("wall_full", {160, 88, 8, 8}, 10, {});
+
     const auto terrain = std::make_shared<pm::Terrain>();
     terrain->load_from_file("./resources/level.map");
-
-    pm::SpriteSheet sprite_sheet("./resources/sprite_sheet.bmp");
     
     // Create ghost_a
     auto ghost_a = pm::Character(terrain);

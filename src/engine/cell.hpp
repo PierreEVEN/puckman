@@ -1,9 +1,20 @@
 #pragma once
 #include "sprite_sheet.hpp"
 
+#include <array>
+#include <map>
 #include <memory>
 
 namespace pm {
+
+using WallMask = int;
+
+const WallMask WALL_MASK_NORTH = 0b0001;
+const WallMask WALL_MASK_WEST  = 0b0010;
+const WallMask WALL_MASK_EAST  = 0b0100;
+const WallMask WALL_MASK_SOUTH = 0b1000;
+
+const WallMask WALL_MASK_FULL  = 0b1111;
 
 enum class EItemType
 {
@@ -15,25 +26,6 @@ enum class EItemType
     Axe,
     Bell,
     Key
-};
-
-enum class EWallType
-{
-    LR,
-    UB,
-    BR,
-    LB,
-    LU,
-    UR,
-    LRB,
-    ULB,
-    LRU,
-    UBR,
-    UBLR,
-    L,
-    U,
-    B,
-    R
 };
 
 enum class ECellType
@@ -49,28 +41,40 @@ enum class ECellType
 class Cell
 {
 public:
+    static double draw_scale;
+
+public:
 
     static Cell from_char(char chr);
 
     Cell();
     
+    void set_pos(const SDL_Point& in_pos);
     void set_item(EItemType in_item_type);
-    void set_wall(EWallType in_wall_type);
+    void set_wall(WallMask in_wall_mask);
     void set_gum(bool big);
     void set_door();
 
+    [[nodiscard]] ECellType get_type() const;
+
+    void update_sprite_handle(
+        std::unordered_map<ECellType, SpriteHandle> map_cell_type,
+        std::unordered_map<EItemType, SpriteHandle> map_item_type,
+        std::array<SpriteHandle, 16>& walls);
     void draw();
 
 private:
 
-    std::unique_ptr<SpriteHandle> sprite_handle = nullptr;
+    SpriteHandle sprite_handle;
+
+    SDL_Point pos{0, 0};
 
     ECellType type = ECellType::Void;
 
     union
     {
         EItemType item_type;
-        EWallType wall_type;
+        WallMask  wall_mask;
     };
 };
 }
