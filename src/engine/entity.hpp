@@ -2,20 +2,11 @@
 #include "sprite_sheet.hpp"
 
 #include <array>
+#include "types.hpp"
 
 namespace pm
 {
 class Terrain;
-
-enum class EDirection : uint8_t
-{
-    Idle = 0,
-    Up = 1,
-    Left = 2,
-    Down = 3,
-    Right = 4,
-    MAX = 4,
-};
 
 class Entity
 {
