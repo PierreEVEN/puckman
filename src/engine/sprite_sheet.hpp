@@ -20,10 +20,10 @@ public:
     }
 
 private:
-    double                 animation_speed;
-    SDL_Rect               sprite_base_pos;
-    std::vector<SDL_Point> sprite_offsets;
-    bool                                  paused = false;
+    double                                animation_speed;
+    SDL_Rect                              sprite_base_pos;
+    std::vector<SDL_Point>                sprite_offsets;
+    bool                                  paused        = false;
     double                                internal_time = 0.0;
     std::chrono::steady_clock::time_point last_time;
 };
@@ -48,6 +48,11 @@ public:
 
     SpriteHandle(std::string handle_name)
         : handle(std::move(handle_name)), owner(nullptr)
+    {
+    }
+
+    SpriteHandle()
+        : owner(nullptr)
     {
     }
 
@@ -101,11 +106,11 @@ public:
     void render_sprite(SpriteHandle sprite, SDL_Point pos, double scale_x = 1.0, double scale_y = 1.0, SDL_Surface* surface_override = nullptr) const;
 
     [[nodiscard]] static std::optional<SpriteHandle> find_sprite_by_name(const std::string& name);
-    
+
     void set_paused(SpriteHandle sprite, bool in_paused);
 
     [[nodiscard]] bool is_paused(SpriteHandle sprite) const;
 private:
-    SDL_Surface*                          sprite_sheet_handle;
+    SDL_Surface* sprite_sheet_handle;
 };
 }
