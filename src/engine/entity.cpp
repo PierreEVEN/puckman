@@ -28,3 +28,9 @@ void pm::Entity::draw()
 
     sprite->draw(SDL_Point{static_cast<int>(pos_x), static_cast<int>(pos_y)});
 }
+
+void pm::Entity::pause_animation(bool paused)
+{
+    for (auto& anim : direction_sprite)
+        anim->set_paused(paused);
+}

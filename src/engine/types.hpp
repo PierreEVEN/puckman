@@ -1,8 +1,13 @@
 #pragma once
 
+namespace std
+{
+template <typename T>
+constexpr int sign(T a) { return a < 0 ? -1 : 1; }
+}
+
 namespace pm
 {
-	
 enum class EDirection : uint8_t
 {
     Idle = 0,
@@ -20,11 +25,11 @@ inline SDL_Point direction_to_vector(const EDirection direction)
     case EDirection::Idle:
         return SDL_Point{0, 0};
     case EDirection::Up:
-        return SDL_Point{0, 1};
+        return SDL_Point{0, -1};
     case EDirection::Left:
         return SDL_Point{-1, 0};
     case EDirection::Down:
-        return SDL_Point{0, -1};
+        return SDL_Point{0, 1};
     case EDirection::Right:
         return SDL_Point{1, 0};
     default: ;
@@ -36,6 +41,4 @@ inline int32_t discrete_dot(const SDL_Point& a, const SDL_Point& b)
 {
     return a.x * b.x + a.y * b.y;
 }
-
-
 }

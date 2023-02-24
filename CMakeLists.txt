@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.13)
 
-project(PucMan LANGUAGES CXX)
+project(PuckMan LANGUAGES CXX)
 
 # Set project constants
 set(PROJECT_ROOT ${CMAKE_CURRENT_SOURCE_DIR}) # Project dir
@@ -9,7 +9,7 @@ set(INTERMEDIATES_DIR ${CMAKE_BINARY_DIR}) # Intermediates dir
 
 IF (MSVC)
 	#Set startup project
-	set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT PucMan)
+	set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT PuckMan)
 	
 	# Enable Hot Reload
 	set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /MDd /ZI /Ob0 /Od /RTC1")
@@ -34,16 +34,16 @@ set(CMAKE_VS_DEBUGGER_WORKING_DIRECTORY "${PROJECT_ROOT}")
 find_package(SDL2 REQUIRED)
 
 file(GLOB_RECURSE SOURCES src/*.cpp src/*.hpp)
-add_executable(PucMan ${SOURCES})
-set_target_properties(PucMan PROPERTIES 
+add_executable(PuckMan ${SOURCES})
+set_target_properties(PuckMan PROPERTIES 
 	ARCHIVE_OUTPUT_DIRECTORY "${BINARIES_DIR}/Lib"
 	RUNTIME_OUTPUT_DIRECTORY "${BINARIES_DIR}/Bin"
 	LIBRARY_OUTPUT_DIRECTORY "${BINARIES_DIR}/Bin"
 	VS_DEBUGGER_WORKING_DIRECTORY "${PROJECT_ROOT}")
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
-set_target_properties(PucMan PROPERTIES CXX_EXTENSIONS OFF)
+set_target_properties(PuckMan PROPERTIES CXX_EXTENSIONS OFF)
 source_group(TREE ${PROJECT_ROOT} FILES ${SOURCES})
-target_include_directories(PucMan PRIVATE ${SDL2_INCLUDE_DIRS})
-target_compile_definitions(PucMan PRIVATE "SDL_MAIN_HANDLED")
-target_link_libraries(PucMan PRIVATE ${SDL2_LIBRARIES})
+target_include_directories(PuckMan PRIVATE ${SDL2_INCLUDE_DIRS})
+target_compile_definitions(PuckMan PRIVATE "SDL_MAIN_HANDLED")
+target_link_libraries(PuckMan PRIVATE ${SDL2_LIBRARIES})
 

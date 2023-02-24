@@ -11,7 +11,7 @@
 
 int main(int argc, char** argv)
 {
-    pm::Engine::init("PucMan", 700, 900);
+    pm::Engine::init("PucMan", 700, 600);
 
     pm::SpriteSheet sprite_sheet("./resources/sprite_sheet.bmp");
 
@@ -88,11 +88,11 @@ int main(int argc, char** argv)
         {0, 0, 16, 16}, 
         20, 
         {{80, 0}, {96, 0}, {0, 16}, {16, 16}, {32, 16}, {48, 16}, {64, 16}, {80, 16}, {96, 16}, {112, 16}, {128, 16}, {144, 16}});
-    ghost_a.set_position(10, 20);
-    ghost_b.set_position(30, 20);
-    ghost_c.set_position(50, 20);
-    ghost_d.set_position(70, 20);
-    puckman.set_position(100, 20);
+    ghost_a.set_position(16, 16);
+    ghost_b.set_position(32, 16);
+    ghost_c.set_position(48, 16);
+    ghost_d.set_position(64, 16);
+    puckman.set_position(80, 16);
 
     const auto change_dir = [&](pm::EDirection new_dir)
     {
@@ -142,7 +142,7 @@ int main(int argc, char** argv)
         ghost_c.draw();
         ghost_d.draw();
         puckman.draw();
-        puckman_die.draw(SDL_Point(4, 40), 1.0, 1.0);
+        puckman_die.draw(SDL_Point(16, 32), 1.0, 1.0);
     }
     return 0;
 }

@@ -19,6 +19,10 @@ public:
     [[nodiscard]] double get_pos_y() const { return pos_y; }
 
     virtual void set_look_direction(const EDirection new_direction);
+    [[nodiscard]] virtual EDirection get_look_direction() const
+    {
+        return looking_direction;
+    };
 
     virtual void draw();
 
@@ -28,6 +32,8 @@ public:
     }
 
     Terrain& get_terrain() const { return *terrain; }
+
+    void pause_animation(bool paused);
 
 private:
     double pos_x;

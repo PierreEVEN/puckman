@@ -21,6 +21,6 @@ private:
 
     double lin_pos_x;
     double lin_pos_y;
-    EDirection current_direction;
+    EDirection current_direction = EDirection::Idle;
 };
 }
