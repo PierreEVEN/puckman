@@ -15,10 +15,13 @@ public:
 
     void draw();
 
-    [[nodiscard]] bool is_free(const int32_t x, const int32_t y) const
+    [[nodiscard]] bool is_free(const int32_t x, const int32_t y, bool is_door_free=false) const
     {
-        //@TODO : Verify if cell is free (also handle negative values)
-        return true;
+        if (x < 0 || y < 0 || uint32_t(x) >= width || uint32_t(y) >= height)
+            return false;
+
+        auto cell_type = grid[x + y * width].get_type();
+        return cell_type != ECellType::Wall && (is_door_free || cell_type != ECellType::Door);
     }
 
 private:
