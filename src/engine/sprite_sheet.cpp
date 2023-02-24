@@ -61,7 +61,7 @@ void SpriteSheet::render_sprite(const SpriteHandle& sprite, SDL_Point pos, doubl
     const auto elapsed = std::chrono::steady_clock::now() - info->second.last_time;
     if (!info->second.paused)
         info->second.internal_time += static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count()) / 1000000.0;
-    info->second.last_time                 = std::chrono::steady_clock::now();
+    info->second.last_time    = std::chrono::steady_clock::now();
     const size_t sprite_index = static_cast<int64_t>(info->second.internal_time * info->second.animation_speed) % (info->second.sprite_offsets.size() + 1);
 
     // If not 0, apply sub-sprite offset
