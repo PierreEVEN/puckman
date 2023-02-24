@@ -10,6 +10,7 @@ pm::Entity::Entity(const std::shared_ptr<Terrain>& new_terrain)
 void pm::Entity::set_direction_sprite(const EDirection direction, const SpriteHandle& new_sprite)
 {
     direction_sprite[static_cast<uint8_t>(direction)] = new_sprite;
+    direction_sprite[static_cast<uint8_t>(direction)]->set_paused(true);
 }
 
 void pm::Entity::set_look_direction(const EDirection new_direction)
@@ -32,5 +33,6 @@ void pm::Entity::draw()
 void pm::Entity::pause_animation(bool paused)
 {
     for (auto& anim : direction_sprite)
-        anim->set_paused(paused);
+        if (anim)
+            anim->set_paused(paused);
 }

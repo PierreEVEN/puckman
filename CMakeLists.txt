@@ -44,6 +44,7 @@ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 set_target_properties(PuckMan PROPERTIES CXX_EXTENSIONS OFF)
 source_group(TREE ${PROJECT_ROOT} FILES ${SOURCES})
 target_include_directories(PuckMan PRIVATE ${SDL2_INCLUDE_DIRS})
+target_include_directories(PuckMan PRIVATE src/)
 target_compile_definitions(PuckMan PRIVATE "SDL_MAIN_HANDLED")
 target_link_libraries(PuckMan PRIVATE ${SDL2_LIBRARIES})
 

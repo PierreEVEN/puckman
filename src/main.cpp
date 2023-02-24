@@ -1,13 +1,11 @@
-#include "engine/character.hpp"
-
 #include <SDL.h>
 
 #include <filesystem>
 
 #include "engine/engine.hpp"
 #include "engine/entity.hpp"
-#include "engine/ghost.hpp"
-#include "engine/puckman.hpp"
+#include "game/ghost.hpp"
+#include "game/puckman.hpp"
 #include "engine/sprite_sheet.hpp"
 #include "engine/terrain.hpp"
 
@@ -90,11 +88,11 @@ int main(int argc, char** argv)
                                                {0, 0, 16, 16},
                                                20,
                                                {{80, 0}, {96, 0}, {0, 16}, {16, 16}, {32, 16}, {48, 16}, {64, 16}, {80, 16}, {96, 16}, {112, 16}, {128, 16}, {144, 16}});
-    ghost_a.set_position(16, 16);
-    ghost_b.set_position(32, 16);
-    ghost_c.set_position(48, 16);
-    ghost_d.set_position(64, 16);
-    puckman.set_position(80, 16);
+    ghost_a.set_position(10 * 16, 10 * 16);
+    ghost_b.set_position(10 * 16, 10 * 16);
+    ghost_c.set_position(10 * 16, 10 * 16);
+    ghost_d.set_position(10 * 16, 10 * 16);
+    puckman.set_position(10 * 16, 19 * 16);
 
     while (pm::Engine::get().next_frame())
     {
