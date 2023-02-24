@@ -6,6 +6,8 @@
 
 #include "engine/engine.hpp"
 #include "engine/entity.hpp"
+#include "engine/ghost.hpp"
+#include "engine/puckman.hpp"
 #include "engine/sprite_sheet.hpp"
 #include "engine/terrain.hpp"
 
@@ -46,62 +48,53 @@ int main(int argc, char** argv)
 
     const auto terrain = std::make_shared<pm::Terrain>();
     terrain->load_from_file("./resources/level.map");
-    
+
     // Create ghost_a
-    auto ghost_a = pm::Character(terrain);
+    auto ghost_a = pm::Ghost(terrain);
     ghost_a.set_direction_sprite(pm::EDirection::Idle, sprite_sheet.new_sprite("ghost_a_default", {0, 32, 16, 16}, 10, {{16, 0}}));
     ghost_a.set_direction_sprite(pm::EDirection::Right, sprite_sheet.new_sprite("ghost_a_right", {0, 32, 16, 16}, 10, {{16, 0}}));
     ghost_a.set_direction_sprite(pm::EDirection::Left, sprite_sheet.new_sprite("ghost_a_left", {32, 32, 16, 16}, 10, {{16, 0}}));
     ghost_a.set_direction_sprite(pm::EDirection::Down, sprite_sheet.new_sprite("ghost_a_down", {96, 32, 16, 16}, 10, {{16, 0}}));
     ghost_a.set_direction_sprite(pm::EDirection::Up, sprite_sheet.new_sprite("ghost_a_up", {64, 32, 16, 16}, 10, {{16, 0}}));
 
-    auto ghost_b = pm::Character(terrain);
+    auto ghost_b = pm::Ghost(terrain);
     ghost_b.set_direction_sprite(pm::EDirection::Idle, sprite_sheet.new_sprite("ghost_b_default", {0, 48, 16, 16}, 10, {{16, 0}}));
     ghost_b.set_direction_sprite(pm::EDirection::Right, sprite_sheet.new_sprite("ghost_b_right", {0, 48, 16, 16}, 10, {{16, 0}}));
     ghost_b.set_direction_sprite(pm::EDirection::Left, sprite_sheet.new_sprite("ghost_b_left", {32, 48, 16, 16}, 10, {{16, 0}}));
     ghost_b.set_direction_sprite(pm::EDirection::Down, sprite_sheet.new_sprite("ghost_b_down", {96, 48, 16, 16}, 10, {{16, 0}}));
     ghost_b.set_direction_sprite(pm::EDirection::Up, sprite_sheet.new_sprite("ghost_b_up", {64, 48, 16, 16}, 10, {{16, 0}}));
 
-    auto ghost_c = pm::Character(terrain);
+    auto ghost_c = pm::Ghost(terrain);
     ghost_c.set_direction_sprite(pm::EDirection::Idle, sprite_sheet.new_sprite("ghost_c_default", {0, 64, 16, 16}, 10, {{16, 0}}));
     ghost_c.set_direction_sprite(pm::EDirection::Right, sprite_sheet.new_sprite("ghost_c_right", {0, 64, 16, 16}, 10, {{16, 0}}));
     ghost_c.set_direction_sprite(pm::EDirection::Left, sprite_sheet.new_sprite("ghost_c_left", {32, 64, 16, 16}, 10, {{16, 0}}));
     ghost_c.set_direction_sprite(pm::EDirection::Down, sprite_sheet.new_sprite("ghost_c_down", {96, 64, 16, 16}, 10, {{16, 0}}));
     ghost_c.set_direction_sprite(pm::EDirection::Up, sprite_sheet.new_sprite("ghost_c_up", {64, 64, 16, 16}, 10, {{16, 0}}));
 
-    auto ghost_d = pm::Character(terrain);
+    auto ghost_d = pm::Ghost(terrain);
     ghost_d.set_direction_sprite(pm::EDirection::Idle, sprite_sheet.new_sprite("ghost_d_default", {0, 80, 16, 16}, 10, {{16, 0}}));
     ghost_d.set_direction_sprite(pm::EDirection::Right, sprite_sheet.new_sprite("ghost_d_right", {0, 80, 16, 16}, 10, {{16, 0}}));
     ghost_d.set_direction_sprite(pm::EDirection::Left, sprite_sheet.new_sprite("ghost_d_left", {32, 80, 16, 16}, 10, {{16, 0}}));
     ghost_d.set_direction_sprite(pm::EDirection::Down, sprite_sheet.new_sprite("ghost_d_down", {96, 80, 16, 16}, 10, {{16, 0}}));
     ghost_d.set_direction_sprite(pm::EDirection::Up, sprite_sheet.new_sprite("ghost_d_up", {64, 80, 16, 16}, 10, {{16, 0}}));
-    
+
     // Create ghost_a
-    auto puckman = pm::Character(terrain);
+    auto puckman = pm::Puckman(terrain);
     puckman.set_direction_sprite(pm::EDirection::Idle, sprite_sheet.new_sprite("puckman_default", {0, 0, 16, 16}, 20, {{16, 0}, {32, 0}, {16, 0}}));
     puckman.set_direction_sprite(pm::EDirection::Right, sprite_sheet.new_sprite("puckman_right", {0, 0, 16, 16}, 20, {{16, 0}, {32, 0}, {16, 0}}));
     puckman.set_direction_sprite(pm::EDirection::Left, sprite_sheet.new_sprite("puckman_left", {0, 0, 16, 16}, 20, {{48, 0}, {64, 0}, {48, 0}}));
     puckman.set_direction_sprite(pm::EDirection::Down, sprite_sheet.new_sprite("puckman_down", {0, 0, 16, 16}, 20, {{112, 0}, {128, 0}, {112, 0}}));
     puckman.set_direction_sprite(pm::EDirection::Up, sprite_sheet.new_sprite("puckcman_up", {0, 0, 16, 16}, 20, {{80, 0}, {96, 0}, {80, 0}}));
 
-    auto puckman_die = sprite_sheet.new_sprite("puckman_die", 
-        {0, 0, 16, 16}, 
-        20, 
-        {{80, 0}, {96, 0}, {0, 16}, {16, 16}, {32, 16}, {48, 16}, {64, 16}, {80, 16}, {96, 16}, {112, 16}, {128, 16}, {144, 16}});
+    auto puckman_die = sprite_sheet.new_sprite("puckman_die",
+                                               {0, 0, 16, 16},
+                                               20,
+                                               {{80, 0}, {96, 0}, {0, 16}, {16, 16}, {32, 16}, {48, 16}, {64, 16}, {80, 16}, {96, 16}, {112, 16}, {128, 16}, {144, 16}});
     ghost_a.set_position(16, 16);
     ghost_b.set_position(32, 16);
     ghost_c.set_position(48, 16);
     ghost_d.set_position(64, 16);
     puckman.set_position(80, 16);
-
-    const auto change_dir = [&](pm::EDirection new_dir)
-    {
-        ghost_a.set_look_direction(new_dir);
-        ghost_b.set_look_direction(new_dir);
-        ghost_c.set_look_direction(new_dir);
-        ghost_d.set_look_direction(new_dir);
-        puckman.set_look_direction(new_dir);
-    };
 
     while (pm::Engine::get().next_frame())
     {
@@ -124,13 +117,13 @@ int main(int argc, char** argv)
         if (keys[SDL_SCANCODE_ESCAPE])
             pm::Engine::get().shutdown();
         if (keys[SDL_SCANCODE_LEFT])
-            change_dir(pm::EDirection::Left);
+            puckman.set_look_direction(pm::EDirection::Left);
         if (keys[SDL_SCANCODE_RIGHT])
-            change_dir(pm::EDirection::Right);
+            puckman.set_look_direction(pm::EDirection::Right);
         if (keys[SDL_SCANCODE_UP])
-            change_dir(pm::EDirection::Up);
+            puckman.set_look_direction(pm::EDirection::Up);
         if (keys[SDL_SCANCODE_DOWN])
-            change_dir(pm::EDirection::Down);
+            puckman.set_look_direction(pm::EDirection::Down);
         if (keys[SDL_SCANCODE_P])
             puckman_die.set_paused(true);
         if (keys[SDL_SCANCODE_M])

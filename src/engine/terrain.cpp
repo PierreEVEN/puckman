@@ -61,6 +61,36 @@ void Terrain::load_from_file(const std::filesystem::path& path)
     INFO("Successfully loaded {}", path.string());
 }
 
+int Terrain::eat(const int32_t x, const int32_t y)
+{
+    if (x < 0 || y < 0 || uint32_t(x) >= width || uint32_t(y) >= height)
+        return 0;
+
+    auto& cell = get_cell(x, y);
+
+    switch (cell.get_type())
+    {
+    case ECellType::Gum:
+        cell.update_type(ECellType::Void);
+        //@TODO : Don't rebuild all sprites each time
+        update_sprite_handles();
+        return 1;
+    case ECellType::Item:
+        cell.update_type(ECellType::Void);
+        //@TODO : Don't rebuild all sprites each time
+        update_sprite_handles();
+        return 100;
+    case ECellType::BiGum:
+        cell.update_type(ECellType::Void);
+        //@TODO : Don't rebuild all sprites each time
+        update_sprite_handles();
+        return 10;
+    default:
+        break;
+    }
+    return 0;
+}
+
 void Terrain::update_position_and_walls()
 {
     for (uint32_t y = 0; y < height; ++y)
@@ -114,22 +144,22 @@ void Terrain::update_sprite_handles()
     };
 
     std::array<SpriteHandle, 16> walls;
-    walls[0] = get_sprite_handle("wall_none");
-    walls[WALL_MASK_NORTH] = get_sprite_handle("wall_N");
-    walls[WALL_MASK_EAST] = get_sprite_handle("wall_E");
-    walls[WALL_MASK_EAST | WALL_MASK_NORTH] = get_sprite_handle("wall_NE");
-    walls[WALL_MASK_WEST] = get_sprite_handle("wall_W");
-    walls[WALL_MASK_WEST | WALL_MASK_NORTH] = get_sprite_handle("wall_NW");
-    walls[WALL_MASK_WEST | WALL_MASK_EAST] = get_sprite_handle("wall_EW");
-    walls[WALL_MASK_WEST | WALL_MASK_EAST | WALL_MASK_NORTH] = get_sprite_handle("wall_NEW");
-    walls[WALL_MASK_SOUTH] = get_sprite_handle("wall_S");
-    walls[WALL_MASK_SOUTH | WALL_MASK_NORTH] = get_sprite_handle("wall_NS");
-    walls[WALL_MASK_SOUTH | WALL_MASK_EAST] = get_sprite_handle("wall_ES");
+    walls[0]                                                  = get_sprite_handle("wall_none");
+    walls[WALL_MASK_NORTH]                                    = get_sprite_handle("wall_N");
+    walls[WALL_MASK_EAST]                                     = get_sprite_handle("wall_E");
+    walls[WALL_MASK_EAST | WALL_MASK_NORTH]                   = get_sprite_handle("wall_NE");
+    walls[WALL_MASK_WEST]                                     = get_sprite_handle("wall_W");
+    walls[WALL_MASK_WEST | WALL_MASK_NORTH]                   = get_sprite_handle("wall_NW");
+    walls[WALL_MASK_WEST | WALL_MASK_EAST]                    = get_sprite_handle("wall_EW");
+    walls[WALL_MASK_WEST | WALL_MASK_EAST | WALL_MASK_NORTH]  = get_sprite_handle("wall_NEW");
+    walls[WALL_MASK_SOUTH]                                    = get_sprite_handle("wall_S");
+    walls[WALL_MASK_SOUTH | WALL_MASK_NORTH]                  = get_sprite_handle("wall_NS");
+    walls[WALL_MASK_SOUTH | WALL_MASK_EAST]                   = get_sprite_handle("wall_ES");
     walls[WALL_MASK_SOUTH | WALL_MASK_EAST | WALL_MASK_NORTH] = get_sprite_handle("wall_NES");
-    walls[WALL_MASK_SOUTH | WALL_MASK_WEST] = get_sprite_handle("wall_WS");
+    walls[WALL_MASK_SOUTH | WALL_MASK_WEST]                   = get_sprite_handle("wall_WS");
     walls[WALL_MASK_SOUTH | WALL_MASK_WEST | WALL_MASK_NORTH] = get_sprite_handle("wall_NWS");
-    walls[WALL_MASK_SOUTH | WALL_MASK_WEST | WALL_MASK_EAST] = get_sprite_handle("wall_EWS");
-    walls[WALL_MASK_FULL] = get_sprite_handle("wall_full");
+    walls[WALL_MASK_SOUTH | WALL_MASK_WEST | WALL_MASK_EAST]  = get_sprite_handle("wall_EWS");
+    walls[WALL_MASK_FULL]                                     = get_sprite_handle("wall_full");
 
     for (auto& cell : grid)
         cell.update_sprite_handle(map_cell_type, map_item_type, walls);

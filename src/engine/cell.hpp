@@ -56,6 +56,7 @@ public:
     void set_door();
 
     [[nodiscard]] ECellType get_type() const;
+    void update_type(const ECellType new_type);
 
     void update_sprite_handle(
         std::unordered_map<ECellType, SpriteHandle> map_cell_type,

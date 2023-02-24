@@ -42,6 +42,11 @@ ECellType Cell::get_type() const
     return type;
 }
 
+void Cell::update_type(const ECellType new_type)
+{
+    type = new_type;
+}
+
 void Cell::update_sprite_handle(
         std::unordered_map<ECellType, SpriteHandle> map_cell_type,
         std::unordered_map<EItemType, SpriteHandle> map_item_type,
