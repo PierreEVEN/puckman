@@ -22,8 +22,8 @@ public:
     }
 
 private:
-	void update_position_and_walls();
-	void update_sprite_handles();
+    void update_position_and_walls();
+    void update_sprite_handles();
 
 private:
     uint32_t          width;
