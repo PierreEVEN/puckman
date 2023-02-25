@@ -1,6 +1,7 @@
 #include "cell.hpp"
 
 #include "logger.hpp"
+#include "types.hpp"
 
 namespace pm
 {
@@ -70,8 +71,7 @@ void Cell::draw() const
 {
     if (sprite_handle){
         SDL_Point draw_pos{pos};
-        draw_pos.x = static_cast<int>(16 * draw_pos.x * draw_scale);
-        draw_pos.y = static_cast<int>(16 * draw_pos.y * draw_scale);
+        draw_pos *= 16. * draw_scale;
         const double ds = draw_scale * (1 + (type == ECellType::Wall));
         sprite_handle.draw(draw_pos, ds, ds);
     }

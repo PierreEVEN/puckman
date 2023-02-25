@@ -37,6 +37,16 @@ inline SDL_Point direction_to_vector(const EDirection direction)
     }
 }
 
+SDL_Point operator*(const SDL_Point a, const auto b)
+{
+    return { static_cast<int>(a.x * b), static_cast<int>(a.y * b) };
+}
+
+SDL_Point& operator*=(SDL_Point& a, const auto b)
+{
+    return a = { static_cast<int>(a.x * b), static_cast<int>(a.y * b) };
+}
+
 inline int32_t discrete_dot(const SDL_Point& a, const SDL_Point& b)
 {
     return a.x * b.x + a.y * b.y;
