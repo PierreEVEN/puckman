@@ -51,7 +51,7 @@ public:
     
     void set_pos(const SDL_Point& in_pos);
     void set_item(EItemType in_item_type);
-    void set_wall(WallMask in_wall_mask);
+    void set_wall(WallMask in_wall_mask, WallMask in_wall_mask_neg=-1);
     void set_gum(bool big);
     void set_door();
 
@@ -75,7 +75,10 @@ private:
     union
     {
         EItemType item_type;
-        WallMask  wall_mask;
+        struct {
+            WallMask pos;
+            WallMask neg;
+        } wall_masks;
     };
 };
 }

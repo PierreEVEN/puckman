@@ -21,10 +21,10 @@ void Cell::set_item(EItemType in_item_type)
     item_type = in_item_type;
 }
 
-void Cell::set_wall(WallMask in_wall_mask)
+void Cell::set_wall(WallMask in_wall_mask, WallMask in_wall_mask_neg)
 {
     type      = ECellType::Wall;
-    wall_mask = in_wall_mask;
+    wall_masks = { in_wall_mask, in_wall_mask_neg < 0 ? wall_masks.neg : in_wall_mask_neg };
 }
 
 void Cell::set_gum(bool big)
@@ -55,7 +55,7 @@ void Cell::update_sprite_handle(
     switch (type)
     {
     case ECellType::Wall:
-        sprite_handle = walls[wall_mask];
+        sprite_handle = walls[wall_masks.pos & ~wall_masks.neg];
         break;
     case ECellType::Item:
         sprite_handle = map_item_type[item_type];
@@ -85,7 +85,13 @@ Cell Cell::from_char(char chr)
     case '.':
         return cell;
     case '#':
-        cell.set_wall(WALL_MASK_FULL);
+        cell.set_wall(WALL_MASK_FULL, 0);
+        break;
+    case '^':
+        cell.set_wall(WALL_MASK_FULL, WALL_MASK_SOUTH);
+        break;
+    case 'v':
+        cell.set_wall(WALL_MASK_FULL, WALL_MASK_NORTH);
         break;
     case 'o':
         cell.set_gum(false);
