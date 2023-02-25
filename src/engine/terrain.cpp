@@ -178,12 +178,12 @@ void Terrain::create_wall_cache_surface()
 
     wall_cache_surface_handle = SDL_CreateRGBSurface(0, esh->w, esh->h, 32, 0, 0, 0, 0);
 
+    if (wall_cache_surface_handle == nullptr)
+        INFO("couldn't create wall cache surface, continuing without wall caching");
+
     for (auto& cell : grid)
         if (cell.get_type() == ECellType::Wall)
             cell.draw(wall_cache_surface_handle);
-
-    if (wall_cache_surface_handle == nullptr)
-        INFO("couldn't create wall cache surface, continuing without wall caching");
 }
 
 void Terrain::free_wall_cache_surface()
