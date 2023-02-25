@@ -67,13 +67,13 @@ void Cell::update_sprite_handle(
     }
 }
 
-void Cell::draw() const
+void Cell::draw(SDL_Surface* surface_override) const
 {
     if (sprite_handle){
         SDL_Point draw_pos{pos};
         draw_pos *= 16. * draw_scale;
         const double ds = draw_scale * (1 + (type == ECellType::Wall));
-        sprite_handle.draw(draw_pos, ds, ds);
+        sprite_handle.draw(draw_pos, ds, ds, surface_override);
     }
 }
 

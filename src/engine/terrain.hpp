@@ -2,12 +2,15 @@
 #include "cell.hpp"
 #include <filesystem>
 
+struct SDL_Surface;
+
 namespace pm
 {
 class Terrain
 {
 public:
     Terrain();
+    ~Terrain();
 
     void load_from_file(const std::filesystem::path& path);
 
@@ -29,10 +32,13 @@ public:
 private:
     void update_position_and_walls();
     void update_sprite_handles();
+    void create_wall_cache_surface();
+    void free_wall_cache_surface();
 
 private:
     uint32_t          width;
     uint32_t          height;
     std::vector<Cell> grid;
+    SDL_Surface* wall_cache_surface_handle = nullptr;
 };
 }
