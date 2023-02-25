@@ -29,6 +29,8 @@ public:
 
     [[nodiscard]] int eat(const int32_t x, const int32_t y);
 
+    void set_wall_color(const Uint8 r, const Uint8 g, const Uint8 b) const;
+
 private:
     void update_position_and_walls();
     void update_sprite_handles();

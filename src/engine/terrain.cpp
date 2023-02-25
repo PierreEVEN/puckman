@@ -95,6 +95,11 @@ int Terrain::eat(const int32_t x, const int32_t y)
     return 0;
 }
 
+void Terrain::set_wall_color(const Uint8 r, const Uint8 g, const Uint8 b) const
+{
+    SDL_SetSurfaceColorMod(wall_cache_surface_handle, r, g, b);
+}
+
 void Terrain::update_position_and_walls()
 {
     for (uint32_t y = 0; y < height; ++y)
