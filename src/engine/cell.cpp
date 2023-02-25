@@ -90,6 +90,12 @@ Cell Cell::from_char(char chr)
     case '^':
         cell.set_wall(WALL_MASK_FULL, WALL_MASK_SOUTH);
         break;
+    case '<':
+        cell.set_wall(WALL_MASK_FULL, WALL_MASK_EAST);
+        break;
+    case '>':
+        cell.set_wall(WALL_MASK_FULL, WALL_MASK_WEST);
+        break;
     case 'v':
         cell.set_wall(WALL_MASK_FULL, WALL_MASK_NORTH);
         break;
