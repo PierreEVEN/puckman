@@ -107,7 +107,7 @@ public:
 
     [[nodiscard]] static std::optional<SpriteHandle> find_sprite_by_name(const std::string& name);
 
-    void set_paused(SpriteHandle sprite, bool in_paused);
+    void set_paused(SpriteHandle sprite, bool in_paused) const;
 
     [[nodiscard]] bool is_paused(SpriteHandle sprite) const;
 private:

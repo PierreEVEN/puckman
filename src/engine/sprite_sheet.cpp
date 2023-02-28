@@ -76,7 +76,7 @@ void SpriteSheet::render_sprite(const SpriteHandle& sprite, SDL_Point pos, doubl
     SDL_BlitScaled(sprite_sheet_handle, &selected_sprite, surface_override ? surface_override : pm::Engine::get().get_surface_handle(), &new_coords);
 }
 
-inline void SpriteSheet::set_paused(SpriteHandle sprite, bool in_paused)
+void SpriteSheet::set_paused(SpriteHandle sprite, bool in_paused) const
 {
     const auto info = sprite_map.find(sprite);
     if (info == sprite_map.end())

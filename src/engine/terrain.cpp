@@ -2,6 +2,8 @@
 #include "logger.hpp"
 #include <fstream>
 
+#include "types.hpp"
+
 namespace pm
 {
 Terrain::Terrain()
@@ -89,6 +91,31 @@ int Terrain::eat(const int32_t x, const int32_t y)
         break;
     }
     return 0;
+}
+
+SDL_Point Terrain::closest_free_point(const SDL_Point& location) const
+{
+    const SDL_Point clamped_location = {std::clamp(location.x, 0, static_cast<int>(width)), std::clamp(location.y, 0, static_cast<int>(height))};
+
+    for (int i = 0; i < static_cast<int>(std::max(width, height)); ++i)
+    {
+        for (int x = -i; x <= i; ++x)
+            if (is_free(clamped_location + SDL_Point{i, x}))
+                return clamped_location + SDL_Point{i, x};
+        
+        for (int x = -i; x <= i; ++x)
+            if (is_free(clamped_location + SDL_Point{-i, x}))
+                return clamped_location + SDL_Point{-i, x};
+        
+        for (int y = -i + 1; y < i; ++y)
+            if (is_free(clamped_location + SDL_Point{y, i}))
+                return clamped_location + SDL_Point{y, y};
+        
+        for (int y = -i + 1; y < i; ++y)
+            if (is_free(clamped_location + SDL_Point{y, -i}))
+                return clamped_location + SDL_Point{y, -i};
+    }
+    FATAL("failed to find free point");
 }
 
 void Terrain::update_position_and_walls()

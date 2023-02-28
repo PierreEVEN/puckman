@@ -2,8 +2,8 @@
 
 namespace std
 {
-template <typename T>
-constexpr int sign(T a) { return a < 0 ? -1 : 1; }
+constexpr int sign(auto a) { return a < 0 ? -1 : 1; }
+constexpr auto clamp(auto val, auto min, auto max) { return val < min ? min : val > max ? max : val; }
 }
 
 namespace pm
@@ -41,4 +41,51 @@ inline int32_t discrete_dot(const SDL_Point& a, const SDL_Point& b)
 {
     return a.x * b.x + a.y * b.y;
 }
+
+inline SDL_Point normalize(const SDL_Point& v)
+{
+    return std::abs(v.x) > std::abs(v.y) ? SDL_Point{std::clamp(v.x, -1, 1), 0} : SDL_Point{0, std::clamp(v.y, -1, 1)};
+}
+}
+
+
+inline SDL_Point operator+(const SDL_Point& a, const SDL_Point& b)
+{
+    return {a.x + b.x, a.y + b.x};
+}
+
+inline SDL_Point operator-(const SDL_Point& a, const SDL_Point& b)
+{
+    return {a.x - b.x, a.y - b.y};
+}
+
+SDL_Point operator+(const SDL_Point& a, const auto& b)
+{
+    return {a.x + b, a.y + b};
+}
+
+SDL_Point operator-(const SDL_Point& a, const auto& b)
+{
+    return {a.x - b, a.y - b};
+}
+
+inline bool operator==(const SDL_Point& a, const SDL_Point& b)
+{
+    return a.x == b.x && a.y == b.y;
+}
+
+inline bool operator<(const SDL_Point& a, const SDL_Point& b)
+{
+    return a.x < b.x || (a.x == b.x && a.y < b.y);
+}
+
+namespace std
+{
+template <> struct hash<SDL_Point>
+{
+    std::size_t operator()(const SDL_Point& p) const noexcept
+    {
+        return std::hash<int>()(p.x) + std::hash<int>()(p.y) * 2537;
+    }
+};
 }

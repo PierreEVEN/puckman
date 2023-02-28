@@ -14,7 +14,7 @@ void Character::draw()
     {
         const auto next_x = std::round(lin_pos_x + current_dir_vector.x * 0.55);
         const auto next_y = std::round(lin_pos_y + current_dir_vector.y * 0.55);
-        if (!get_terrain().is_free(static_cast<int32_t>(next_x), static_cast<int32_t>(next_y)))
+        if (!get_terrain().is_free(SDL_Point{static_cast<int32_t>(next_x), static_cast<int32_t>(next_y)}))
         {
             lin_pos_x = std::round(lin_pos_x);
             lin_pos_y = std::round(lin_pos_y);
@@ -74,7 +74,7 @@ void Character::set_look_direction(const EDirection new_direction)
     const auto next_dir = direction_to_vector(new_direction);
     const auto next_x   = std::round(lin_pos_x) + next_dir.x;
     const auto next_y   = std::round(lin_pos_y) + next_dir.y;
-    if (!get_terrain().is_free(static_cast<int32_t>(next_x), static_cast<int32_t>(next_y)))
+    if (!get_terrain().is_free(SDL_Point{static_cast<int32_t>(next_x), static_cast<int32_t>(next_y)}))
         return;
 
     Entity::set_look_direction(new_direction);
