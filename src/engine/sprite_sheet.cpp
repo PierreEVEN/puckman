@@ -9,11 +9,11 @@ namespace pm
 {
 static std::unordered_map<SpriteHandle, SpriteInfo> sprite_map;
 
-void SpriteHandle::draw(const SDL_Point& pos, double scale_x, double scale_y) const
+void SpriteHandle::draw(const SDL_Point& pos, double scale_x, double scale_y, SDL_Surface* surface_override) const
 {
     if (!*this)
         FATAL("invalid handle");
-    owner->render_sprite(*this, pos, scale_x, scale_y);
+    owner->render_sprite(*this, pos, scale_x, scale_y, surface_override);
 }
 
 SpriteHandle& SpriteHandle::set_paused(bool paused)

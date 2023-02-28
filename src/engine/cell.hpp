@@ -51,7 +51,7 @@ public:
     
     void set_pos(const SDL_Point& in_pos);
     void set_item(EItemType in_item_type);
-    void set_wall(WallMask in_wall_mask);
+    void set_wall(WallMask in_wall_mask, WallMask in_wall_mask_neg=-1);
     void set_gum(bool big);
     void set_door();
 
@@ -62,7 +62,7 @@ public:
         std::unordered_map<ECellType, SpriteHandle> map_cell_type,
         std::unordered_map<EItemType, SpriteHandle> map_item_type,
         std::array<SpriteHandle, 16>& walls);
-    void draw() const;
+    void draw(SDL_Surface* surface_override=nullptr) const;
 
 private:
 
@@ -75,7 +75,10 @@ private:
     union
     {
         EItemType item_type;
-        WallMask  wall_mask;
+        struct {
+            WallMask pos;
+            WallMask neg;
+        } wall_masks;
     };
 };
 }

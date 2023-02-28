@@ -56,7 +56,7 @@ public:
     {
     }
 
-    void               draw(const SDL_Point& pos, double scale_x = 1.0, double scale_y = 1.0) const;
+    void               draw(const SDL_Point& pos, double scale_x = 1.0, double scale_y = 1.0, SDL_Surface* surface_override=nullptr) const;
     SpriteHandle&      set_paused(bool paused);
     [[nodiscard]] bool is_paused() const;
 

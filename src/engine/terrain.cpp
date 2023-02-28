@@ -1,6 +1,8 @@
 #include "terrain.hpp"
+#include "engine.hpp"
 #include "logger.hpp"
 #include <fstream>
+#include <SDL_surface.h>
 
 #include "types.hpp"
 
@@ -60,6 +62,8 @@ void Terrain::load_from_file(const std::filesystem::path& path)
 
     update_sprite_handles();
 
+    create_wall_cache_surface();
+
     INFO("Successfully loaded {}", path.string());
 }
 
@@ -116,6 +120,11 @@ SDL_Point Terrain::closest_free_point(const SDL_Point& location) const
                 return clamped_location + SDL_Point{y, -i};
     }
     FATAL("failed to find free point");
+}
+
+void Terrain::set_wall_color(const Uint8 r, const Uint8 g, const Uint8 b) const
+{
+    SDL_SetSurfaceColorMod(wall_cache_surface_handle, r, g, b);
 }
 
 void Terrain::update_position_and_walls()
@@ -192,6 +201,29 @@ void Terrain::update_sprite_handles()
         cell.update_sprite_handle(map_cell_type, map_item_type, walls);
 }
 
+void Terrain::create_wall_cache_surface()
+{
+    if (wall_cache_surface_handle != nullptr)
+        free_wall_cache_surface();
+
+    SDL_Surface* esh = pm::Engine::get().get_surface_handle();
+
+    wall_cache_surface_handle = SDL_CreateRGBSurface(0, esh->w, esh->h, 32, 0, 0, 0, 0);
+
+    if (wall_cache_surface_handle == nullptr)
+        INFO("couldn't create wall cache surface, continuing without wall caching");
+
+    for (auto& cell : grid)
+        if (cell.get_type() == ECellType::Wall)
+            cell.draw(wall_cache_surface_handle);
+}
+
+void Terrain::free_wall_cache_surface()
+{
+    SDL_FreeSurface(wall_cache_surface_handle);
+    wall_cache_surface_handle = nullptr;
+}
+
 Cell& Terrain::get_cell(const uint32_t x, const uint32_t y)
 {
     if (x < 0 || x >= width || y < 0 || y >= height)
@@ -202,7 +234,16 @@ Cell& Terrain::get_cell(const uint32_t x, const uint32_t y)
 
 void Terrain::draw()
 {
+    if (wall_cache_surface_handle != nullptr)
+        SDL_BlitSurface(wall_cache_surface_handle, nullptr, pm::Engine::get().get_surface_handle(), nullptr);
+
     for (auto& cell : grid)
-        cell.draw();
+        if (wall_cache_surface_handle == nullptr || cell.get_type() != ECellType::Wall)
+            cell.draw();
+}
+
+Terrain::~Terrain()
+{
+    free_wall_cache_surface();
 }
 }
