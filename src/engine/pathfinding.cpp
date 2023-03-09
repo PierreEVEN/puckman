@@ -109,17 +109,17 @@ bool PathFinder::find_path(const SDL_Point& from, SDL_Point to)
     return false;
 }
 
-SDL_Point PathFinder::direction_to_next_point(const SDL_Point& current_location)
+EDirection PathFinder::direction_to_next_point(const SDL_Point& current_location)
 {
     if (actual_path.empty())
-        return {0, 0};
+        return EDirection::Idle;
 
     if (current_location == actual_path.back())
         actual_path.pop_back();
     
     if (actual_path.empty())
-        return {0, 0};
+        return EDirection::Idle;
     
-    return normalize(actual_path.back() - current_location);
+    return get_direction(normalize(actual_path.back() - current_location));
 }
 }

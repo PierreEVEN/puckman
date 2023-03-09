@@ -15,7 +15,7 @@ public:
     PathFinder(const std::shared_ptr<Terrain>& in_terrain);
 
     bool find_path(const SDL_Point& from, SDL_Point to);
-    SDL_Point direction_to_next_point(const SDL_Point& current_location);
+    EDirection direction_to_next_point(const SDL_Point& current_location);
 
 private:
 
