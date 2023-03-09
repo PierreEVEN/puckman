@@ -1,6 +1,7 @@
 #include "character.hpp"
 
 #include "engine/engine.hpp"
+#include "engine/logger.hpp"
 #include "engine/terrain.hpp"
 
 namespace pm

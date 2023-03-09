@@ -31,7 +31,7 @@ public:
         pos_x = x, pos_y = y;
     }
 
-    Terrain& get_terrain() const { return *terrain; }
+    [[nodiscard]] Terrain& get_terrain() const { return *terrain; }
 
     void pause_animation(bool paused);
 

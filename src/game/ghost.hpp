@@ -3,6 +3,8 @@
 
 namespace pm
 {
+class PathFinder;
+
 class Ghost: public Character
 {
 public:
@@ -12,6 +14,18 @@ public:
     }
 
     void draw() override;
+};
+
+class GhostCustom: public Ghost
+{
+public:
+    explicit GhostCustom(const std::shared_ptr<Terrain>& terrain, std::shared_ptr<Character> in_target);
+
+    void draw() override;
+    
+private:
+    const std::shared_ptr<PathFinder> pathfinder;
+    std::shared_ptr<Character> target;
 };
 
 }

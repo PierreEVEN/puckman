@@ -43,12 +43,19 @@ int main(int argc, char** argv)
     sprite_sheet.new_sprite("wall_NWS", {136, 88, 8, 8}, 10, {});
     sprite_sheet.new_sprite("wall_EWS", {128, 88, 8, 8}, 10, {});
     sprite_sheet.new_sprite("wall_full", {160, 88, 8, 8}, 10, {});
-
+    
     const auto terrain = std::make_shared<pm::Terrain>();
     terrain->load_from_file("./resources/level.map");
 
+    auto puckman = std::make_shared<pm::Puckman>(pm::Puckman(terrain));
+    puckman->set_direction_sprite(pm::EDirection::Idle, sprite_sheet.new_sprite("puckman_default", {0, 0, 16, 16}, 20, {{16, 0}, {32, 0}, {16, 0}}));
+    puckman->set_direction_sprite(pm::EDirection::Right, sprite_sheet.new_sprite("puckman_right", {0, 0, 16, 16}, 20, {{16, 0}, {32, 0}, {16, 0}}));
+    puckman->set_direction_sprite(pm::EDirection::Left, sprite_sheet.new_sprite("puckman_left", {0, 0, 16, 16}, 20, {{48, 0}, {64, 0}, {48, 0}}));
+    puckman->set_direction_sprite(pm::EDirection::Down, sprite_sheet.new_sprite("puckman_down", {0, 0, 16, 16}, 20, {{112, 0}, {128, 0}, {112, 0}}));
+    puckman->set_direction_sprite(pm::EDirection::Up, sprite_sheet.new_sprite("puckcman_up", {0, 0, 16, 16}, 20, {{80, 0}, {96, 0}, {80, 0}}));
+
     // Create ghost_a
-    auto ghost_a = pm::Ghost(terrain);
+    auto ghost_a = pm::GhostCustom(terrain, puckman);
     ghost_a.set_direction_sprite(pm::EDirection::Idle, sprite_sheet.new_sprite("ghost_a_default", {0, 32, 16, 16}, 10, {{16, 0}}));
     ghost_a.set_direction_sprite(pm::EDirection::Right, sprite_sheet.new_sprite("ghost_a_right", {0, 32, 16, 16}, 10, {{16, 0}}));
     ghost_a.set_direction_sprite(pm::EDirection::Left, sprite_sheet.new_sprite("ghost_a_left", {32, 32, 16, 16}, 10, {{16, 0}}));
@@ -75,15 +82,7 @@ int main(int argc, char** argv)
     ghost_d.set_direction_sprite(pm::EDirection::Left, sprite_sheet.new_sprite("ghost_d_left", {32, 80, 16, 16}, 10, {{16, 0}}));
     ghost_d.set_direction_sprite(pm::EDirection::Down, sprite_sheet.new_sprite("ghost_d_down", {96, 80, 16, 16}, 10, {{16, 0}}));
     ghost_d.set_direction_sprite(pm::EDirection::Up, sprite_sheet.new_sprite("ghost_d_up", {64, 80, 16, 16}, 10, {{16, 0}}));
-
-    // Create ghost_a
-    auto puckman = pm::Puckman(terrain);
-    puckman.set_direction_sprite(pm::EDirection::Idle, sprite_sheet.new_sprite("puckman_default", {0, 0, 16, 16}, 20, {{16, 0}, {32, 0}, {16, 0}}));
-    puckman.set_direction_sprite(pm::EDirection::Right, sprite_sheet.new_sprite("puckman_right", {0, 0, 16, 16}, 20, {{16, 0}, {32, 0}, {16, 0}}));
-    puckman.set_direction_sprite(pm::EDirection::Left, sprite_sheet.new_sprite("puckman_left", {0, 0, 16, 16}, 20, {{48, 0}, {64, 0}, {48, 0}}));
-    puckman.set_direction_sprite(pm::EDirection::Down, sprite_sheet.new_sprite("puckman_down", {0, 0, 16, 16}, 20, {{112, 0}, {128, 0}, {112, 0}}));
-    puckman.set_direction_sprite(pm::EDirection::Up, sprite_sheet.new_sprite("puckcman_up", {0, 0, 16, 16}, 20, {{80, 0}, {96, 0}, {80, 0}}));
-
+    
     auto puckman_die = sprite_sheet.new_sprite("puckman_die",
                                                {0, 0, 16, 16},
                                                20,
@@ -92,7 +91,7 @@ int main(int argc, char** argv)
     ghost_b.set_position(10 * 16, 10 * 16);
     ghost_c.set_position(10 * 16, 10 * 16);
     ghost_d.set_position(10 * 16, 10 * 16);
-    puckman.set_position(10 * 16, 19 * 16);
+    puckman->set_position(10 * 16, 19 * 16);
 
     while (pm::Engine::get().next_frame())
     {
@@ -115,13 +114,13 @@ int main(int argc, char** argv)
         if (keys[SDL_SCANCODE_ESCAPE])
             pm::Engine::get().shutdown();
         if (keys[SDL_SCANCODE_LEFT])
-            puckman.set_look_direction(pm::EDirection::Left);
+            puckman->set_look_direction(pm::EDirection::Left);
         if (keys[SDL_SCANCODE_RIGHT])
-            puckman.set_look_direction(pm::EDirection::Right);
+            puckman->set_look_direction(pm::EDirection::Right);
         if (keys[SDL_SCANCODE_UP])
-            puckman.set_look_direction(pm::EDirection::Up);
+            puckman->set_look_direction(pm::EDirection::Up);
         if (keys[SDL_SCANCODE_DOWN])
-            puckman.set_look_direction(pm::EDirection::Down);
+            puckman->set_look_direction(pm::EDirection::Down);
         if (keys[SDL_SCANCODE_P])
             puckman_die.set_paused(true);
         if (keys[SDL_SCANCODE_M])
@@ -132,7 +131,7 @@ int main(int argc, char** argv)
         ghost_b.draw();
         ghost_c.draw();
         ghost_d.draw();
-        puckman.draw();
+        puckman->draw();
         puckman_die.draw(SDL_Point(16, 32), 1.0, 1.0);
     }
     return 0;
