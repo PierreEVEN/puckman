@@ -1,9 +1,9 @@
 #pragma once
 
-#include <format>
 #include <string>
 #include <mutex>
 #include <optional>
+#include <engine/format.hpp>
 
 #if defined(_MSC_VER)
 #define DEBUG(format_str, ...) ::pm::Logger::get().message(::pm::ELogLevel::DEBUG, std::format(format_str, __VA_ARGS__), __FILE__, ##__FUNCTION__, __LINE__)

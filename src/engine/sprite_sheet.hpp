@@ -1,6 +1,9 @@
 #pragma once
+
 #include <filesystem>
 #include <SDL_rect.h>
+
+#include "engine/format.hpp"
 
 struct SDL_Surface;
 
@@ -28,17 +31,10 @@ private:
 };
 }
 
-template <>
-struct std::formatter<::pm::SpriteHandle> : std::formatter<std::string>
-{
-    auto format(::pm::SpriteHandle s, format_context& ctx) const;
-};
-
 namespace pm
 {
 class SpriteHandle
 {
-    friend struct std::formatter<::pm::SpriteHandle>;
 public:
     SpriteHandle(SpriteSheet* in_owner, std::string handle_name)
         : handle(std::move(handle_name)), owner(in_owner)
@@ -55,7 +51,7 @@ public:
     {
     }
 
-    void               draw(const SDL_Point& pos, double scale_x = 1.0, double scale_y = 1.0, SDL_Surface* surface_override=nullptr) const;
+    void               draw(const SDL_Point& pos, double scale_x = 1.0, double scale_y = 1.0, SDL_Surface* surface_override = nullptr) const;
     SpriteHandle&      set_paused(bool paused);
     [[nodiscard]] bool is_paused() const;
 
@@ -73,15 +69,16 @@ public:
         return owner;
     }
 
+    std::stringstream& operator<<(std::stringstream& stream) const
+    {
+        stream << handle;
+        return stream;
+    }
+
 private:
     std::string  handle;
     SpriteSheet* owner;
 };
-}
-
-inline auto std::formatter<pm::SpriteHandle, char>::format(pm::SpriteHandle s, format_context& ctx) const
-{
-    return formatter<string>::format(std::format("{}", s.handle), ctx);
 }
 
 template <>
@@ -89,7 +86,9 @@ struct std::hash<::pm::SpriteHandle>
 {
     size_t operator()(const ::pm::SpriteHandle& c) const noexcept
     {
-        return hash<string>()(std::format("{}", c));
+        std::stringstream str;
+        str << c;
+        return hash<string>()(str.str());
     }
 };
 
