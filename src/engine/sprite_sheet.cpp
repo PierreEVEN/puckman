@@ -4,6 +4,7 @@
 #include "logger.hpp"
 
 #include <SDL_surface.h>
+#include <unordered_map>
 
 namespace pm
 {

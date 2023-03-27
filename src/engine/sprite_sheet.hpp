@@ -1,7 +1,6 @@
 #pragma once
 #include <filesystem>
 #include <SDL_rect.h>
-#include <unordered_map>
 
 struct SDL_Surface;
 

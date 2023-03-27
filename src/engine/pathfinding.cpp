@@ -17,6 +17,8 @@ PathFinder::PathFinder(const std::shared_ptr<Terrain>& in_terrain)
 bool PathFinder::find_path(const SDL_Point& from, SDL_Point to)
 {
     to = terrain->closest_free_point(to);
+    
+        SpriteSheet::find_sprite_by_name("puckman_die")->draw(to * 16);
 
     // Using same path than last search
     if (!actual_path.empty() && from == actual_path.front() && to == actual_path.back())
