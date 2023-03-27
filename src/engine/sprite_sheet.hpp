@@ -3,7 +3,7 @@
 #include <filesystem>
 #include <SDL_rect.h>
 
-#include "engine/format.hpp"
+#include "format.hpp"
 
 struct SDL_Surface;
 
@@ -29,13 +29,16 @@ private:
     double                                internal_time = 0.0;
     std::chrono::steady_clock::time_point last_time;
 };
-}
+} // namespace pm
 
 namespace pm
 {
 class SpriteHandle
 {
-public:
+    friend struct std::formatter<::pm::SpriteHandle>;
+    friend std::stringstream& operator<<(std::stringstream& stream, const SpriteHandle& s);
+
+  public:
     SpriteHandle(SpriteSheet* in_owner, std::string handle_name)
         : handle(std::move(handle_name)), owner(in_owner)
     {
@@ -69,17 +72,17 @@ public:
         return owner;
     }
 
-    std::stringstream& operator<<(std::stringstream& stream) const
-    {
-        stream << handle;
-        return stream;
-    }
-
 private:
     std::string  handle;
     SpriteSheet* owner;
 };
+
+inline std::stringstream& operator<<(std::stringstream& stream, const SpriteHandle& s)
+{
+    stream << s.handle.c_str();
+    return stream;
 }
+} // namespace pm
 
 template <>
 struct std::hash<::pm::SpriteHandle>
@@ -88,7 +91,7 @@ struct std::hash<::pm::SpriteHandle>
     {
         std::stringstream str;
         str << c;
-        return hash<string>()(str.str());
+        return hash<string>()(std::format("{}", c));
     }
 };
 
