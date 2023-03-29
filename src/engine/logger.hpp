@@ -1,11 +1,9 @@
 #pragma once
 
-#if __has_include(<format>)
-#include <format>
-#endif
 #include <string>
 #include <mutex>
 #include <optional>
+#include <engine/format.hpp>
 
 #if defined(_MSC_VER)
 #define DEBUG(format_str, ...) ::pm::Logger::get().message(::pm::ELogLevel::DEBUG, std::format(format_str, __VA_ARGS__), __FILE__, ##__FUNCTION__, __LINE__)
@@ -21,7 +19,7 @@
 #define DEBUG(format_str, ...) ::pm::Logger::get().message(::pm::ELogLevel::DEBUG, std::format(format_str, ##__VA_ARGS__), __FILE__, __FUNCTION__, __LINE__)
 #define INFO(format_str, ...) ::pm::Logger::get().message(::pm::ELogLevel::INFO, std::format(format_str, ##__VA_ARGS__), __FILE__, __FUNCTION__, __LINE__)
 #define WARNING(format_str, ...) ::pm::Logger::get().message(::pm::ELogLevel::WARNING, std::format(format_str, ##__VA_ARGS__), __FILE__, __FUNCTION__, __LINE__)
-#define ERROR(format_str, ...) ::pm::Logger::get().message(::pm::ELogLevel::ERROR, std::format(format_str, __VA_ARGS__), __FILE__, __FUNCTION__, __LINE__)
+#define ERROR(format_str, ...) ::pm::Logger::get().message(::pm::ELogLevel::ERROR, std::format(format_str, ##__VA_ARGS__), __FILE__, __FUNCTION__, __LINE__)
 #define FATAL(format_str, ...) do { ::pm::Logger::get().message(::pm::ELogLevel::FATAL, std::format(format_str, ##__VA_ARGS__), __FILE__, __FUNCTION__, __LINE__); exit(EXIT_FAILURE); } while (0)
 #elif defined(__clang__)
 #define DEBUG(format_str, ...) ::pm::Logger::get().message(::pm::ELogLevel::DEBUG, std::format(format_str __VA_OPT__(,) __VA_ARGS__), __FILE__, ##__FUNCTION__, __LINE__)

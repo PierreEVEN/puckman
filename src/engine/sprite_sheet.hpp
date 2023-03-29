@@ -1,8 +1,11 @@
 #pragma once
+
 #include <filesystem>
 #include <vector>
 #include <SDL_rect.h>
-#include <unordered_map>
+#include <optional>
+
+#include "format.hpp"
 
 struct SDL_Surface;
 
@@ -28,20 +31,15 @@ private:
     double                                internal_time = 0.0;
     std::chrono::steady_clock::time_point last_time;
 };
-}
-
-template <>
-struct std::formatter<::pm::SpriteHandle> : std::formatter<std::string>
-{
-    auto format(::pm::SpriteHandle s, format_context& ctx) const;
-};
+} // namespace pm
 
 namespace pm
 {
 class SpriteHandle
 {
-    friend struct std::formatter<::pm::SpriteHandle>;
-public:
+    friend std::stringstream& operator<<(std::stringstream& stream, const SpriteHandle& s);
+
+  public:
     SpriteHandle(SpriteSheet* in_owner, std::string handle_name)
         : handle(std::move(handle_name)), owner(in_owner)
     {
@@ -57,7 +55,7 @@ public:
     {
     }
 
-    void               draw(const SDL_Point& pos, double scale_x = 1.0, double scale_y = 1.0, SDL_Surface* surface_override=nullptr) const;
+    void               draw(const SDL_Point& pos, double scale_x = 1.0, double scale_y = 1.0, SDL_Surface* surface_override = nullptr) const;
     SpriteHandle&      set_paused(bool paused);
     [[nodiscard]] bool is_paused() const;
 
@@ -79,18 +77,21 @@ private:
     std::string  handle;
     SpriteSheet* owner;
 };
-}
 
-inline auto std::formatter<pm::SpriteHandle, char>::format(pm::SpriteHandle s, format_context& ctx) const
+inline std::stringstream& operator<<(std::stringstream& stream, const SpriteHandle& s)
 {
-    return formatter<string>::format(std::format("{}", s.handle), ctx);
+    stream << s.handle.c_str();
+    return stream;
 }
+} // namespace pm
 
 template <>
 struct std::hash<::pm::SpriteHandle>
 {
     size_t operator()(const ::pm::SpriteHandle& c) const noexcept
     {
+        std::stringstream str;
+        str << c;
         return hash<string>()(std::format("{}", c));
     }
 };

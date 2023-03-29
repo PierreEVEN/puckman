@@ -56,12 +56,21 @@ inline SDL_Point normalize(const SDL_Point& v)
 {
     return std::abs(v.x) > std::abs(v.y) ? SDL_Point{std::clamp(v.x, -1, 1), 0} : SDL_Point{0, std::clamp(v.y, -1, 1)};
 }
+
+inline EDirection get_direction(const SDL_Point& v)
+{
+    if (v.x == 0 && v.y == 0)
+        return EDirection::Idle;
+
+    return std::abs(v.x) > std::abs(v.y) ? (v.x > 0 ? EDirection::Right : EDirection::Left) : (v.y > 0 ? EDirection::Down : EDirection::Up);
+}
+
 }
 
 
 inline SDL_Point operator+(const SDL_Point& a, const SDL_Point& b)
 {
-    return {a.x + b.x, a.y + b.x};
+    return {a.x + b.x, a.y + b.y};
 }
 
 inline SDL_Point operator-(const SDL_Point& a, const SDL_Point& b)

@@ -2,8 +2,7 @@
 #include "sprite_sheet.hpp"
 
 #include <array>
-#include <map>
-#include <memory>
+#include <unordered_map>
 
 namespace pm {
 

@@ -1,6 +1,7 @@
 #include "character.hpp"
 
 #include "engine/engine.hpp"
+#include "engine/logger.hpp"
 #include "engine/terrain.hpp"
 
 namespace pm
@@ -8,7 +9,7 @@ namespace pm
 void Character::draw()
 {
     const auto   current_dir_vector = direction_to_vector(current_direction);
-    const double step               = Engine::get().get_delta_second() * 3;
+    const double step               = Engine::get().get_delta_second() * velocity;
 
     if (current_direction == get_look_direction())
     {
