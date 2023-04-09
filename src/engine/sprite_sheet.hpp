@@ -1,7 +1,9 @@
 #pragma once
 
 #include <filesystem>
+#include <vector>
 #include <SDL_rect.h>
+#include <optional>
 
 #include "format.hpp"
 
@@ -35,7 +37,6 @@ namespace pm
 {
 class SpriteHandle
 {
-    friend struct std::formatter<::pm::SpriteHandle>;
     friend std::stringstream& operator<<(std::stringstream& stream, const SpriteHandle& s);
 
   public:
