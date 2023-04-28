@@ -27,6 +27,11 @@ public:
         return cell_type != ECellType::Wall && (is_door_free || cell_type != ECellType::Door);
     }
 
+    [[nodiscard]] bool is_tunnel(const SDL_Point& pos) const
+    {
+        return (static_cast<uint32_t>(pos.x + 2) + width) % (width + 2) >= width;
+    }
+
     [[nodiscard]] int eat(const int32_t x, const int32_t y);
 
     [[nodiscard]] uint32_t get_width() const { return width; }

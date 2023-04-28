@@ -15,7 +15,11 @@ void Character::tick()
     {
         const auto next_x = std::round(lin_pos_x + current_dir_vector.x * 0.55);
         const auto next_y = std::round(lin_pos_y + current_dir_vector.y * 0.55);
-        if (!get_terrain().is_free(SDL_Point{static_cast<int32_t>(next_x), static_cast<int32_t>(next_y)}))
+
+        const auto& terrain = get_terrain();
+        const SDL_Point next{static_cast<int32_t>(next_x), static_cast<int32_t>(next_y)};
+
+        if (!terrain.is_free(next) && !terrain.is_tunnel(next))
         {
             lin_pos_x = std::round(lin_pos_x);
             lin_pos_y = std::round(lin_pos_y);
@@ -27,6 +31,15 @@ void Character::tick()
 
         lin_pos_x += current_dir_vector.x * step;
         lin_pos_y += current_dir_vector.y * step;
+
+        if (terrain.is_tunnel(next))
+        {
+            const auto width = terrain.get_width();
+            if (lin_pos_x < -1.0)
+                lin_pos_x += width + 1;
+            else if (lin_pos_x > width)
+                lin_pos_x -= width + 1;
+        }
     }
     else
     {
