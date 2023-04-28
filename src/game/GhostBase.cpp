@@ -10,7 +10,7 @@ GhostRed::GhostRed(const std::shared_ptr<Terrain>& terrain, std::shared_ptr<Char
 {
 }
 
-void GhostRed::draw()
+void GhostRed::tick()
 {
     if (mode == AiMode::Red)
         pathfinder->find_path(get_discrete_pos(), target->get_discrete_pos());
@@ -19,7 +19,7 @@ void GhostRed::draw()
         pathfinder->find_path(get_discrete_pos(), target->get_discrete_pos() * 2 - get_discrete_pos());
 
     set_look_direction(get_direction(direction_to_vector(pathfinder->direction_to_next_point(get_discrete_pos()))));
-    GhostBase::draw();
+    GhostBase::tick();
 }
 
 }

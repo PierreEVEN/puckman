@@ -11,7 +11,7 @@ public:
     {
     }
 
-    void draw() override;
+    void tick() override;
 
     virtual void set_position(const double x, const double y) override;
 

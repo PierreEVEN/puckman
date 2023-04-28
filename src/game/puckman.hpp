@@ -14,7 +14,7 @@ public:
         pause_animation(true);
     }
 
-    void draw() override;
+    void tick() override;
 
     int points = 0;
 };

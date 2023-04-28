@@ -6,7 +6,7 @@
 
 namespace pm
 {
-void Character::draw()
+void Character::tick()
 {
     const auto   current_dir_vector = direction_to_vector(current_direction);
     const double step               = Engine::get().get_delta_second() * velocity;
@@ -21,7 +21,7 @@ void Character::draw()
             lin_pos_y = std::round(lin_pos_y);
             pause_animation(true);
             Entity::set_position(lin_pos_x * 16, lin_pos_y * 16);
-            Entity::draw();
+            Entity::tick();
             return;
         }
 
@@ -48,7 +48,7 @@ void Character::draw()
     }
 
     Entity::set_position(lin_pos_x * 16, lin_pos_y * 16);
-    Entity::draw();
+    Entity::tick();
 }
 
 void Character::set_position(const double x, const double y)

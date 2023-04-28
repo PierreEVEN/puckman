@@ -24,6 +24,8 @@ public:
         return looking_direction;
     }
 
+    virtual void tick(){}
+
     virtual void draw();
 
     virtual void set_position(const double x, const double y)

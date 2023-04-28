@@ -27,7 +27,7 @@ class GhostRed: public GhostBase
 public:
     explicit GhostRed(const std::shared_ptr<Terrain>& terrain, std::shared_ptr<Character> in_target, AiMode in_mode);
 
-    void draw() override;
+    void tick() override;
     
 private:
     const std::shared_ptr<PathFinder> pathfinder;

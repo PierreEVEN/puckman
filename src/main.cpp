@@ -129,6 +129,9 @@ int main(int argc, char** argv)
         if (keys[SDL_SCANCODE_M])
             puckman_die.set_paused(false);
 
+        for (auto& entity : entities)
+            entity->tick();
+
         terrain->draw();
 
         for (auto& entity : entities)
