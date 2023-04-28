@@ -215,7 +215,7 @@ void Terrain::create_wall_cache_surface()
 
     for (auto& cell : grid)
         if (cell.get_type() == ECellType::Wall)
-            cell.draw(wall_cache_surface_handle);
+            cell.draw(unit_length, wall_cache_surface_handle);
 }
 
 void Terrain::free_wall_cache_surface()
@@ -239,7 +239,7 @@ void Terrain::draw()
 
     for (auto& cell : grid)
         if (wall_cache_surface_handle == nullptr || cell.get_type() != ECellType::Wall)
-            cell.draw();
+            cell.draw(unit_length);
 }
 
 Terrain::~Terrain()

@@ -61,7 +61,7 @@ public:
         std::unordered_map<ECellType, SpriteHandle> map_cell_type,
         std::unordered_map<EItemType, SpriteHandle> map_item_type,
         std::array<SpriteHandle, 16>& walls);
-    void draw(SDL_Surface* surface_override=nullptr) const;
+    void draw(int32_t terrain_unit_scale, SDL_Surface* surface_override=nullptr) const;
 
 private:
 

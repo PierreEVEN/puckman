@@ -10,13 +10,14 @@ void Character::tick()
 {
     const auto   current_dir_vector = direction_to_vector(current_direction);
     const double step               = Engine::get().get_delta_second() * velocity;
+    const auto&  terrain            = get_terrain();
+    const auto   terrain_unit_length = terrain.get_unit_length();
 
     if (current_direction == get_look_direction())
     {
         const auto next_x = std::round(lin_pos_x + current_dir_vector.x * 0.55);
         const auto next_y = std::round(lin_pos_y + current_dir_vector.y * 0.55);
 
-        const auto& terrain = get_terrain();
         const SDL_Point next{static_cast<int32_t>(next_x), static_cast<int32_t>(next_y)};
 
         if (!terrain.is_free(next) && !terrain.is_tunnel(next))
@@ -24,7 +25,7 @@ void Character::tick()
             lin_pos_x = std::round(lin_pos_x);
             lin_pos_y = std::round(lin_pos_y);
             pause_animation(true);
-            Entity::set_position(lin_pos_x * 16, lin_pos_y * 16);
+            Entity::set_position(lin_pos_x * terrain_unit_length, lin_pos_y * terrain_unit_length);
             Entity::tick();
             return;
         }
@@ -60,15 +61,16 @@ void Character::tick()
         }
     }
 
-    Entity::set_position(lin_pos_x * 16, lin_pos_y * 16);
+    Entity::set_position(lin_pos_x * terrain_unit_length, lin_pos_y * terrain_unit_length);
     Entity::tick();
 }
 
 void Character::set_position(const double x, const double y)
 {
     Entity::set_position(x, y);
-    lin_pos_x = x / 16;
-    lin_pos_y = y / 16;
+    const auto terrain_unit_length = get_terrain().get_unit_length();
+    lin_pos_x = x / terrain_unit_length;
+    lin_pos_y = y / terrain_unit_length;
 }
 
 void Character::set_look_direction(const EDirection new_direction)

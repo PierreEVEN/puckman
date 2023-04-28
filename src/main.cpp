@@ -46,12 +46,13 @@ int main(int argc, char** argv)
     
     const auto terrain = std::make_shared<pm::Terrain>();
     terrain->load_from_file("./resources/level.map");
+    const auto terrain_unit_length = terrain->get_unit_length();
 
     const SDL_Rect tunnel_rect{
-            static_cast<int>(terrain->get_width() * pm::Cell::draw_scale * 16),
+            static_cast<int>(terrain->get_width() * pm::Cell::draw_scale * terrain_unit_length),
             0,
-            static_cast<int>(pm::Cell::draw_scale * 16),
-            static_cast<int>(terrain->get_height() * pm::Cell::draw_scale * 16) };
+            static_cast<int>(pm::Cell::draw_scale * terrain_unit_length),
+            static_cast<int>(terrain->get_height() * pm::Cell::draw_scale * terrain_unit_length) };
 
     auto puckman = std::make_shared<pm::Puckman>(pm::Puckman(terrain));
     puckman->set_velocity(4);
@@ -96,11 +97,11 @@ int main(int argc, char** argv)
                                                {0, 0, 16, 16},
                                                20,
                                                {{80, 0}, {96, 0}, {0, 16}, {16, 16}, {32, 16}, {48, 16}, {64, 16}, {80, 16}, {96, 16}, {112, 16}, {128, 16}, {144, 16}});
-    ghost_a->set_position(10 * 16, 10 * 16);
-    ghost_b->set_position(10 * 16, 10 * 16);
-    ghost_c->set_position(10 * 16, 10 * 16);
-    ghost_d->set_position(10 * 16, 10 * 16);
-    puckman->set_position(10 * 16, 19 * 16);
+    ghost_a->set_position(10 * terrain_unit_length, 10 * terrain_unit_length);
+    ghost_b->set_position(10 * terrain_unit_length, 10 * terrain_unit_length);
+    ghost_c->set_position(10 * terrain_unit_length, 10 * terrain_unit_length);
+    ghost_d->set_position(10 * terrain_unit_length, 10 * terrain_unit_length);
+    puckman->set_position(10 * terrain_unit_length, 19 * terrain_unit_length);
 
     while (pm::Engine::get().next_frame())
     {

@@ -16,6 +16,11 @@ public:
 
     [[nodiscard]] Cell& get_cell(const uint32_t x, const uint32_t y);
 
+    [[nodiscard]] int32_t get_unit_length() const
+    {
+        return unit_length;
+    }
+
     void draw();
 
     [[nodiscard]] bool is_free(const SDL_Point& pos, bool is_door_free = false) const
@@ -48,6 +53,7 @@ private:
     void free_wall_cache_surface();
 
 private:
+    int32_t           unit_length = 16;
     uint32_t          width;
     uint32_t          height;
     std::vector<Cell> grid;
