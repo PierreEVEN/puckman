@@ -92,7 +92,7 @@ struct std::hash<::pm::SpriteHandle>
     {
         std::stringstream str;
         str << c;
-        return hash<string>()(std::format("{}", c));
+        return hash<string>()(std::format_2("{}", c));
     }
 };
 

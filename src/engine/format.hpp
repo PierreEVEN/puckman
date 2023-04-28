@@ -5,7 +5,7 @@
 #include <vector>
 
 // std format replacement
-#define format format_2
+// #define format format_2
 
 namespace std
 {
@@ -31,7 +31,7 @@ template <typename T, typename... Args> std::vector<std::string> format_argument
     return vec;
 }
 
-template <typename... Args> std::string format_2(const std::string& format, Args ...args)
+template <typename... Args> std::string format_2(const std::string& format_str, Args ...args)
 {
     std::stringstream str;
 
@@ -39,7 +39,7 @@ template <typename... Args> std::string format_2(const std::string& format, Args
     size_t                         arg_index = arguments.size();
     bool                           skip      = false;
 
-    for (const auto& chr : format)
+    for (const auto& chr : format_str)
     {
         switch (chr)
         {
