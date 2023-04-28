@@ -56,42 +56,44 @@ int main(int argc, char** argv)
     puckman->set_direction_sprite(pm::EDirection::Up, sprite_sheet.new_sprite("puckcman_up", {0, 0, 16, 16}, 20, {{80, 0}, {96, 0}, {80, 0}}));
 
     // Create ghost_a
-    auto ghost_a = pm::GhostRed(terrain, puckman, pm::AiMode::Red);
-    ghost_a.set_direction_sprite(pm::EDirection::Idle, sprite_sheet.new_sprite("ghost_a_default", {0, 32, 16, 16}, 10, {{16, 0}}));
-    ghost_a.set_direction_sprite(pm::EDirection::Right, sprite_sheet.new_sprite("ghost_a_right", {0, 32, 16, 16}, 10, {{16, 0}}));
-    ghost_a.set_direction_sprite(pm::EDirection::Left, sprite_sheet.new_sprite("ghost_a_left", {32, 32, 16, 16}, 10, {{16, 0}}));
-    ghost_a.set_direction_sprite(pm::EDirection::Down, sprite_sheet.new_sprite("ghost_a_down", {96, 32, 16, 16}, 10, {{16, 0}}));
-    ghost_a.set_direction_sprite(pm::EDirection::Up, sprite_sheet.new_sprite("ghost_a_up", {64, 32, 16, 16}, 10, {{16, 0}}));
+    auto ghost_a = std::make_shared<pm::GhostRed>(terrain, puckman, pm::AiMode::Red);
+    ghost_a->set_direction_sprite(pm::EDirection::Idle, sprite_sheet.new_sprite("ghost_a_default", {0, 32, 16, 16}, 10, {{16, 0}}));
+    ghost_a->set_direction_sprite(pm::EDirection::Right, sprite_sheet.new_sprite("ghost_a_right", {0, 32, 16, 16}, 10, {{16, 0}}));
+    ghost_a->set_direction_sprite(pm::EDirection::Left, sprite_sheet.new_sprite("ghost_a_left", {32, 32, 16, 16}, 10, {{16, 0}}));
+    ghost_a->set_direction_sprite(pm::EDirection::Down, sprite_sheet.new_sprite("ghost_a_down", {96, 32, 16, 16}, 10, {{16, 0}}));
+    ghost_a->set_direction_sprite(pm::EDirection::Up, sprite_sheet.new_sprite("ghost_a_up", {64, 32, 16, 16}, 10, {{16, 0}}));
     
-    auto ghost_b = pm::GhostRed(terrain, puckman, pm::AiMode::Pink);
-    ghost_b.set_direction_sprite(pm::EDirection::Idle, sprite_sheet.new_sprite("ghost_b_default", {0, 48, 16, 16}, 10, {{16, 0}}));
-    ghost_b.set_direction_sprite(pm::EDirection::Right, sprite_sheet.new_sprite("ghost_b_right", {0, 48, 16, 16}, 10, {{16, 0}}));
-    ghost_b.set_direction_sprite(pm::EDirection::Left, sprite_sheet.new_sprite("ghost_b_left", {32, 48, 16, 16}, 10, {{16, 0}}));
-    ghost_b.set_direction_sprite(pm::EDirection::Down, sprite_sheet.new_sprite("ghost_b_down", {96, 48, 16, 16}, 10, {{16, 0}}));
-    ghost_b.set_direction_sprite(pm::EDirection::Up, sprite_sheet.new_sprite("ghost_b_up", {64, 48, 16, 16}, 10, {{16, 0}}));
+    auto ghost_b = std::make_shared<pm::GhostRed>(terrain, puckman, pm::AiMode::Pink);
+    ghost_b->set_direction_sprite(pm::EDirection::Idle, sprite_sheet.new_sprite("ghost_b_default", {0, 48, 16, 16}, 10, {{16, 0}}));
+    ghost_b->set_direction_sprite(pm::EDirection::Right, sprite_sheet.new_sprite("ghost_b_right", {0, 48, 16, 16}, 10, {{16, 0}}));
+    ghost_b->set_direction_sprite(pm::EDirection::Left, sprite_sheet.new_sprite("ghost_b_left", {32, 48, 16, 16}, 10, {{16, 0}}));
+    ghost_b->set_direction_sprite(pm::EDirection::Down, sprite_sheet.new_sprite("ghost_b_down", {96, 48, 16, 16}, 10, {{16, 0}}));
+    ghost_b->set_direction_sprite(pm::EDirection::Up, sprite_sheet.new_sprite("ghost_b_up", {64, 48, 16, 16}, 10, {{16, 0}}));
     
-    auto ghost_c = pm::GhostRed(terrain, puckman, pm::AiMode::Any);
-    ghost_c.set_direction_sprite(pm::EDirection::Idle, sprite_sheet.new_sprite("ghost_c_default", {0, 64, 16, 16}, 10, {{16, 0}}));
-    ghost_c.set_direction_sprite(pm::EDirection::Right, sprite_sheet.new_sprite("ghost_c_right", {0, 64, 16, 16}, 10, {{16, 0}}));
-    ghost_c.set_direction_sprite(pm::EDirection::Left, sprite_sheet.new_sprite("ghost_c_left", {32, 64, 16, 16}, 10, {{16, 0}}));
-    ghost_c.set_direction_sprite(pm::EDirection::Down, sprite_sheet.new_sprite("ghost_c_down", {96, 64, 16, 16}, 10, {{16, 0}}));
-    ghost_c.set_direction_sprite(pm::EDirection::Up, sprite_sheet.new_sprite("ghost_c_up", {64, 64, 16, 16}, 10, {{16, 0}}));
+    auto ghost_c = std::make_shared<pm::GhostRed>(terrain, puckman, pm::AiMode::Any);
+    ghost_c->set_direction_sprite(pm::EDirection::Idle, sprite_sheet.new_sprite("ghost_c_default", {0, 64, 16, 16}, 10, {{16, 0}}));
+    ghost_c->set_direction_sprite(pm::EDirection::Right, sprite_sheet.new_sprite("ghost_c_right", {0, 64, 16, 16}, 10, {{16, 0}}));
+    ghost_c->set_direction_sprite(pm::EDirection::Left, sprite_sheet.new_sprite("ghost_c_left", {32, 64, 16, 16}, 10, {{16, 0}}));
+    ghost_c->set_direction_sprite(pm::EDirection::Down, sprite_sheet.new_sprite("ghost_c_down", {96, 64, 16, 16}, 10, {{16, 0}}));
+    ghost_c->set_direction_sprite(pm::EDirection::Up, sprite_sheet.new_sprite("ghost_c_up", {64, 64, 16, 16}, 10, {{16, 0}}));
     
-    auto ghost_d = pm::GhostRed(terrain, puckman, pm::AiMode::Any);
-    ghost_d.set_direction_sprite(pm::EDirection::Idle, sprite_sheet.new_sprite("ghost_d_default", {0, 80, 16, 16}, 10, {{16, 0}}));
-    ghost_d.set_direction_sprite(pm::EDirection::Right, sprite_sheet.new_sprite("ghost_d_right", {0, 80, 16, 16}, 10, {{16, 0}}));
-    ghost_d.set_direction_sprite(pm::EDirection::Left, sprite_sheet.new_sprite("ghost_d_left", {32, 80, 16, 16}, 10, {{16, 0}}));
-    ghost_d.set_direction_sprite(pm::EDirection::Down, sprite_sheet.new_sprite("ghost_d_down", {96, 80, 16, 16}, 10, {{16, 0}}));
-    ghost_d.set_direction_sprite(pm::EDirection::Up, sprite_sheet.new_sprite("ghost_d_up", {64, 80, 16, 16}, 10, {{16, 0}}));
-    
+    auto ghost_d = std::make_shared<pm::GhostRed>(terrain, puckman, pm::AiMode::Any);
+    ghost_d->set_direction_sprite(pm::EDirection::Idle, sprite_sheet.new_sprite("ghost_d_default", {0, 80, 16, 16}, 10, {{16, 0}}));
+    ghost_d->set_direction_sprite(pm::EDirection::Right, sprite_sheet.new_sprite("ghost_d_right", {0, 80, 16, 16}, 10, {{16, 0}}));
+    ghost_d->set_direction_sprite(pm::EDirection::Left, sprite_sheet.new_sprite("ghost_d_left", {32, 80, 16, 16}, 10, {{16, 0}}));
+    ghost_d->set_direction_sprite(pm::EDirection::Down, sprite_sheet.new_sprite("ghost_d_down", {96, 80, 16, 16}, 10, {{16, 0}}));
+    ghost_d->set_direction_sprite(pm::EDirection::Up, sprite_sheet.new_sprite("ghost_d_up", {64, 80, 16, 16}, 10, {{16, 0}}));
+
+    std::vector<std::shared_ptr<pm::Entity>> entities{ ghost_a, ghost_b, ghost_c, ghost_d, puckman };
+
     auto puckman_die = sprite_sheet.new_sprite("puckman_die",
                                                {0, 0, 16, 16},
                                                20,
                                                {{80, 0}, {96, 0}, {0, 16}, {16, 16}, {32, 16}, {48, 16}, {64, 16}, {80, 16}, {96, 16}, {112, 16}, {128, 16}, {144, 16}});
-    ghost_a.set_position(10 * 16, 10 * 16);
-    ghost_b.set_position(10 * 16, 10 * 16);
-    ghost_c.set_position(10 * 16, 10 * 16);
-    ghost_d.set_position(10 * 16, 10 * 16);
+    ghost_a->set_position(10 * 16, 10 * 16);
+    ghost_b->set_position(10 * 16, 10 * 16);
+    ghost_c->set_position(10 * 16, 10 * 16);
+    ghost_d->set_position(10 * 16, 10 * 16);
     puckman->set_position(10 * 16, 19 * 16);
 
     while (pm::Engine::get().next_frame())
@@ -128,11 +130,9 @@ int main(int argc, char** argv)
             puckman_die.set_paused(false);
 
         terrain->draw();
-        ghost_a.draw();
-        ghost_b.draw();
-        ghost_c.draw();
-        ghost_d.draw();
-        puckman->draw();
+
+        for (auto& entity : entities)
+            entity->draw();
     }
     return 0;
 }
