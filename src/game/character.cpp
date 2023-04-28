@@ -8,9 +8,9 @@ namespace pm
 {
 void Character::tick()
 {
-    const auto   current_dir_vector = direction_to_vector(current_direction);
-    const double step               = Engine::get().get_delta_second() * velocity;
-    const auto&  terrain            = get_terrain();
+    const auto   current_dir_vector  = direction_to_vector(current_direction);
+    const double step                = Engine::get().get_delta_second() * velocity;
+    const auto&  terrain             = get_terrain();
     const auto   terrain_unit_length = terrain.get_unit_length();
 
     if (current_direction == get_look_direction())
