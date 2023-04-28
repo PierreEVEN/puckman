@@ -22,7 +22,7 @@ public:
     [[nodiscard]] virtual EDirection get_look_direction() const
     {
         return looking_direction;
-    };
+    }
 
     virtual void draw();
 
