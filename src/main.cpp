@@ -133,7 +133,6 @@ int main(int argc, char** argv)
         ghost_c.draw();
         ghost_d.draw();
         puckman->draw();
-        puckman_die.draw(SDL_Point(16, 32), 1.0, 1.0);
     }
     return 0;
 }
