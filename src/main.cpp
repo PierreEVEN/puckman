@@ -47,6 +47,12 @@ int main(int argc, char** argv)
     const auto terrain = std::make_shared<pm::Terrain>();
     terrain->load_from_file("./resources/level.map");
 
+    const SDL_Rect tunnel_rect{
+            static_cast<int>(terrain->get_width() * pm::Cell::draw_scale * 16),
+            0,
+            static_cast<int>(pm::Cell::draw_scale * 16),
+            static_cast<int>(terrain->get_height() * pm::Cell::draw_scale * 16) };
+
     auto puckman = std::make_shared<pm::Puckman>(pm::Puckman(terrain));
     puckman->set_velocity(4);
     puckman->set_direction_sprite(pm::EDirection::Idle, sprite_sheet.new_sprite("puckman_default", {0, 0, 16, 16}, 20, {{16, 0}, {32, 0}, {16, 0}}));
@@ -136,6 +142,9 @@ int main(int argc, char** argv)
 
         for (auto& entity : entities)
             entity->draw();
+
+        // Hide tunnel
+        SDL_FillRect(pm::Engine::get().get_surface_handle(), &tunnel_rect, 0);
     }
     return 0;
 }
