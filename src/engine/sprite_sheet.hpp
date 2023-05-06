@@ -90,8 +90,6 @@ struct std::hash<::pm::SpriteHandle>
 {
     size_t operator()(const ::pm::SpriteHandle& c) const noexcept
     {
-        std::stringstream str;
-        str << c;
         return hash<string>()(std::format_2("{}", c));
     }
 };

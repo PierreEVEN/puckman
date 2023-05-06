@@ -1,9 +1,9 @@
 #pragma once
-#include <memory>
-#include <SDL_rect.h>
-#include <vector>
+#include "direction.hpp"
+#include "vector2.hpp"
 
-#include "types.hpp"
+#include <memory>
+#include <vector>
 
 namespace pm
 {
@@ -14,12 +14,12 @@ class PathFinder
 public:
     PathFinder(const std::shared_ptr<Terrain>& in_terrain);
 
-    bool find_path(const SDL_Point& from, SDL_Point to);
-    EDirection direction_to_next_point(const SDL_Point& current_location);
+    bool find_path(const Vector2I& from, Vector2I to);
+    Direction direction_to_next_point(const Vector2I& current_location);
 
 private:
 
-    std::vector<SDL_Point> actual_path;
+    std::vector<Vector2I> actual_path;
 
     std::shared_ptr<Terrain> terrain;
 };

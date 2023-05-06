@@ -1,8 +1,10 @@
 #pragma once
+#include "direction.hpp"
 #include "sprite_sheet.hpp"
+#include "terrain.hpp"
+#include "vector2.hpp"
 
 #include <array>
-#include "types.hpp"
 
 namespace pm
 {
@@ -11,38 +13,45 @@ class Terrain;
 class Entity
 {
 public:
-    Entity(const std::shared_ptr<Terrain>& terrain);
+    Entity(std::shared_ptr<Terrain> terrain);
 
-    void set_direction_sprite(const EDirection direction, const SpriteHandle& new_sprite);
+    void set_direction_sprite(const Direction direction, const SpriteHandle& new_sprite);
 
-    [[nodiscard]] double get_pos_x() const { return pos_x; }
-    [[nodiscard]] double get_pos_y() const { return pos_y; }
+    virtual void set_look_direction(const Direction new_direction);
 
-    virtual void set_look_direction(const EDirection new_direction);
-    [[nodiscard]] virtual EDirection get_look_direction() const
+    [[nodiscard]] virtual Direction get_look_direction() const
     {
         return looking_direction;
     }
 
-    virtual void tick(){}
+    virtual void tick()
+    {
+    }
 
     virtual void draw();
 
-    virtual void set_position(const double x, const double y)
-    {
-        pos_x = x, pos_y = y;
-    }
+    void set_absolute_linear_position(const Vector2D& new_pos) { linear_pos = new_pos; }
+    void set_absolute_discrete_position(const Vector2I& new_pos) { linear_pos = new_pos.cast<Vector2D>(); }
+    void set_cell_discrete_pos(const Vector2I& new_pos) { linear_pos = new_pos.cast<Vector2D>() * terrain->get_unit_length(); }
+    void set_cell_linear_pos(const Vector2D& new_pos) { linear_pos = new_pos * terrain->get_unit_length(); }
+
+    [[nodiscard]] Vector2I        get_absolute_discrete_pos() const { return {static_cast<int32_t>(linear_pos.x()), static_cast<int32_t>(linear_pos.y())}; }
+    [[nodiscard]] const Vector2D& get_absolute_linear_pos() const { return linear_pos; }
+    [[nodiscard]] Vector2I        get_cell_discrete_pos() const { return (linear_pos / terrain->get_unit_length()).rounded().cast<Vector2I>(); }
+    [[nodiscard]] Vector2D        get_cell_linear_pos() const { return linear_pos / terrain->get_unit_length(); }
+
 
     [[nodiscard]] Terrain& get_terrain() const { return *terrain; }
 
     void pause_animation(bool paused);
 
-private:
-    double pos_x;
-    double pos_y;
+    [[nodiscard]] bool is_at_intersection() const;
 
-    std::array<std::optional<SpriteHandle>, static_cast<size_t>(EDirection::MAX) + 1> direction_sprite;
-    EDirection                                                                        looking_direction;
-    std::shared_ptr<Terrain>                                                          terrain;
+private:
+    Vector2D linear_pos;
+
+    std::array<std::optional<SpriteHandle>, 5> direction_sprite;
+    Direction                                  looking_direction;
+    std::shared_ptr<Terrain>                   terrain;
 };
 }

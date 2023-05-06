@@ -19,7 +19,7 @@ void SpriteHandle::draw(const SDL_Point& pos, double scale_x, double scale_y, SD
 
 SpriteHandle& SpriteHandle::set_paused(bool paused)
 {
-    if (!*this)
+    if (!*this || !owner)
         FATAL("invalid handle");
     owner->set_paused(*this, paused);
     return *this;

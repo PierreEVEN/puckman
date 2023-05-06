@@ -1,5 +1,7 @@
 #pragma once
 #include "cell.hpp"
+#include "vector2.hpp"
+
 #include <filesystem>
 
 struct SDL_Surface;
@@ -23,18 +25,18 @@ public:
 
     void draw();
 
-    [[nodiscard]] bool is_free(const SDL_Point& pos, bool is_door_free = false) const
+    [[nodiscard]] bool is_free(const Vector2I& pos, bool is_door_free = false) const
     {
-        if (pos.x < 0 || pos.y < 0 || static_cast<uint32_t>(pos.x) >= width || static_cast<uint32_t>(pos.y) >= height)
+        if (pos.x() < 0 || pos.y() < 0 || static_cast<uint32_t>(pos.x()) >= width || static_cast<uint32_t>(pos.y()) >= height)
             return false;
 
-        const auto cell_type = grid[pos.x + pos.y * width].get_type();
+        const auto cell_type = grid[pos.x() + pos.y() * width].get_type();
         return cell_type != ECellType::Wall && (is_door_free || cell_type != ECellType::Door);
     }
 
-    [[nodiscard]] bool is_tunnel(const SDL_Point& pos) const
+    [[nodiscard]] bool is_tunnel(const Vector2I& pos) const
     {
-        return (static_cast<uint32_t>(pos.x + 2) + width) % (width + 2) >= width;
+        return (static_cast<uint32_t>(pos.x() + 2) + width) % (width + 2) >= width;
     }
 
     [[nodiscard]] int eat(const int32_t x, const int32_t y);
@@ -42,7 +44,7 @@ public:
     [[nodiscard]] uint32_t get_width() const { return width; }
     [[nodiscard]] uint32_t get_height() const { return height; }
 
-    [[nodiscard]] SDL_Point closest_free_point(const SDL_Point& location) const;
+    [[nodiscard]] Vector2I closest_free_point(const Vector2I& location) const;
     
     void set_wall_color(const Uint8 r, const Uint8 g, const Uint8 b) const;
 

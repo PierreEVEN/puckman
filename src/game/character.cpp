@@ -8,76 +8,66 @@ namespace pm
 {
 void Character::tick()
 {
-    const auto   current_dir_vector  = direction_to_vector(current_direction);
-    const double step                = Engine::get().get_delta_second() * velocity;
-    const auto&  terrain             = get_terrain();
-    const auto   terrain_unit_length = terrain.get_unit_length();
+    const auto   current_dir_vector = *current_direction;
+    const double step               = Engine::get().get_delta_second() * velocity;
+    const auto&  terrain            = get_terrain();
 
     if (current_direction == get_look_direction())
     {
-        const auto next_x = std::round(lin_pos_x + current_dir_vector.x * 0.55);
-        const auto next_y = std::round(lin_pos_y + current_dir_vector.y * 0.55);
+        // Move forward in current direction
+        const auto next = get_cell_discrete_pos() + current_dir_vector;
 
-        const SDL_Point next{static_cast<int32_t>(next_x), static_cast<int32_t>(next_y)};
+        // Predict cell in next frame
+        const auto next_absolute = (get_cell_linear_pos() + current_dir_vector.cast<Vector2D>() * 0.5 + step).rounded().cast<Vector2I>();
 
-        if (!terrain.is_free(next) && !terrain.is_tunnel(next))
+        // Hit wall
+        if (!terrain.is_free(next_absolute) && !terrain.is_tunnel(next_absolute))
         {
-            lin_pos_x = std::round(lin_pos_x);
-            lin_pos_y = std::round(lin_pos_y);
             pause_animation(true);
-            Entity::set_position(lin_pos_x * terrain_unit_length, lin_pos_y * terrain_unit_length);
+            set_cell_discrete_pos(get_cell_discrete_pos());
             Entity::tick();
             return;
         }
-
-        lin_pos_x += current_dir_vector.x * step;
-        lin_pos_y += current_dir_vector.y * step;
+        
+        // Move forward
+        set_cell_linear_pos(get_cell_linear_pos() + current_dir_vector.cast<Vector2D>() * step);
 
         if (terrain.is_tunnel(next))
         {
-            const auto width = terrain.get_width();
-            if (lin_pos_x < -1.0)
-                lin_pos_x += width + 1;
-            else if (lin_pos_x > width)
-                lin_pos_x -= width + 1;
+            const int32_t width = terrain.get_width();
+            if (get_cell_discrete_pos().x() < -1.0)
+                set_cell_discrete_pos({width + 1, get_cell_discrete_pos().y()});
+            else if (get_cell_discrete_pos().x() > width)
+                set_cell_discrete_pos({-1, get_cell_discrete_pos().y()});
         }
     }
     else
     {
-        const double delta_x = std::round(lin_pos_x) - lin_pos_x;
-        const double delta_y = std::round(lin_pos_y) - lin_pos_y;
+        // Interpolate to cell center before changing direction
+        const auto cell_delta = get_cell_discrete_pos().cast<Vector2D>() - get_cell_linear_pos();
 
-        if (abs(delta_x) < step && abs(delta_y) < step)
+        // to far from cell center
+        if (cell_delta.l1_length() < step)
         {
-            current_direction         = get_look_direction();
-            const auto new_dir_vector = direction_to_vector(current_direction);
-            lin_pos_x                 = std::round(lin_pos_x) + delta_x + (step - (delta_x + delta_y)) * new_dir_vector.x;
-            lin_pos_y                 = std::round(lin_pos_y) + delta_y + (step - (delta_x + delta_y)) * new_dir_vector.y;
+            // Teleport to cell center, and add remaining delta in new direction
+            current_direction = get_look_direction();
+            const auto new_dir_vector = *get_look_direction();
+            set_cell_linear_pos(get_cell_discrete_pos().cast<Vector2D>() + cell_delta + new_dir_vector.cast<Vector2D>() * (step - (cell_delta.x() + cell_delta.y())));
         }
         else
         {
-            lin_pos_x += step * std::sign(delta_x);
-            lin_pos_y += step * std::sign(delta_y);
+            // Move to cell center
+            set_cell_linear_pos(get_cell_linear_pos() + Vector2D{step * std::sign(cell_delta.x()), step * std::sign(cell_delta.y())});
         }
     }
 
-    Entity::set_position(lin_pos_x * terrain_unit_length, lin_pos_y * terrain_unit_length);
     Entity::tick();
 }
 
-void Character::set_position(const double x, const double y)
+void Character::set_look_direction(const Direction new_direction)
 {
-    Entity::set_position(x, y);
-    const auto terrain_unit_length = get_terrain().get_unit_length();
-    lin_pos_x = x / terrain_unit_length;
-    lin_pos_y = y / terrain_unit_length;
-}
-
-void Character::set_look_direction(const EDirection new_direction)
-{
-    const auto current_dir = direction_to_vector(current_direction);
-    const auto dot_result  = discrete_dot(direction_to_vector(new_direction), current_dir);
-
+    const auto dot_result  = new_direction->dot(*current_direction);
+    
     pause_animation(false);
     // Go forward or back
     if (dot_result != 0)
@@ -86,15 +76,12 @@ void Character::set_look_direction(const EDirection new_direction)
         return Entity::set_look_direction(new_direction);
     }
 
-    // Turn
-    const auto next_dir = direction_to_vector(new_direction);
-    const auto next_x   = std::round(lin_pos_x) + next_dir.x;
-    const auto next_y   = std::round(lin_pos_y) + next_dir.y;
-    if (!get_terrain().is_free(SDL_Point{static_cast<int32_t>(next_x), static_cast<int32_t>(next_y)}))
+    // Allow turn if cell is free
+    if (!get_terrain().is_free(get_cell_discrete_pos() + *new_direction))
         return;
 
     Entity::set_look_direction(new_direction);
-    if (current_direction == EDirection::Idle)
+    if (current_direction.is_none())
         current_direction = new_direction;
 }
 }

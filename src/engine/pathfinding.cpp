@@ -14,7 +14,7 @@ PathFinder::PathFinder(const std::shared_ptr<Terrain>& in_terrain)
         FATAL("invalid terrain");
 }
 
-bool PathFinder::find_path(const SDL_Point& from, SDL_Point to)
+bool PathFinder::find_path(const Vector2I& from, Vector2I to)
 {
     to = terrain->closest_free_point(to);
     
@@ -41,13 +41,13 @@ bool PathFinder::find_path(const SDL_Point& from, SDL_Point to)
 
     std::vector distance_map(width * height, std::make_pair(UINT32_MAX, to));
 
-    std::unordered_set<SDL_Point> study_points = {from};
-    const std::vector<SDL_Point>  neighbors    = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    std::unordered_set study_points = {from};
+    const std::vector<Vector2I>  neighbors    = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
 
-    distance_map[from.x + from.y * width] = std::make_pair(0, from);
+    distance_map[from.x() + from.y() * width] = std::make_pair(0, from);
 
-    const auto index_of    = [width](const SDL_Point&         pt) { return pt.x + pt.y * width; };
-    const auto point_valid = [width, height](const SDL_Point& pt) { return pt.x >= 0 && pt.y >= 0 && pt.x < static_cast<int>(width) && pt.y < static_cast<int>(height); };
+    const auto index_of    = [width](const Vector2I&         pt) { return pt.x() + pt.y() * width; };
+    const auto point_valid = [width, height](const Vector2I& pt) { return pt.x() >= 0 && pt.y() >= 0 && pt.x() < static_cast<int>(width) && pt.y() < static_cast<int>(height); };
 
     do
     {
@@ -62,13 +62,13 @@ bool PathFinder::find_path(const SDL_Point& from, SDL_Point to)
                 {
                     distance_map[index_of(to)] = std::make_pair(distance_map[index_of(study_point)].first + 1, study_point);
                     // Find path to root;
-                    SDL_Point current_rewind_pos = to;
+                    Vector2I current_rewind_pos = to;
 
                     while (current_rewind_pos != from)
                     {
                         actual_path.emplace_back(current_rewind_pos);
 
-                        SDL_Point min_dir     = {};
+                        Vector2I min_dir     = {};
                         uint32_t   min_dir_val = distance_map[index_of(current_rewind_pos)].first;
                         for (const auto neighbor : neighbors)
                         {
@@ -82,7 +82,7 @@ bool PathFinder::find_path(const SDL_Point& from, SDL_Point to)
                                 min_dir     = distance_map[index_of(rev_test_point)].second;
                             }
                         }
-                        if (min_dir == SDL_Point{})
+                        if (min_dir == Vector2I{})
                         {
                             ERROR("failed to rewind pathfinding pos");
                             actual_path.clear();
@@ -109,17 +109,17 @@ bool PathFinder::find_path(const SDL_Point& from, SDL_Point to)
     return false;
 }
 
-EDirection PathFinder::direction_to_next_point(const SDL_Point& current_location)
+Direction PathFinder::direction_to_next_point(const Vector2I& current_location)
 {
     if (actual_path.empty())
-        return EDirection::Idle;
+        return Direction::NONE;
 
     if (current_location == actual_path.back())
         actual_path.pop_back();
     
     if (actual_path.empty())
-        return EDirection::Idle;
+        return Direction::NONE;
     
-    return get_direction(normalize(actual_path.back() - current_location));
+    return {actual_path.back() - current_location};
 }
 }

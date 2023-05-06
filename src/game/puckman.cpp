@@ -10,7 +10,7 @@ void Puckman::tick()
 	auto& terrain = get_terrain();
 	const auto terrain_unit_length = terrain.get_unit_length();
     const int new_points = points + terrain.eat(
-            static_cast<int32_t>(std::round(get_pos_x() / terrain_unit_length)), static_cast<int32_t>(std::round(get_pos_y() / terrain_unit_length)));
+            static_cast<int32_t>(std::round(get_absolute_linear_pos().x() / terrain_unit_length)), static_cast<int32_t>(std::round(get_absolute_linear_pos().y() / terrain_unit_length)));
     Character::tick();
     if (points != new_points)
     {
