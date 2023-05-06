@@ -15,9 +15,10 @@ public:
     
     void set_look_direction(const Direction new_direction) override;    
     void set_velocity(double new_velocity) { velocity = new_velocity; }
-
+protected:
+    bool go_through_doors = false;
 private:
-    double velocity = 3.0;
+    double velocity;
     Direction current_direction = Direction::NONE;
 };
 }

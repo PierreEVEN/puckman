@@ -21,7 +21,7 @@ void Character::tick()
         const auto next_absolute = (get_cell_linear_pos() + current_dir_vector.cast<Vector2D>() * 0.5 + step).rounded().cast<Vector2I>();
 
         // Hit wall
-        if (!terrain.is_free(next_absolute) && !terrain.is_tunnel(next_absolute))
+        if (!terrain.is_free(next_absolute, go_through_doors) && !terrain.is_tunnel(next_absolute))
         {
             pause_animation(true);
             set_cell_discrete_pos(get_cell_discrete_pos());
@@ -36,9 +36,9 @@ void Character::tick()
         {
             const int32_t width = terrain.get_width();
             if (get_cell_discrete_pos().x() < -1.0)
-                set_cell_discrete_pos({width + 1, get_cell_discrete_pos().y()});
+                set_cell_discrete_pos({width, get_cell_discrete_pos().y()});
             else if (get_cell_discrete_pos().x() > width)
-                set_cell_discrete_pos({-1, get_cell_discrete_pos().y()});
+                set_cell_discrete_pos({0, get_cell_discrete_pos().y()});
         }
     }
     else
@@ -83,7 +83,7 @@ void Character::set_look_direction(const Direction new_direction)
     }
 
     // Allow turn if cell is free
-    if (!get_terrain().is_free(get_cell_discrete_pos() + *new_direction))
+    if (!get_terrain().is_free(get_cell_discrete_pos() + *new_direction, go_through_doors))
         return;
 
     Entity::set_look_direction(new_direction);

@@ -85,7 +85,7 @@ int Terrain::eat(const int32_t x, const int32_t y)
         update_sprite_handles();
         return 100;
     case ECellType::BiGum:
-        Engine::get().get_gamemode<Pacman>().on_eat_big_gum.execute();
+        Engine::get().get_gamemode<Pacman>().on_frightened.execute();
         cell.update_type(ECellType::Void);
         update_sprite_handles();
         return 10;

@@ -18,7 +18,9 @@ bool Engine::next_frame()
 
     SDL_UpdateWindowSurface(window_handle);
 
-    delta_second    = static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - last_frame_time).count()) / 1000000.0;
+    delta_second = static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - last_frame_time).count()) / 1000000.0;
+    //clamp delta seconds to avoid physic issues during freezes
+    delta_second    = std::min(1 / 20.0, delta_second);
     last_frame_time = std::chrono::steady_clock::now();
     SDL_FillRect(surface_handle, nullptr, 0x000000);
     return !close;

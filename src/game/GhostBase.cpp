@@ -11,27 +11,69 @@ namespace pm
 GhostBase::GhostBase(const std::shared_ptr<Terrain>& terrain, std::shared_ptr<Character> in_target)
     : Character(terrain), pathfinder(std::make_shared<PathFinder>(terrain)), target(std::move(in_target)), mode(AiMode::Spawned)
 {
-    frightened_sprite = *SpriteSheet::find_sprite_by_name("frightened_ghost");
+    frightened_sprite       = *SpriteSheet::find_sprite_by_name("frightened_ghost");
+    frightened_sprite_flash = *SpriteSheet::find_sprite_by_name("frightened_ghost_flash");
+    eyes_down_sprite        = *SpriteSheet::find_sprite_by_name("eyes_down");
+    eyes_left_sprite        = *SpriteSheet::find_sprite_by_name("eyes_left");
+    eyes_right_sprite       = *SpriteSheet::find_sprite_by_name("eyes_right");
+    eyes_up_sprite          = *SpriteSheet::find_sprite_by_name("eyes_up");
 }
 
 GhostBase::~GhostBase()
 {
-    Engine::get().get_gamemode<Pacman>().on_eat_big_gum.clear_object(this);
+    Engine::get().get_gamemode<Pacman>().on_frightened.clear_object(this);
+    Engine::get().get_gamemode<Pacman>().on_chase.clear_object(this);
+    Engine::get().get_gamemode<Pacman>().on_scatter.clear_object(this);
+}
+
+double GhostBase::compute_speed_percent() const
+{
+    if (mode == AiMode::GoHome)
+        return 2;
+
+    const auto level = Engine::get().get_gamemode<Pacman>().current_level();
+    if (level < 2)
+        return mode == AiMode::Frightened ? 0.5 : 0.75;
+    if (level < 5)
+        return mode == AiMode::Frightened ? 0.55 : 0.85;
+    if (level < 21)
+        return mode == AiMode::Frightened ? 0.6 : 0.95;
+
+    return 0.95;
 }
 
 void GhostBase::tick()
 {
     if (mode == AiMode::Spawned)
     {
-        Engine::get().get_gamemode<Pacman>().on_eat_big_gum.add_object(this, &GhostBase::on_frightened);
+        Engine::get().get_gamemode<Pacman>().on_frightened.add_object(this, &GhostBase::on_frightened);
+        Engine::get().get_gamemode<Pacman>().on_chase.add_object(this, &GhostBase::on_chase);
+        Engine::get().get_gamemode<Pacman>().on_scatter.add_object(this, &GhostBase::on_scatter);
         set_cell_discrete_pos(home_location());
-        mode = AiMode::Chase;
+        mode = AiMode::ExitSpawn;
     }
 
+    go_through_doors = mode == AiMode::GoHome || mode == AiMode::ExitSpawn;
+    set_velocity(compute_speed_percent() * 75.75757625 / get_terrain().get_unit_length());
     if (last_cell != get_cell_discrete_pos())
     {
         last_cell = get_cell_discrete_pos();
         on_search_new_dir();
+
+        // Hit player
+        if (get_cell_discrete_pos() == target->get_cell_discrete_pos())
+        {
+            if (mode == AiMode::Frightened)
+            {
+                mode = AiMode::GoHome;
+                set_look_direction(Direction::NONE);
+                on_search_new_dir();
+            }
+            else if (mode == AiMode::Chase || mode == AiMode::Scatter)
+            {
+                WARNING("TODO : lose hp");
+            }
+        }
     }
     Character::tick();
 }
@@ -41,7 +83,22 @@ void GhostBase::draw()
     if (mode == AiMode::Frightened)
     {
         auto s = Cell::draw_scale;
-        frightened_sprite.draw(get_absolute_discrete_pos() * static_cast<int32_t>(s), s, s);
+        if (Engine::get().get_gamemode<Pacman>().frightened_remaining_time() > 2.2)
+            frightened_sprite.draw(get_absolute_discrete_pos() * static_cast<int32_t>(s), s, s);
+        else
+            frightened_sprite_flash.draw(get_absolute_discrete_pos() * static_cast<int32_t>(s), s, s);
+    }
+    else if (mode == AiMode::GoHome)
+    {
+        auto s = Cell::draw_scale;
+        if (get_look_direction().is_down())
+            eyes_down_sprite.draw(get_absolute_discrete_pos() * static_cast<int32_t>(s), s, s);
+        else if (get_look_direction().is_left())
+            eyes_left_sprite.draw(get_absolute_discrete_pos() * static_cast<int32_t>(s), s, s);
+        else if (get_look_direction().is_right())
+            eyes_right_sprite.draw(get_absolute_discrete_pos() * static_cast<int32_t>(s), s, s);
+        else if (get_look_direction().is_up())
+            eyes_up_sprite.draw(get_absolute_discrete_pos() * static_cast<int32_t>(s), s, s);
     }
     else
         Character::draw();
@@ -54,7 +111,7 @@ void GhostBase::on_search_new_dir()
     for (const auto& dir : Direction::enumerate())
     {
         // Test if the given direction is ok and free
-        if ((dir.is_none() || get_look_direction()->dot(*dir) == 0 || dir == get_look_direction()) && get_terrain().is_free(get_cell_discrete_pos() + *dir))
+        if ((dir.is_none() || get_look_direction()->dot(*dir) == 0 || dir == get_look_direction()) && get_terrain().is_free(get_cell_discrete_pos() + *dir, go_through_doors))
             available_directions.emplace_back(dir);
     }
 
@@ -65,7 +122,6 @@ void GhostBase::on_search_new_dir()
     }
 
     Vector2I target_pos = get_cell_discrete_pos();
-
     switch (mode)
     {
     case AiMode::Chase:
@@ -76,6 +132,26 @@ void GhostBase::on_search_new_dir()
         break;
     case AiMode::Frightened:
         target_pos = Vector2I{Engine::get().random_int(0, get_terrain().get_width()), Engine::get().random_int(0, get_terrain().get_height())};
+        break;
+    case AiMode::ExitSpawn:
+        target_pos = {10, 10};
+        if (target_pos == get_cell_discrete_pos())
+        {
+            mode             = Engine::get().get_gamemode<Pacman>().is_chase_time() ? AiMode::Chase : AiMode::Scatter;
+            go_through_doors = false;
+            set_look_direction(Direction::NONE);
+            on_search_new_dir();
+            return;
+        }
+        break;
+    case AiMode::GoHome:
+        target_pos = home_location();
+        if (target_pos == get_cell_discrete_pos())
+        {
+            mode = AiMode::ExitSpawn;
+            on_search_new_dir();
+            return;
+        }
         break;
     default: ;
     }
@@ -99,8 +175,28 @@ void GhostBase::on_search_new_dir()
 
 void GhostBase::on_frightened()
 {
+    if (mode == AiMode::GoHome)
+        return;
     mode = AiMode::Frightened;
     set_look_direction(get_look_direction().opposite());
+    on_search_new_dir();
+}
+
+void GhostBase::on_scatter()
+{
+    if (mode == AiMode::GoHome || mode == AiMode::ExitSpawn)
+        return;
+    mode = AiMode::Scatter;
+    set_look_direction(Direction::NONE);
+    on_search_new_dir();
+}
+
+void GhostBase::on_chase()
+{
+    if (mode == AiMode::GoHome || mode == AiMode::ExitSpawn)
+        return;
+    mode = AiMode::Chase;
+    set_look_direction(Direction::NONE);
     on_search_new_dir();
 }
 
