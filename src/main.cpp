@@ -9,7 +9,7 @@
 
 int main(int argc, char** argv)
 {
-    pm::Engine::init<pm::Pacman>("PucMan", 16 * 21, 16 * 28);
+    pm::Engine::init<pm::Pacman>("PuckMan", 16 * 21, 16 * 28);
     
     while (pm::Engine::get().next_frame())
     {
