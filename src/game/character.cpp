@@ -1,7 +1,6 @@
 #include "character.hpp"
 
 #include "engine/engine.hpp"
-#include "engine/logger.hpp"
 #include "engine/terrain.hpp"
 
 namespace pm
@@ -18,7 +17,7 @@ void Character::tick()
         const auto next = get_cell_discrete_pos() + current_dir_vector;
 
         // Predict cell in next frame
-        const auto next_absolute = (get_cell_linear_pos() + current_dir_vector.cast<Vector2D>() * 0.5 + step).rounded().cast<Vector2I>();
+        const auto next_absolute = (get_cell_linear_pos() + current_dir_vector.cast<Vector2D>() * (0.5 + step)).rounded().cast<Vector2I>();
 
         // Hit wall
         if (!terrain.is_free(next_absolute, go_through_doors) && !terrain.is_tunnel(next_absolute))

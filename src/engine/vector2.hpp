@@ -17,6 +17,11 @@ class Vector2
 public:
     Vector2() = default;
 
+    Vector2(T a)
+        : pos_x(a), pos_y(a)
+    {
+    }
+
     Vector2(T x, T y)
         : pos_x(x), pos_y(y)
     {
