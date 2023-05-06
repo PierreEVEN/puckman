@@ -6,6 +6,7 @@
 #include <optional>
 
 #include "format.hpp"
+#include "vector2.hpp"
 
 struct SDL_Surface;
 
@@ -18,7 +19,7 @@ class SpriteInfo
 {
     friend SpriteSheet;
 public:
-    SpriteInfo(const SDL_Rect& in_sprite_base_pos = {}, double in_animation_speed = 0.0, std::vector<SDL_Point> in_sprite_offsets = {})
+    SpriteInfo(const SDL_Rect& in_sprite_base_pos = {}, double in_animation_speed = 0.0, std::vector<Vector2I> in_sprite_offsets = {})
         : animation_speed(in_animation_speed), sprite_base_pos(in_sprite_base_pos), sprite_offsets(std::move(in_sprite_offsets))
     {
     }
@@ -26,7 +27,7 @@ public:
 private:
     double                                animation_speed;
     SDL_Rect                              sprite_base_pos;
-    std::vector<SDL_Point>                sprite_offsets;
+    std::vector<Vector2I>                 sprite_offsets;
     bool                                  paused        = false;
     double                                internal_time = 0.0;
     std::chrono::steady_clock::time_point last_time;
@@ -39,7 +40,7 @@ class SpriteHandle
 {
     friend std::stringstream& operator<<(std::stringstream& stream, const SpriteHandle& s);
 
-  public:
+public:
     SpriteHandle(SpriteSheet* in_owner, std::string handle_name)
         : handle(std::move(handle_name)), owner(in_owner)
     {
@@ -55,13 +56,13 @@ class SpriteHandle
     {
     }
 
-    void               draw(const SDL_Point& pos, double scale_x = 1.0, double scale_y = 1.0, SDL_Surface* surface_override = nullptr) const;
+    void               draw(const Vector2I& pos, double scale_x = 1.0, double scale_y = 1.0, SDL_Surface* surface_override = nullptr) const;
     SpriteHandle&      set_paused(bool paused);
     [[nodiscard]] bool is_paused() const;
 
     SpriteHandle& operator=(const SpriteHandle& other) = default;
-    SpriteHandle(const SpriteHandle& other)            = default;
-    SpriteHandle(SpriteHandle&& other)                 = default;
+    SpriteHandle(const SpriteHandle& other) = default;
+    SpriteHandle(SpriteHandle&& other)      = default;
 
     bool operator==(const SpriteHandle& other) const
     {
@@ -101,9 +102,9 @@ class SpriteSheet
 public:
     SpriteSheet(const std::filesystem::path& sprite_sheet);
 
-    SpriteHandle new_sprite(const std::string& name, SDL_Rect base_transform, double animation_speed = 1.0, const std::vector<SDL_Point>& offsets = {});
+    SpriteHandle new_sprite(const std::string& name, SDL_Rect base_transform, double animation_speed = 1.0, const std::vector<Vector2I>& offsets = {});
 
-    void render_sprite(const SpriteHandle& sprite, SDL_Point pos, double scale_x = 1.0, double scale_y = 1.0, SDL_Surface* surface_override = nullptr) const;
+    void render_sprite(const SpriteHandle& sprite, Vector2I pos, double scale_x = 1.0, double scale_y = 1.0, SDL_Surface* surface_override = nullptr) const;
 
     [[nodiscard]] static std::optional<SpriteHandle> find_sprite_by_name(const std::string& name);
 

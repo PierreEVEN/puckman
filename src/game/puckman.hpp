@@ -8,11 +8,7 @@ class Terrain;
 class Puckman : public Character
 {
 public:
-    explicit Puckman(const std::shared_ptr<Terrain>& terrain)
-        : Character(terrain)
-    {
-        pause_animation(true);
-    }
+    explicit Puckman(const std::shared_ptr<Terrain>& terrain);
 
     void tick() override;
 

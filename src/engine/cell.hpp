@@ -1,5 +1,6 @@
 #pragma once
 #include "sprite_sheet.hpp"
+#include "vector2.hpp"
 
 #include <array>
 #include <unordered_map>
@@ -48,7 +49,7 @@ public:
 
     Cell();
     
-    void set_pos(const SDL_Point& in_pos);
+    void set_pos(const Vector2I& in_pos);
     void set_item(EItemType in_item_type);
     void set_wall(WallMask in_wall_mask, WallMask in_wall_mask_neg=-1);
     void set_gum(bool big);
@@ -67,7 +68,7 @@ private:
 
     SpriteHandle sprite_handle;
 
-    SDL_Point pos{0, 0};
+    Vector2I pos{0, 0};
 
     ECellType type = ECellType::Void;
 

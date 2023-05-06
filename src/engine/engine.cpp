@@ -5,12 +5,17 @@
 
 #include "logger.hpp"
 
+#include <random>
+
 namespace pm
 {
 static Engine* ENGINE_SINGLETON = nullptr;
 
 bool Engine::next_frame()
 {
+    gamemode->tick(get_delta_second());
+    gamemode->draw();
+
     SDL_UpdateWindowSurface(window_handle);
 
     delta_second    = static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - last_frame_time).count()) / 1000000.0;
@@ -25,8 +30,18 @@ void Engine::shutdown()
     INFO("Request shutdown");
 }
 
+int32_t Engine::random_int(int32_t min, int32_t max)
+{
+    return std::uniform_int_distribution(min, max)(mt);
+}
+
+double Engine::random_double(double min, double max)
+{
+    return std::uniform_real_distribution(min, max)(mt);
+}
+
 Engine::Engine(const std::string& app_name, uint32_t width, uint32_t height)
-    : window_handle(nullptr), surface_handle(nullptr), close(false), delta_second(0.033), last_frame_time(std::chrono::steady_clock::now()), start_time(std::chrono::steady_clock::now())
+    : window_handle(nullptr), surface_handle(nullptr), close(false), delta_second(0.033), last_frame_time(std::chrono::steady_clock::now()), start_time(std::chrono::steady_clock::now()), mt(random_device())
 {
     INFO("Initializing SDL");
 
@@ -48,7 +63,7 @@ Engine::~Engine()
     INFO("Engine closed");
 }
 
-Engine& Engine::init(const std::string& app_name, uint32_t width, uint32_t height)
+Engine& Engine::init_internal(const std::string& app_name, uint32_t width, uint32_t height)
 {
     if (ENGINE_SINGLETON)
         FATAL("cannot create multiple engine instances");

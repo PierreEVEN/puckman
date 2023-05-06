@@ -10,7 +10,7 @@ namespace pm
 {
 static std::unordered_map<SpriteHandle, SpriteInfo> sprite_map;
 
-void SpriteHandle::draw(const SDL_Point& pos, double scale_x, double scale_y, SDL_Surface* surface_override) const
+void SpriteHandle::draw(const Vector2I& pos, double scale_x, double scale_y, SDL_Surface* surface_override) const
 {
     if (!*this)
         FATAL("invalid handle");
@@ -38,7 +38,7 @@ SpriteSheet::SpriteSheet(const std::filesystem::path& sprite_sheet)
     SDL_SetColorKey(sprite_sheet_handle, true, 0);
 }
 
-SpriteHandle SpriteSheet::new_sprite(const std::string& name, SDL_Rect base_transform, double animation_speed, const std::vector<SDL_Point>& offsets)
+SpriteHandle SpriteSheet::new_sprite(const std::string& name, SDL_Rect base_transform, double animation_speed, const std::vector<Vector2I>& offsets)
 {
     SpriteHandle handle(this, name);
     if (sprite_map.contains(handle))
@@ -48,7 +48,7 @@ SpriteHandle SpriteSheet::new_sprite(const std::string& name, SDL_Rect base_tran
     return handle;
 }
 
-void SpriteSheet::render_sprite(const SpriteHandle& sprite, SDL_Point pos, double scale_x, double scale_y, SDL_Surface* surface_override) const
+void SpriteSheet::render_sprite(const SpriteHandle& sprite, Vector2I pos, double scale_x, double scale_y, SDL_Surface* surface_override) const
 {
     const auto info = sprite_map.find(sprite);
     if (info == sprite_map.end())
@@ -69,11 +69,11 @@ void SpriteSheet::render_sprite(const SpriteHandle& sprite, SDL_Point pos, doubl
     SDL_Rect selected_sprite = info->second.sprite_base_pos;
     if (sprite_index != 0)
     {
-        selected_sprite.x += info->second.sprite_offsets[sprite_index - 1].x;
-        selected_sprite.y += info->second.sprite_offsets[sprite_index - 1].y;
+        selected_sprite.x += info->second.sprite_offsets[sprite_index - 1].x();
+        selected_sprite.y += info->second.sprite_offsets[sprite_index - 1].y();
     }
 
-    SDL_Rect new_coords{pos.x, pos.y, static_cast<int>(selected_sprite.w * scale_x), static_cast<int>(selected_sprite.h * scale_y)};
+    SDL_Rect new_coords{pos.x(), pos.y(), static_cast<int>(selected_sprite.w * scale_x), static_cast<int>(selected_sprite.h * scale_y)};
     SDL_BlitScaled(sprite_sheet_handle, &selected_sprite, surface_override ? surface_override : pm::Engine::get().get_surface_handle(), &new_coords);
 }
 

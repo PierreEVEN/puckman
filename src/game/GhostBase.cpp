@@ -1,6 +1,8 @@
 #include "GhostBase.hpp"
 
+#include "pacman.hpp"
 #include "engine/direction.hpp"
+#include "engine/engine.hpp"
 #include "engine/logger.hpp"
 #include "engine/pathfinding.hpp"
 
@@ -9,6 +11,15 @@ namespace pm
 GhostBase::GhostBase(const std::shared_ptr<Terrain>& terrain, std::shared_ptr<Character> in_target)
     : Character(terrain), pathfinder(std::make_shared<PathFinder>(terrain)), target(std::move(in_target)), mode(AiMode::Spawned)
 {
+    frightened_sprite = *SpriteSheet::find_sprite_by_name("frightened_ghost");
+
+
+    Engine::get().get_gamemode<Pacman>().on_eat_big_gum.add_object(this, &GhostBase::on_frightened);
+}
+
+GhostBase::~GhostBase()
+{
+    Engine::get().get_gamemode<Pacman>().on_eat_big_gum.clear_object(this);
 }
 
 void GhostBase::tick()
@@ -22,12 +33,23 @@ void GhostBase::tick()
     if (last_cell != get_cell_discrete_pos())
     {
         last_cell = get_cell_discrete_pos();
-        on_enter_new_cell();
+        on_search_new_dir();
     }
     Character::tick();
 }
 
-void GhostBase::on_enter_new_cell()
+void GhostBase::draw()
+{
+    if (mode == AiMode::Frightened)
+    {
+        auto s = Cell::draw_scale;
+        frightened_sprite.draw(get_absolute_discrete_pos() * static_cast<int32_t>(s), s, s);
+    }
+    else
+        Character::draw();
+}
+
+void GhostBase::on_search_new_dir()
 {
     // Compute available direction for next cell
     std::vector<Direction> available_directions;
@@ -55,6 +77,7 @@ void GhostBase::on_enter_new_cell()
         target_pos = scatter_target();
         break;
     case AiMode::Frightened:
+        target_pos = Vector2I{Engine::get().random_int(0, get_terrain().get_width()), Engine::get().random_int(0, get_terrain().get_height())};
         break;
     default: ;
     }
@@ -76,6 +99,23 @@ void GhostBase::on_enter_new_cell()
     set_look_direction(min_direction);
 }
 
+void GhostBase::on_frightened()
+{
+    mode = AiMode::Frightened;
+    set_look_direction(Direction::NONE);
+    on_search_new_dir();
+}
+
+Blinky::Blinky(const std::shared_ptr<Terrain>& terrain, std::shared_ptr<Character> in_target)
+    : GhostBase(terrain, in_target)
+{
+    set_direction_sprite(Direction::NONE, *SpriteSheet::find_sprite_by_name("ghost_a_default"));
+    set_direction_sprite(Direction::RIGHT, *SpriteSheet::find_sprite_by_name("ghost_a_right"));
+    set_direction_sprite(Direction::LEFT, *SpriteSheet::find_sprite_by_name("ghost_a_left"));
+    set_direction_sprite(Direction::DOWN, *SpriteSheet::find_sprite_by_name("ghost_a_down"));
+    set_direction_sprite(Direction::UP, *SpriteSheet::find_sprite_by_name("ghost_a_up"));
+}
+
 Vector2I Blinky::target_player() const
 {
     return target->get_cell_discrete_pos();
@@ -92,6 +132,16 @@ Vector2I Blinky::home_location() const
     return {10, 10};
 }
 
+Pinky::Pinky(const std::shared_ptr<Terrain>& terrain, std::shared_ptr<Character> in_target)
+    : GhostBase(terrain, in_target)
+{
+    set_direction_sprite(Direction::NONE, *SpriteSheet::find_sprite_by_name("ghost_b_default"));
+    set_direction_sprite(Direction::RIGHT, *SpriteSheet::find_sprite_by_name("ghost_b_right"));
+    set_direction_sprite(Direction::LEFT, *SpriteSheet::find_sprite_by_name("ghost_b_left"));
+    set_direction_sprite(Direction::DOWN, *SpriteSheet::find_sprite_by_name("ghost_b_down"));
+    set_direction_sprite(Direction::UP, *SpriteSheet::find_sprite_by_name("ghost_b_up"));
+}
+
 Vector2I Pinky::target_player() const
 {
     return target->get_cell_discrete_pos() + dir_with_overflow_error(target->get_look_direction()) * 4;
@@ -105,7 +155,17 @@ Vector2I Pinky::scatter_target() const
 
 Vector2I Pinky::home_location() const
 {
-    return {10, 10};
+    return {10, 12};
+}
+
+Inky::Inky(const std::shared_ptr<Terrain>& terrain, std::shared_ptr<Character> in_target, std::shared_ptr<Character> blinky_ref)
+    : GhostBase(terrain, std::move(in_target)), blinky(std::move(blinky_ref))
+{
+    set_direction_sprite(Direction::NONE, *SpriteSheet::find_sprite_by_name("ghost_c_default"));
+    set_direction_sprite(Direction::RIGHT, *SpriteSheet::find_sprite_by_name("ghost_c_right"));
+    set_direction_sprite(Direction::LEFT, *SpriteSheet::find_sprite_by_name("ghost_c_left"));
+    set_direction_sprite(Direction::DOWN, *SpriteSheet::find_sprite_by_name("ghost_c_down"));
+    set_direction_sprite(Direction::UP, *SpriteSheet::find_sprite_by_name("ghost_c_up"));
 }
 
 Vector2I Inky::target_player() const
@@ -122,7 +182,17 @@ Vector2I Inky::scatter_target() const
 
 Vector2I Inky::home_location() const
 {
-    return {10, 10};
+    return {11, 12};
+}
+
+Clyde::Clyde(const std::shared_ptr<Terrain>& terrain, std::shared_ptr<Character> in_target)
+    : GhostBase(terrain, in_target)
+{
+    set_direction_sprite(Direction::NONE, *SpriteSheet::find_sprite_by_name("ghost_d_default"));
+    set_direction_sprite(Direction::RIGHT, *SpriteSheet::find_sprite_by_name("ghost_d_right"));
+    set_direction_sprite(Direction::LEFT, *SpriteSheet::find_sprite_by_name("ghost_d_left"));
+    set_direction_sprite(Direction::DOWN, *SpriteSheet::find_sprite_by_name("ghost_d_down"));
+    set_direction_sprite(Direction::UP, *SpriteSheet::find_sprite_by_name("ghost_d_up"));
 }
 
 Vector2I Clyde::target_player() const
@@ -143,6 +213,7 @@ Vector2I Clyde::scatter_target() const
 
 Vector2I Clyde::home_location() const
 {
-    return {10, 10};
+    return {9, 12};
 }
+
 }

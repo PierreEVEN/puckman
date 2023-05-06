@@ -28,7 +28,7 @@ void Character::tick()
             Entity::tick();
             return;
         }
-        
+
         // Move forward
         set_cell_linear_pos(get_cell_linear_pos() + current_dir_vector.cast<Vector2D>() * step);
 
@@ -50,7 +50,7 @@ void Character::tick()
         if (cell_delta.l1_length() < step)
         {
             // Teleport to cell center, and add remaining delta in new direction
-            current_direction = get_look_direction();
+            current_direction         = get_look_direction();
             const auto new_dir_vector = *get_look_direction();
             set_cell_linear_pos(get_cell_discrete_pos().cast<Vector2D>() + cell_delta + new_dir_vector.cast<Vector2D>() * (step - (cell_delta.x() + cell_delta.y())));
         }
@@ -66,8 +66,14 @@ void Character::tick()
 
 void Character::set_look_direction(const Direction new_direction)
 {
-    const auto dot_result  = new_direction->dot(*current_direction);
-    
+    if (new_direction == Direction::NONE)
+    {
+        Entity::set_look_direction(new_direction);
+        current_direction = new_direction;
+    }
+
+    const auto dot_result = new_direction->dot(*current_direction);
+
     pause_animation(false);
     // Go forward or back
     if (dot_result != 0)

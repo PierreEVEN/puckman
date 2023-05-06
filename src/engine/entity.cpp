@@ -26,8 +26,9 @@ void pm::Entity::draw()
         WARNING("missing sprite for direction %d", looking_direction.index());
         return;
     }
-
-    sprite->draw(SDL_Point{get_absolute_discrete_pos().x(), get_absolute_discrete_pos().y()});
+    
+    auto s = Cell::draw_scale;
+    sprite->draw(get_absolute_discrete_pos() * static_cast<int32_t>(s), s, s);
 }
 
 void pm::Entity::pause_animation(bool paused)

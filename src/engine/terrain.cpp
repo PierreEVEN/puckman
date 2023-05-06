@@ -1,6 +1,8 @@
 #include "terrain.hpp"
 #include "engine.hpp"
 #include "logger.hpp"
+#include "game/pacman.hpp"
+
 #include <fstream>
 #include <SDL_surface.h>
 
@@ -76,17 +78,15 @@ int Terrain::eat(const int32_t x, const int32_t y)
     {
     case ECellType::Gum:
         cell.update_type(ECellType::Void);
-        //@TODO : Don't rebuild all sprites each time
         update_sprite_handles();
         return 1;
     case ECellType::Item:
         cell.update_type(ECellType::Void);
-        //@TODO : Don't rebuild all sprites each time
         update_sprite_handles();
         return 100;
     case ECellType::BiGum:
+        Engine::get().get_gamemode<Pacman>().on_eat_big_gum.execute();
         cell.update_type(ECellType::Void);
-        //@TODO : Don't rebuild all sprites each time
         update_sprite_handles();
         return 10;
     default:
@@ -208,8 +208,10 @@ void Terrain::create_wall_cache_surface()
 
     wall_cache_surface_handle = SDL_CreateRGBSurface(0, esh->w, esh->h, 32, 0, 0, 0, 0);
 
-    if (wall_cache_surface_handle == nullptr)
+    if (wall_cache_surface_handle == nullptr) {
         INFO("couldn't create wall cache surface, continuing without wall caching");
+        return;
+    }
 
     for (auto& cell : grid)
         if (cell.get_type() == ECellType::Wall)

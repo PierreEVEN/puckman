@@ -1,7 +1,7 @@
 #include "cell.hpp"
 
 #include "logger.hpp"
-#include "types.hpp"
+#include "vector2.hpp"
 
 namespace pm
 {
@@ -11,7 +11,7 @@ double Cell::draw_scale = 1.;
 Cell::Cell() : type(ECellType::Void)
 {}
 
-void Cell::set_pos(const SDL_Point& in_pos)
+void Cell::set_pos(const Vector2I& in_pos)
 {
     pos = in_pos;
 }
@@ -70,8 +70,8 @@ void Cell::update_sprite_handle(
 void Cell::draw(int32_t terrain_unit_scale, SDL_Surface* surface_override) const
 {
     if (sprite_handle){
-        SDL_Point draw_pos{pos};
-        draw_pos *= terrain_unit_scale * draw_scale;
+        Vector2I draw_pos{pos};
+        draw_pos *= terrain_unit_scale * static_cast<int32_t>(draw_scale);
         const double ds = draw_scale * (1 + (type == ECellType::Wall));
         sprite_handle.draw(draw_pos, ds, ds, surface_override);
     }
