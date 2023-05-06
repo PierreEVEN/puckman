@@ -12,9 +12,6 @@ GhostBase::GhostBase(const std::shared_ptr<Terrain>& terrain, std::shared_ptr<Ch
     : Character(terrain), pathfinder(std::make_shared<PathFinder>(terrain)), target(std::move(in_target)), mode(AiMode::Spawned)
 {
     frightened_sprite = *SpriteSheet::find_sprite_by_name("frightened_ghost");
-
-
-    Engine::get().get_gamemode<Pacman>().on_eat_big_gum.add_object(this, &GhostBase::on_frightened);
 }
 
 GhostBase::~GhostBase()
@@ -26,6 +23,7 @@ void GhostBase::tick()
 {
     if (mode == AiMode::Spawned)
     {
+        Engine::get().get_gamemode<Pacman>().on_eat_big_gum.add_object(this, &GhostBase::on_frightened);
         set_cell_discrete_pos(home_location());
         mode = AiMode::Chase;
     }
@@ -103,6 +101,7 @@ void GhostBase::on_frightened()
 {
     mode = AiMode::Frightened;
     set_look_direction(get_look_direction().opposite());
+    on_search_new_dir();
 }
 
 Blinky::Blinky(const std::shared_ptr<Terrain>& terrain, std::shared_ptr<Character> in_target)
@@ -214,5 +213,4 @@ Vector2I Clyde::home_location() const
 {
     return {9, 12};
 }
-
 }
