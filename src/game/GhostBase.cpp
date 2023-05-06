@@ -102,8 +102,7 @@ void GhostBase::on_search_new_dir()
 void GhostBase::on_frightened()
 {
     mode = AiMode::Frightened;
-    set_look_direction(Direction::NONE);
-    on_search_new_dir();
+    set_look_direction(get_look_direction().opposite());
 }
 
 Blinky::Blinky(const std::shared_ptr<Terrain>& terrain, std::shared_ptr<Character> in_target)
