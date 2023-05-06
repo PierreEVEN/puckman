@@ -293,7 +293,7 @@ Vector2I Clyde::target_player() const
 {
     const auto player_distance = (get_cell_discrete_pos() - target->get_cell_discrete_pos()).length();
 
-    if (player_distance < 8)
+    if (player_distance > 8)
         return scatter_target();
 
     return target->get_cell_discrete_pos();
