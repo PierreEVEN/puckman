@@ -1,6 +1,6 @@
 #include "pacman.hpp"
 
-#include "GhostBase.hpp"
+#include "ghost_base"
 #include "puckman.hpp"
 #include "engine/entity.hpp"
 #include "engine/logger.hpp"
