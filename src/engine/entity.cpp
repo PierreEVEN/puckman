@@ -20,6 +20,8 @@ void pm::Entity::set_look_direction(const Direction new_direction)
 
 void pm::Entity::draw()
 {
+    if (hidden)
+        return;
     auto sprite = direction_sprite[looking_direction.index()];
     if (!sprite)
     {

@@ -32,6 +32,13 @@ bool SpriteHandle::is_paused() const
     return owner->is_paused(*this);
 }
 
+void SpriteHandle::reset_timer() const
+{
+    if (!*this)
+        FATAL("invalid handle");
+    return owner->reset_timer(*this);
+}
+
 SpriteSheet::SpriteSheet(const std::filesystem::path& sprite_sheet)
 {
     sprite_sheet_handle = SDL_LoadBMP(sprite_sheet.string().c_str());
@@ -97,6 +104,16 @@ bool SpriteSheet::is_paused(SpriteHandle sprite) const
         return true;
     }
     return info->second.paused;
+}
+
+void SpriteSheet::reset_timer(SpriteHandle sprite) const
+{
+    const auto info = sprite_map.find(sprite);
+    if (info == sprite_map.end())
+    {
+        ERROR("Failed to find sprite with handle {}", sprite);
+    }
+    info->second.internal_time = 0;
 }
 
 std::optional<SpriteHandle> SpriteSheet::find_sprite_by_name(const std::string& name)

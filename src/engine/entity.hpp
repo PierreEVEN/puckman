@@ -47,7 +47,14 @@ public:
 
     [[nodiscard]] bool is_at_intersection() const;
 
-private:
+    void hide(bool in_hide) { hidden = in_hide; }
+
+    virtual void reset() {}
+
+  protected:
+    bool hidden = false;
+
+  private:
     Vector2D linear_pos;
 
     std::array<std::optional<SpriteHandle>, 5> direction_sprite;

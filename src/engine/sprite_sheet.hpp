@@ -59,6 +59,7 @@ public:
     void               draw(const Vector2I& pos, double scale_x = 1.0, double scale_y = 1.0, SDL_Surface* surface_override = nullptr) const;
     SpriteHandle&      set_paused(bool paused);
     [[nodiscard]] bool is_paused() const;
+    void reset_timer() const;
 
     SpriteHandle& operator=(const SpriteHandle& other) = default;
     SpriteHandle(const SpriteHandle& other) = default;
@@ -111,7 +112,9 @@ public:
     void set_paused(SpriteHandle sprite, bool in_paused) const;
 
     [[nodiscard]] bool is_paused(SpriteHandle sprite) const;
-private:
+    void               reset_timer(SpriteHandle sprite) const;
+
+  private:
     SDL_Surface* sprite_sheet_handle;
 };
 }

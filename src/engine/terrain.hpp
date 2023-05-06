@@ -39,7 +39,7 @@ public:
         return (static_cast<uint32_t>(pos.x() + 2) + width) % (width + 2) >= width;
     }
 
-    [[nodiscard]] int eat(const int32_t x, const int32_t y);
+    [[nodiscard]] int eat(const Vector2I& pos);
 
     [[nodiscard]] uint32_t get_width() const { return width; }
     [[nodiscard]] uint32_t get_height() const { return height; }

@@ -1,5 +1,6 @@
 #include "character.hpp"
 
+#include "pacman.hpp"
 #include "engine/engine.hpp"
 #include "engine/terrain.hpp"
 
@@ -7,6 +8,13 @@ namespace pm
 {
 void Character::tick()
 {
+    if (Engine::get().get_gamemode<Pacman>().stop_movements())
+    {
+        Entity::tick();
+        return;
+    }
+
+
     const auto   current_dir_vector = *current_direction;
     const double step               = Engine::get().get_delta_second() * velocity;
     const auto&  terrain            = get_terrain();

@@ -7,7 +7,7 @@ void Pacman::load_sprites()
 {
     // Load terrain sprites
     sprite_sheet->new_sprite("gum", {128, 32, 16, 16}, 10, {});
-    sprite_sheet->new_sprite("bigum", {144, 32, 16, 16}, 10, {});
+    sprite_sheet->new_sprite("bigum", {144, 32, 16, 16}, 7, {{16, 0}});
     sprite_sheet->new_sprite("door", {128, 96, 16, 16}, 10, {});
     sprite_sheet->new_sprite("cherry", {128, 64, 16, 16}, 10, {{0, -16}});
     sprite_sheet->new_sprite("strawberry", {144, 64, 16, 16}, 10, {{0, -16}});
@@ -64,14 +64,12 @@ void Pacman::load_sprites()
     sprite_sheet->new_sprite("ghost_d_down", {96, 80, 16, 16}, 10, {{16, 0}});
     sprite_sheet->new_sprite("ghost_d_up", {64, 80, 16, 16}, 10, {{16, 0}});
 
-    sprite_sheet->new_sprite("pac²man_die",
-                             {0, 0, 16, 16},
-                             20,
-                             {{80, 0}, {96, 0}, {0, 16}, {16, 16}, {32, 16}, {48, 16}, {64, 16}, {80, 16}, {96, 16}, {112, 16}, {128, 16}, {144, 16}});
+    sprite_sheet->new_sprite("pacman_die", {0, 0, 16, 16}, 8,
+                             {{80, 0}, {96, 0}, {0, 16}, {16, 16}, {32, 16}, {48, 16}, {64, 16}, {80, 16}, {96, 16}, {112, 16}, {128, 16}, {160, 16}, {144, 16}, {144, 16}, {160, 16}, {160, 16}});
 
     sprite_sheet->new_sprite("frightened_ghost", {0, 95, 16, 16}, 10, {{16, 0}});
     sprite_sheet->new_sprite("frightened_ghost_flash", {0, 95, 16, 16}, 10, {{16, 0}, {32, 0}, {48, 0}});
-    
+
     sprite_sheet->new_sprite("pacman_life", {48, 0, 16, 16}, 20, {});
     sprite_sheet->new_sprite("eyes_down", {112, 96, 16, 16}, 20, {});
     sprite_sheet->new_sprite("eyes_left", {80, 96, 16, 16}, 20, {});

@@ -5,11 +5,12 @@
 
 namespace pm
 {
-
 double Cell::draw_scale = 1.;
 
-Cell::Cell() : type(ECellType::Void)
-{}
+Cell::Cell()
+    : type(ECellType::Void)
+{
+}
 
 void Cell::set_pos(const Vector2I& in_pos)
 {
@@ -24,8 +25,8 @@ void Cell::set_item(EItemType in_item_type)
 
 void Cell::set_wall(WallMask in_wall_mask, WallMask in_wall_mask_neg)
 {
-    type      = ECellType::Wall;
-    wall_masks = { in_wall_mask, in_wall_mask_neg < 0 ? wall_masks.neg : in_wall_mask_neg };
+    type       = ECellType::Wall;
+    wall_masks = {in_wall_mask, in_wall_mask_neg < 0 ? wall_masks.neg : in_wall_mask_neg};
 }
 
 void Cell::set_gum(bool big)
@@ -49,9 +50,9 @@ void Cell::update_type(const ECellType new_type)
 }
 
 void Cell::update_sprite_handle(
-        std::unordered_map<ECellType, SpriteHandle> map_cell_type,
-        std::unordered_map<EItemType, SpriteHandle> map_item_type,
-        std::array<SpriteHandle, 16>& walls)
+    std::unordered_map<ECellType, SpriteHandle> map_cell_type,
+    std::unordered_map<EItemType, SpriteHandle> map_item_type,
+    std::array<SpriteHandle, 16>&               walls)
 {
     switch (type)
     {
@@ -69,7 +70,8 @@ void Cell::update_sprite_handle(
 
 void Cell::draw(int32_t terrain_unit_scale, SDL_Surface* surface_override) const
 {
-    if (sprite_handle){
+    if (sprite_handle)
+    {
         Vector2I draw_pos{pos};
         draw_pos *= terrain_unit_scale * static_cast<int32_t>(draw_scale);
         const double ds = draw_scale * (1 + (type == ECellType::Wall));

@@ -17,21 +17,47 @@ Puckman::Puckman(const std::shared_ptr<Terrain>& terrain)
     set_direction_sprite(pm::Direction::UP, *SpriteSheet::find_sprite_by_name("pacman_up"));
 
     pause_animation(true);
+
+    death_sprite = *SpriteSheet::find_sprite_by_name("pacman_die");
 }
 
 void Puckman::tick()
 {
     auto&      terrain             = get_terrain();
     const auto terrain_unit_length = terrain.get_unit_length();
-    const int  new_points          = points + terrain.eat(
-                                         static_cast<int32_t>(std::round(get_absolute_linear_pos().x() / terrain_unit_length)), static_cast<int32_t>(std::round(get_absolute_linear_pos().y() / terrain_unit_length)));
+    const auto value               = terrain.eat(get_cell_discrete_pos());
 
     set_velocity(75.75757625 / get_terrain().get_unit_length());
     Character::tick();
-    if (points != new_points)
+}
+
+void Puckman::draw()
+{
+    if (hidden)
+        return;
+
+    if (should_play_death)
     {
-        points = new_points;
-        DEBUG("{} Points", points);
+        auto s = Cell::draw_scale;
+        death_sprite.draw(get_absolute_discrete_pos() * static_cast<int32_t>(s), s, s);
     }
+    else
+        Character::draw();
+}
+
+void Puckman::play_death()
+{
+    death_sprite.reset_timer();
+    should_play_death = true;
+}
+
+void Puckman::reset()
+{
+    Character::reset();
+    set_cell_discrete_pos({10, 20});
+    hidden = false;
+    should_play_death = false;
+    set_look_direction(Direction::NONE);
+    pause_animation(true);
 }
 }

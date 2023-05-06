@@ -67,12 +67,12 @@ void Terrain::load_from_file(const std::filesystem::path& path)
     INFO("Successfully loaded {}", path.string());
 }
 
-int Terrain::eat(const int32_t x, const int32_t y)
+int Terrain::eat(const Vector2I& pos)
 {
-    if (x < 0 || y < 0 || uint32_t(x) >= width || uint32_t(y) >= height)
+    if (pos.x() < 0 || pos.y() < 0 || static_cast<uint32_t>(pos.x()) >= width || static_cast<uint32_t>(pos.y()) >= height)
         return 0;
 
-    auto& cell = get_cell(x, y);
+    auto& cell = get_cell(pos.x(), pos.y());
 
     switch (cell.get_type())
     {

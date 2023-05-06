@@ -1,6 +1,6 @@
 #include "pacman.hpp"
 
-#include "ghost_base"
+#include "ghost_base.hpp"
 #include "puckman.hpp"
 #include "engine/entity.hpp"
 #include "engine/logger.hpp"
@@ -29,11 +29,6 @@ Pacman::Pacman()
     auto inky   = std::make_shared<pm::Inky>(terrain, player, blinky);
     auto clyde  = std::make_shared<pm::Clyde>(terrain, player);
     entities    = {blinky, pinky, inky, clyde, player};
-    blinky->set_cell_discrete_pos({10, 10});
-    pinky->set_cell_discrete_pos({10, 10});
-    inky->set_cell_discrete_pos({10, 10});
-    clyde->set_cell_discrete_pos({10, 10});
-    player->set_cell_discrete_pos({10, 20});
 
     tunnel_rect = {
         static_cast<int>(terrain->get_width() * pm::Cell::draw_scale * terrain_unit_length),
@@ -46,6 +41,9 @@ Pacman::Pacman()
         INFO("enter frightened mode");
         frightened_timer = 7;
     });
+
+    for (const auto& entity : entities)
+        entity->reset();
 }
 
 void Pacman::tick(double delta_seconds)
@@ -105,6 +103,30 @@ void Pacman::tick(double delta_seconds)
         }
     }
 
+    if (death_timer > 0)
+    {
+        const auto last_death_timer = death_timer;
+        death_timer -= delta_seconds;
+        if (death_timer < 2 && last_death_timer >= 2)
+        {
+            for (const auto& entity : entities)
+                entity->hide(true);
+            player->hide(false);
+            player->play_death();
+        }
+        if (death_timer <= 0 && last_death_timer > 0)
+        {
+            player->hide(true);
+            for (const auto& entity : entities)
+                entity->reset();
+            lives--;
+            if (lives == 0)
+            {
+                exit(EXIT_SUCCESS);
+            }
+        }
+    }
+
     for (const auto& entity : entities)
         entity->tick();
 }
@@ -123,5 +145,14 @@ void Pacman::draw()
 
     // Hide tunnel
     SDL_FillRect(pm::Engine::get().get_surface_handle(), &tunnel_rect, 0);
+}
+
+void Pacman::death()
+{
+    if (death_timer <= 0)
+    {
+        death_timer = 3;
+        player->pause_animation(true);
+    }
 }
 }

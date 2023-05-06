@@ -12,6 +12,13 @@ public:
 
     void tick() override;
 
-    int points = 0;
+    void draw() override;
+
+    void play_death();
+
+    void reset() override;
+private:
+    bool         should_play_death = false;
+    SpriteHandle death_sprite;
 };
 }
