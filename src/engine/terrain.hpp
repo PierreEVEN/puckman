@@ -57,6 +57,9 @@ private:
     void create_wall_cache_surface();
     void free_wall_cache_surface();
 
+    static std::array<EItemType, 13> level_items;
+    static std::unordered_map<EItemType, int> item_values;
+
     int32_t           unit_length               = 16;
     uint32_t          width                     = 0;
     uint32_t          height                    = 0;

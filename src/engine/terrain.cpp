@@ -8,6 +8,33 @@
 
 namespace pm
 {
+std::array<EItemType, 13> Terrain::level_items{
+    EItemType::Key,        // default
+    EItemType::Cherry,     // 1
+    EItemType::Strawberry, // 2
+    EItemType::Abricot,    // 3
+    EItemType::Abricot,    // 4
+    EItemType::Apple,      // 5
+    EItemType::Apple,      // 6
+    EItemType::Grapes,     // 7
+    EItemType::Grapes,     // 8
+    EItemType::Galaxian,   // 9
+    EItemType::Galaxian,   // 10
+    EItemType::Bell,       // 11
+    EItemType::Bell        // 12
+};
+
+std::unordered_map<EItemType, int> Terrain::item_values = {
+        {EItemType::Cherry,      100},
+        {EItemType::Strawberry,  300},
+        {EItemType::Abricot,     500},
+        {EItemType::Apple,       700},
+        {EItemType::Grapes,     1000},
+        {EItemType::Galaxian,   2000},
+        {EItemType::Bell,       3000},
+        {EItemType::Key,        5000}
+};
+
 void Terrain::load_from_file(const std::filesystem::path& path)
 {
     width  = 0;
@@ -68,7 +95,7 @@ void Terrain::eat(const Vector2I& pos)
 
     auto&     cell          = get_cell(pos);
     int32_t   points        = 0;
-    EItemType spawned_fruit = EItemType::Cherry;
+    EItemType spawned_item = EItemType::Cherry;
 
     switch (cell.get_type())
     {
@@ -79,75 +106,16 @@ void Terrain::eat(const Vector2I& pos)
         if (gum_count == 70 || gum_count == 170)
         {
             const auto level = Engine::get().get_gamemode<PacmanGamemode>().current_level();
-            switch (level)
-            {
-            case 1:
-                spawned_fruit = EItemType::Cherry;
-                break;
-            case 2:
-                spawned_fruit = EItemType::Strawberry;
-                break;
-            case 3:
-            case 4:
-                spawned_fruit = EItemType::Abricot;
-                break;
-            case 5:
-            case 6:
-                spawned_fruit = EItemType::Apple;
-                break;
-            case 7:
-            case 8:
-                spawned_fruit = EItemType::Grapes;
-                break;
-            case 9:
-            case 10:
-                spawned_fruit = EItemType::Galaxian;
-                break;
-            case 11:
-            case 12:
-                spawned_fruit = EItemType::Bell;
-                break;
-            default: ;
-                spawned_fruit = EItemType::Key;
-            }
-
+            spawned_item = level_items[level < level_items.size() ? level : 0];
             item_timer = Engine::get().random_double(9.3333, 10);
-            get_cell({10, 15}).set_item(spawned_fruit);
+            get_cell({10, 15}).set_item(spawned_item);
         }
         update_sprite_handles();
         if (gum_count <= 0)
             Engine::get().get_gamemode<PacmanGamemode>().victory();
         break;
     case ECellType::Item:
-        switch (cell.get_item())
-        {
-        case EItemType::Cherry:
-            points = 100;
-            break;
-        case EItemType::Strawberry:
-            points = 300;
-            break;
-        case EItemType::Abricot:
-            points = 500;
-            break;
-        case EItemType::Apple:
-            points = 700;
-            break;
-        case EItemType::Grapes:
-            points = 1000;
-            break;
-        case EItemType::Galaxian:
-            points = 2000;
-            break;
-        case EItemType::Bell:
-            points = 3000;
-            break;
-        case EItemType::Key:
-            points = 5000;
-            break;
-        default:
-            points = 0;
-        }
+        points = item_values[cell.get_item()];
         Engine::get().get_gamemode<PacmanGamemode>().add_points(points);
         cell.update_type(ECellType::Void);
         update_sprite_handles();
