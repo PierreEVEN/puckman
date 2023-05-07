@@ -2,6 +2,10 @@
 
 #include "ghost_base.hpp"
 
+/*
+ * This is the behavior specialization for Blinky, Pinky, Inky and Clyde
+ */
+
 namespace pm
 {	
 class Blinky : public GhostBase

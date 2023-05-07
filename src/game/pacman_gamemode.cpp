@@ -18,14 +18,16 @@ PacmanGamemode::PacmanGamemode()
     : sprite_sheet(std::make_shared<SpriteSheet>("./resources/sprite_sheet.bmp"))
 {
     load_sprites();
-    INFO("loaded sprites");
 
+    // Create terrain
     terrain = std::make_shared<pm::Terrain>();
     terrain->load_from_file("./resources/level.map");
     const auto terrain_unit_length = terrain->get_unit_length();
 
+    // Spawn player
     player = std::make_shared<pm::Player>(pm::Player(terrain));
 
+    // Spawn ghosts
     auto blinky = std::make_shared<pm::Blinky>(terrain, player);
     auto pinky  = std::make_shared<pm::Pinky>(terrain, player);
     auto inky   = std::make_shared<pm::Inky>(terrain, player, blinky);
@@ -44,6 +46,7 @@ PacmanGamemode::PacmanGamemode()
         frightened_timer = 7;
     });
 
+    // Reset everything
     begin_level();
 }
 
@@ -109,6 +112,7 @@ void PacmanGamemode::tick(double delta_seconds)
         }
     }
 
+    // Death timer
     if (death_timer > 0)
     {
         const auto last_death_timer = death_timer;
@@ -134,6 +138,7 @@ void PacmanGamemode::tick(double delta_seconds)
         }
     }
 
+    // Victory timer
     if (victory_timer > 0)
     {
         const auto last_victory_timer = victory_timer;
@@ -154,6 +159,7 @@ void PacmanGamemode::tick(double delta_seconds)
         }
     }
 
+    // Spawn timer
     if (spawn_delay > 0)
     {
         const auto last_spawn_delay = spawn_delay;
@@ -172,23 +178,28 @@ void PacmanGamemode::tick(double delta_seconds)
 void PacmanGamemode::draw()
 {
     GamemodeBase::draw();
+
+    // Draw level
     terrain->draw();
     for (const auto& entity : entities)
         entity->draw();
 
-    for (int32_t i = 0; i < lives; ++i)
-    {
-        SpriteSheet::find_sprite_by_name("pacman_life")->draw({(i + 2) * terrain->get_unit_length(), (static_cast<int32_t>(terrain->get_height())) * terrain->get_unit_length()});
-    }
+    // UI sprites
 
+    // Render lives
+    for (int32_t i = 0; i < lives; ++i)
+        SpriteSheet::find_sprite_by_name("pacman_life")->draw({(i + 2) * terrain->get_unit_length(), (static_cast<int32_t>(terrain->get_height())) * terrain->get_unit_length()});
+
+    // Display fruits in the bottom right corner of the screen
     int32_t items_to_display = std::min(level, 7);
     for (int32_t i = 0; i < items_to_display; ++i)
         terrain->get_item_sprite_handle(terrain->get_level_item(level - items_to_display + i + 1))
-                .draw({(18 - i) * terrain->get_unit_length(), (static_cast<int32_t>(terrain->get_height())) * terrain->get_unit_length()});
+               .draw({(18 - i) * terrain->get_unit_length(), (static_cast<int32_t>(terrain->get_height())) * terrain->get_unit_length()});
 
     // Hide tunnel
     SDL_FillRect(pm::Engine::get().get_surface_handle(), &tunnel_rect, 0);
 
+    // Make level blink on victory
     if (victory_timer > 0 && victory_timer < 3)
     {
         if (static_cast<int32_t>(victory_timer * 5) % 2 == 0)
@@ -197,6 +208,7 @@ void PacmanGamemode::draw()
             terrain->set_wall_color(236, 236, 236);
     }
 
+    // Render game-over and ready texts
     if (lives == 0)
         SpriteSheet::find_sprite_by_name("game_over")->draw({8 * terrain->get_unit_length(), 15 * terrain->get_unit_length()});
     else if (spawn_delay > 0)

@@ -1,4 +1,5 @@
 #include "pacman_gamemode.hpp"
+#include "engine/logger.hpp"
 #include "engine/sprite_sheet.hpp"
 
 namespace pm
@@ -77,5 +78,7 @@ void PacmanGamemode::load_sprites()
     sprite_sheet->new_sprite("eyes_up", {96, 96, 16, 16}, 20, {});
     sprite_sheet->new_sprite("ready", {0, 112, 48, 16}, 20, {});
     sprite_sheet->new_sprite("game_over", {48, 112, 82, 16}, 20, {});
+
+    INFO("loaded sprites");
 }
 }

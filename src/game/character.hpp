@@ -3,6 +3,9 @@
 
 namespace pm
 {
+/*
+ * The character class handles movements with velocity inside terrain
+ */
 class Character : public Entity
 {
 public:
@@ -12,10 +15,16 @@ public:
     }
 
     void tick() override;
-    
-    void set_look_direction(const Direction new_direction) override;    
+
+    // Set the desired look direction.
+    // If desired direction is free, the entity will look at the required direction, then move
+    // until it reaches the center of the intersection before continuing in the desired direction
+    void set_look_direction(const Direction new_direction) override;
+
+    // Change the character velocity (in pixel / second)
     void set_velocity(double new_velocity) { velocity = new_velocity; }
 protected:
+    // is this character allowed to pass through doors
     bool go_through_doors = false;
 private:
     double velocity = 75.0;

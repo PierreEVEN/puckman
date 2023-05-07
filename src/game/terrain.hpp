@@ -23,7 +23,7 @@ public:
         return unit_length;
     }
 
-    [[nodiscard]] EItemType get_level_item(int level) const;
+    [[nodiscard]] EItemType    get_level_item(int level) const;
     [[nodiscard]] SpriteHandle get_item_sprite_handle(EItemType item) const;
 
     void tick(double delta_time);
@@ -60,18 +60,18 @@ private:
     void create_wall_cache_surface();
     void free_wall_cache_surface();
 
-    static std::array<EItemType, 13> level_items;
+    static std::array<EItemType, 13>          level_items;
     static std::unordered_map<EItemType, int> item_values;
 
     std::unordered_map<EItemType, SpriteHandle> item_sprite_handles;
-    int32_t           unit_length               = 16;
-    uint32_t          width                     = 0;
-    uint32_t          height                    = 0;
-    std::vector<Cell> grid                      = {};
-    std::vector<Cell> initial_grid              = {};
-    SDL_Surface*      wall_cache_surface_handle = nullptr;
-    int32_t           gum_count                 = 0;
-    int32_t           initial_gum_count         = 0;
-    double            item_timer                = 0;
+    int32_t                                     unit_length               = 16;
+    uint32_t                                    width                     = 0;
+    uint32_t                                    height                    = 0;
+    std::vector<Cell>                           grid                      = {};
+    std::vector<Cell>                           initial_grid              = {};
+    SDL_Surface*                                wall_cache_surface_handle = nullptr;
+    int32_t                                     gum_count                 = 0;
+    int32_t                                     initial_gum_count         = 0;
+    double                                      item_timer                = 0;
 };
 }
