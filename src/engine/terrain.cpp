@@ -35,6 +35,16 @@ std::unordered_map<EItemType, int> Terrain::item_values = {
     {EItemType::Key,        5000}
 };
 
+EItemType Terrain::get_level_item(int level) const
+{
+    return level_items[static_cast<size_t>(level) < level_items.size() ? level : 0];
+}
+
+SpriteHandle Terrain::get_item_sprite_handle(EItemType item) const
+{
+    return item_sprite_handles.find(item)->second;
+}
+
 void Terrain::load_from_file(const std::filesystem::path& path)
 {
     width  = 0;
@@ -105,7 +115,7 @@ void Terrain::eat(const Vector2I& pos)
         if (gum_count == 70 || gum_count == 170)
         {
             const auto      level        = Engine::get().get_gamemode<PacmanGamemode>().current_level();
-            const EItemType spawned_item = level_items[static_cast<size_t>(level) < level_items.size() ? level : 0];
+            const EItemType spawned_item = get_level_item(level);
             item_timer                   = Engine::get().random_double(9.3333, 10);
             get_cell({10, 15}).set_item(spawned_item);
         }
@@ -202,49 +212,44 @@ void Terrain::update_sprite_handles()
 {
     const SpriteHandle null_handle;
 
-    auto get_sprite_handle = [null_handle](const std::string& name)
-    {
-        return SpriteSheet::find_sprite_by_name(name).value_or(null_handle);
-    };
-
-    const std::unordered_map<ECellType, SpriteHandle> map_cell_type = {
+    const std::unordered_map<ECellType, SpriteHandle> cell_sprite_handles = {
         {ECellType::Void, null_handle},
-        {ECellType::Gum, get_sprite_handle("gum")},
-        {ECellType::BiGum, get_sprite_handle("bigum")},
-        {ECellType::Door, get_sprite_handle("door")}
+        {ECellType::Gum, SpriteSheet::find_sprite_by_name_or_default("gum")},
+        {ECellType::BiGum, SpriteSheet::find_sprite_by_name_or_default("bigum")},
+        {ECellType::Door, SpriteSheet::find_sprite_by_name_or_default("door")}
     };
 
-    const std::unordered_map<EItemType, SpriteHandle> map_item_type = {
-        {EItemType::Cherry, get_sprite_handle("cherry")},
-        {EItemType::Strawberry, get_sprite_handle("strawberry")},
-        {EItemType::Abricot, get_sprite_handle("abricot")},
-        {EItemType::Apple, get_sprite_handle("apple")},
-        {EItemType::Grapes, get_sprite_handle("wtfruit")},
-        {EItemType::Galaxian, get_sprite_handle("axe")},
-        {EItemType::Bell, get_sprite_handle("bell")},
-        {EItemType::Key, get_sprite_handle("key")},
+    item_sprite_handles = {
+        {EItemType::Cherry, SpriteSheet::find_sprite_by_name_or_default("cherry")},
+        {EItemType::Strawberry, SpriteSheet::find_sprite_by_name_or_default("strawberry")},
+        {EItemType::Abricot, SpriteSheet::find_sprite_by_name_or_default("abricot")},
+        {EItemType::Apple, SpriteSheet::find_sprite_by_name_or_default("apple")},
+        {EItemType::Grapes, SpriteSheet::find_sprite_by_name_or_default("wtfruit")},
+        {EItemType::Galaxian, SpriteSheet::find_sprite_by_name_or_default("axe")},
+        {EItemType::Bell, SpriteSheet::find_sprite_by_name_or_default("bell")},
+        {EItemType::Key, SpriteSheet::find_sprite_by_name_or_default("key")},
     };
 
-    std::array<SpriteHandle, 16> walls;
-    walls[0]                                                                    = get_sprite_handle("wall_none");
-    walls[Cell::WALL_MASK_NORTH]                                                = get_sprite_handle("wall_N");
-    walls[Cell::WALL_MASK_EAST]                                                 = get_sprite_handle("wall_E");
-    walls[Cell::WALL_MASK_EAST | Cell::WALL_MASK_NORTH]                         = get_sprite_handle("wall_NE");
-    walls[Cell::WALL_MASK_WEST]                                                 = get_sprite_handle("wall_W");
-    walls[Cell::WALL_MASK_WEST | Cell::WALL_MASK_NORTH]                         = get_sprite_handle("wall_NW");
-    walls[Cell::WALL_MASK_WEST | Cell::WALL_MASK_EAST]                          = get_sprite_handle("wall_EW");
-    walls[Cell::WALL_MASK_WEST | Cell::WALL_MASK_EAST | Cell::WALL_MASK_NORTH]  = get_sprite_handle("wall_NEW");
-    walls[Cell::WALL_MASK_SOUTH]                                                = get_sprite_handle("wall_S");
-    walls[Cell::WALL_MASK_SOUTH | Cell::WALL_MASK_NORTH]                        = get_sprite_handle("wall_NS");
-    walls[Cell::WALL_MASK_SOUTH | Cell::WALL_MASK_EAST]                         = get_sprite_handle("wall_ES");
-    walls[Cell::WALL_MASK_SOUTH | Cell::WALL_MASK_EAST | Cell::WALL_MASK_NORTH] = get_sprite_handle("wall_NES");
-    walls[Cell::WALL_MASK_SOUTH | Cell::WALL_MASK_WEST]                         = get_sprite_handle("wall_WS");
-    walls[Cell::WALL_MASK_SOUTH | Cell::WALL_MASK_WEST | Cell::WALL_MASK_NORTH] = get_sprite_handle("wall_NWS");
-    walls[Cell::WALL_MASK_SOUTH | Cell::WALL_MASK_WEST | Cell::WALL_MASK_EAST]  = get_sprite_handle("wall_EWS");
-    walls[Cell::WALL_MASK_FULL]                                                 = get_sprite_handle("wall_full");
+    std::array<SpriteHandle, 16> wall_sprite_handles;
+    wall_sprite_handles[0]                                                                    = SpriteSheet::find_sprite_by_name_or_default("wall_none");
+    wall_sprite_handles[Cell::WALL_MASK_NORTH]                                                = SpriteSheet::find_sprite_by_name_or_default("wall_N");
+    wall_sprite_handles[Cell::WALL_MASK_EAST]                                                 = SpriteSheet::find_sprite_by_name_or_default("wall_E");
+    wall_sprite_handles[Cell::WALL_MASK_EAST | Cell::WALL_MASK_NORTH]                         = SpriteSheet::find_sprite_by_name_or_default("wall_NE");
+    wall_sprite_handles[Cell::WALL_MASK_WEST]                                                 = SpriteSheet::find_sprite_by_name_or_default("wall_W");
+    wall_sprite_handles[Cell::WALL_MASK_WEST | Cell::WALL_MASK_NORTH]                         = SpriteSheet::find_sprite_by_name_or_default("wall_NW");
+    wall_sprite_handles[Cell::WALL_MASK_WEST | Cell::WALL_MASK_EAST]                          = SpriteSheet::find_sprite_by_name_or_default("wall_EW");
+    wall_sprite_handles[Cell::WALL_MASK_WEST | Cell::WALL_MASK_EAST | Cell::WALL_MASK_NORTH]  = SpriteSheet::find_sprite_by_name_or_default("wall_NEW");
+    wall_sprite_handles[Cell::WALL_MASK_SOUTH]                                                = SpriteSheet::find_sprite_by_name_or_default("wall_S");
+    wall_sprite_handles[Cell::WALL_MASK_SOUTH | Cell::WALL_MASK_NORTH]                        = SpriteSheet::find_sprite_by_name_or_default("wall_NS");
+    wall_sprite_handles[Cell::WALL_MASK_SOUTH | Cell::WALL_MASK_EAST]                         = SpriteSheet::find_sprite_by_name_or_default("wall_ES");
+    wall_sprite_handles[Cell::WALL_MASK_SOUTH | Cell::WALL_MASK_EAST | Cell::WALL_MASK_NORTH] = SpriteSheet::find_sprite_by_name_or_default("wall_NES");
+    wall_sprite_handles[Cell::WALL_MASK_SOUTH | Cell::WALL_MASK_WEST]                         = SpriteSheet::find_sprite_by_name_or_default("wall_WS");
+    wall_sprite_handles[Cell::WALL_MASK_SOUTH | Cell::WALL_MASK_WEST | Cell::WALL_MASK_NORTH] = SpriteSheet::find_sprite_by_name_or_default("wall_NWS");
+    wall_sprite_handles[Cell::WALL_MASK_SOUTH | Cell::WALL_MASK_WEST | Cell::WALL_MASK_EAST]  = SpriteSheet::find_sprite_by_name_or_default("wall_EWS");
+    wall_sprite_handles[Cell::WALL_MASK_FULL]                                                 = SpriteSheet::find_sprite_by_name_or_default("wall_full");
 
     for (auto& cell : grid)
-        cell.update_sprite_handle(map_cell_type, map_item_type, walls);
+        cell.update_sprite_handle(cell_sprite_handles, item_sprite_handles, wall_sprite_handles);
 }
 
 void Terrain::create_wall_cache_surface()

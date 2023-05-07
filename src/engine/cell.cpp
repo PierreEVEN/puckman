@@ -52,20 +52,20 @@ void Cell::update_type(const ECellType new_type)
 }
 
 void Cell::update_sprite_handle(
-    const std::unordered_map<ECellType, SpriteHandle>& map_cell_type,
-    const std::unordered_map<EItemType, SpriteHandle>& map_item_type,
-    const std::array<SpriteHandle, 16>&                walls)
+    const std::unordered_map<ECellType, SpriteHandle>& cell_sprite_handles,
+    const std::unordered_map<EItemType, SpriteHandle>& item_sprite_handles,
+    const std::array<SpriteHandle, 16>&                wall_sprite_handles)
 {
     switch (type)
     {
     case ECellType::Wall:
-        sprite_handle = walls[wall_masks.pos & ~wall_masks.neg];
+        sprite_handle = wall_sprite_handles[wall_masks.pos & ~wall_masks.neg];
         break;
     case ECellType::Item:
-        sprite_handle = map_item_type.find(item_type)->second;
+        sprite_handle = item_sprite_handles.find(item_type)->second;
         break;
     default:
-        sprite_handle = map_cell_type.find(type)->second;
+        sprite_handle = cell_sprite_handles.find(type)->second;
         break;
     }
 }

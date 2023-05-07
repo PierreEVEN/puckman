@@ -62,9 +62,9 @@ public:
     void                    update_type(const ECellType new_type);
 
     void update_sprite_handle(
-        const std::unordered_map<ECellType, SpriteHandle>& map_cell_type,
-        const std::unordered_map<EItemType, SpriteHandle>& map_item_type,
-        const std::array<SpriteHandle, 16>&                walls);
+        const std::unordered_map<ECellType, SpriteHandle>& cell_sprite_handles,
+        const std::unordered_map<EItemType, SpriteHandle>& item_sprite_handles,
+        const std::array<SpriteHandle, 16>&                wall_sprite_handles);
     void draw(int32_t terrain_unit_scale, SDL_Surface* surface_override = nullptr) const;
 
 private:

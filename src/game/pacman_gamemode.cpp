@@ -175,25 +175,13 @@ void PacmanGamemode::draw()
 
     for (int32_t i = 0; i < lives; ++i)
     {
-        SpriteSheet::find_sprite_by_name("pacman_life")->draw({(2 - i) * terrain->get_unit_length(), (static_cast<int32_t>(terrain->get_height())) * terrain->get_unit_length()});
+        SpriteSheet::find_sprite_by_name("pacman_life")->draw({(i + 2) * terrain->get_unit_length(), (static_cast<int32_t>(terrain->get_height())) * terrain->get_unit_length()});
     }
 
-    if (level >= 1)
-        SpriteSheet::find_sprite_by_name("cherry")->draw({(18) * terrain->get_unit_length(), (static_cast<int32_t>(terrain->get_height())) * terrain->get_unit_length()});
-    if (level >= 2)
-        SpriteSheet::find_sprite_by_name("strawberry")->draw({(17) * terrain->get_unit_length(), (static_cast<int32_t>(terrain->get_height())) * terrain->get_unit_length()});
-    if (level >= 4)
-        SpriteSheet::find_sprite_by_name("abricot")->draw({(16) * terrain->get_unit_length(), (static_cast<int32_t>(terrain->get_height())) * terrain->get_unit_length()});
-    if (level >= 6)
-        SpriteSheet::find_sprite_by_name("apple")->draw({(15) * terrain->get_unit_length(), (static_cast<int32_t>(terrain->get_height())) * terrain->get_unit_length()});
-    if (level >= 8)
-        SpriteSheet::find_sprite_by_name("wtfruit")->draw({(14) * terrain->get_unit_length(), (static_cast<int32_t>(terrain->get_height())) * terrain->get_unit_length()});
-    if (level >= 10)
-        SpriteSheet::find_sprite_by_name("axe")->draw({(13) * terrain->get_unit_length(), (static_cast<int32_t>(terrain->get_height())) * terrain->get_unit_length()});
-    if (level >= 12)
-        SpriteSheet::find_sprite_by_name("bell")->draw({(12) * terrain->get_unit_length(), (static_cast<int32_t>(terrain->get_height())) * terrain->get_unit_length()});
-    if (level > 12)
-        SpriteSheet::find_sprite_by_name("key")->draw({(11) * terrain->get_unit_length(), (static_cast<int32_t>(terrain->get_height())) * terrain->get_unit_length()});
+    int32_t items_to_display = std::min(level, 7);
+    for (int32_t i = 0; i < items_to_display; ++i)
+        terrain->get_item_sprite_handle(terrain->get_level_item(level - items_to_display + i + 1))
+                .draw({(18 - i) * terrain->get_unit_length(), (static_cast<int32_t>(terrain->get_height())) * terrain->get_unit_length()});
 
     // Hide tunnel
     SDL_FillRect(pm::Engine::get().get_surface_handle(), &tunnel_rect, 0);

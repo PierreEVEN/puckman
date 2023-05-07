@@ -124,4 +124,9 @@ std::optional<SpriteHandle> SpriteSheet::find_sprite_by_name(const std::string& 
 
     return found->first;
 }
+
+SpriteHandle SpriteSheet::find_sprite_by_name_or_default(const std::string& name, SpriteHandle default_value)
+{
+    return find_sprite_by_name(name).value_or(default_value);
+}
 }

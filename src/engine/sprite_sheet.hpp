@@ -134,6 +134,7 @@ public:
     // Creating a new sprite with a name already in use will update all sprites using this name. Be careful, it's not an intended behavior.
     SpriteHandle                                     new_sprite(const std::string& name, SDL_Rect base_transform, double animation_speed = 1.0, const std::vector<Vector2I>& offsets = {});
     [[nodiscard]] static std::optional<SpriteHandle> find_sprite_by_name(const std::string& name);
+    [[nodiscard]] static SpriteHandle find_sprite_by_name_or_default(const std::string& name, SpriteHandle default_value=SpriteHandle{});
 
     // Draw sprite at location
     void render_sprite(const SpriteHandle& sprite, Vector2I pos, double scale_x = 1.0, double scale_y = 1.0, SDL_Surface* surface_override = nullptr) const;

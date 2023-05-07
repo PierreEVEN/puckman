@@ -23,6 +23,9 @@ public:
         return unit_length;
     }
 
+    [[nodiscard]] EItemType get_level_item(int level) const;
+    [[nodiscard]] SpriteHandle get_item_sprite_handle(EItemType item) const;
+
     void tick(double delta_time);
     void draw();
 
@@ -60,6 +63,7 @@ private:
     static std::array<EItemType, 13> level_items;
     static std::unordered_map<EItemType, int> item_values;
 
+    std::unordered_map<EItemType, SpriteHandle> item_sprite_handles;
     int32_t           unit_length               = 16;
     uint32_t          width                     = 0;
     uint32_t          height                    = 0;
