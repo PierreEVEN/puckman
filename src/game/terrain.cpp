@@ -296,7 +296,6 @@ void Terrain::tick(double delta_time)
         item_timer -= delta_time;
         if (item_timer <= 0)
             get_cell({10, 15}).update_type(ECellType::Void);
-
     }
 }
 
