@@ -63,4 +63,12 @@ void Player::reset()
     set_look_direction(Direction::NONE);
     pause_animation(true);
 }
+
+void Player::set_look_direction(const Direction new_direction)
+{
+    if (Engine::get().is_init() && Engine::get().get_gamemode<PacmanGamemode>().stop_movements())
+        return;
+
+    Character::set_look_direction(new_direction);
+}
 }

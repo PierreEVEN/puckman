@@ -17,6 +17,8 @@ public:
     void play_death();
 
     void reset() override;
+    void set_look_direction(const Direction new_direction) override;
+
 private:
     bool         should_play_death = false;
     SpriteHandle death_sprite;

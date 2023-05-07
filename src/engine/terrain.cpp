@@ -75,6 +75,7 @@ void Terrain::eat(const Vector2I& pos)
     case ECellType::Gum:
         cell.update_type(ECellType::Void);
         gum_count--;
+        Engine::get().get_gamemode<PacmanGamemode>().add_points(10);
         if (gum_count == 70 || gum_count == 170)
         {
             const auto level = Engine::get().get_gamemode<PacmanGamemode>().current_level();
@@ -114,6 +115,8 @@ void Terrain::eat(const Vector2I& pos)
             get_cell({10, 15}).set_item(spawned_fruit);
         }
         update_sprite_handles();
+        if (gum_count <= 0)
+            Engine::get().get_gamemode<PacmanGamemode>().victory();
         break;
     case ECellType::Item:
         switch (cell.get_item())
@@ -152,6 +155,7 @@ void Terrain::eat(const Vector2I& pos)
     case ECellType::BiGum:
         Engine::get().get_gamemode<PacmanGamemode>().on_frightened.execute();
         cell.update_type(ECellType::Void);
+        Engine::get().get_gamemode<PacmanGamemode>().add_points(100);
         update_sprite_handles();
         break;
     default:

@@ -20,8 +20,6 @@ PacmanGamemode::PacmanGamemode()
 
     terrain = std::make_shared<pm::Terrain>();
     terrain->load_from_file("./resources/level.map");
-    terrain->set_wall_color(33, 33, 222);
-    terrain->reset();
     const auto terrain_unit_length = terrain->get_unit_length();
 
     player = std::make_shared<pm::Player>(pm::Player(terrain));
@@ -45,8 +43,7 @@ PacmanGamemode::PacmanGamemode()
         frightened_timer = 7;
     });
 
-    for (const auto& entity : entities)
-        entity->reset();
+    begin_level();
 }
 
 void PacmanGamemode::tick(double delta_seconds)
@@ -132,6 +129,37 @@ void PacmanGamemode::tick(double delta_seconds)
         }
     }
 
+    if (victory_timer > 0)
+    {
+        const auto last_victory_timer = victory_timer;
+        victory_timer -= delta_seconds;
+
+        if (victory_timer < 3 && last_victory_timer >= 3)
+        {
+            for (const auto& entity : entities)
+                entity->hide(true);
+            player->hide(false);
+        }
+
+        if (victory_timer <= 0 && last_victory_timer > 0)
+        {
+            level++;
+            INFO("Now on level {}", level);
+            begin_level();
+        }
+    }
+
+    if (spawn_delay > 0)
+    {
+        const auto last_spawn_delay = spawn_delay;
+        spawn_delay -= delta_seconds;
+
+        if (spawn_delay <= 0 && last_spawn_delay > 0)
+        {
+            player->pause_animation(false);
+        }
+    }
+
     for (const auto& entity : entities)
         entity->tick();
 }
@@ -143,7 +171,8 @@ void PacmanGamemode::draw()
     for (const auto& entity : entities)
         entity->draw();
 
-    for (int32_t i = 0; i < lives; ++i) {
+    for (int32_t i = 0; i < lives; ++i)
+    {
         SpriteSheet::find_sprite_by_name("pacman_life")->draw({(2 - i) * terrain->get_unit_length(), (static_cast<int32_t>(terrain->get_height())) * terrain->get_unit_length()});
     }
 
@@ -166,6 +195,48 @@ void PacmanGamemode::draw()
 
     // Hide tunnel
     SDL_FillRect(pm::Engine::get().get_surface_handle(), &tunnel_rect, 0);
+
+    if (victory_timer > 0 && victory_timer < 3)
+    {
+        if (static_cast<int32_t>(victory_timer * 5) % 2 == 0)
+            terrain->set_wall_color(32, 56, 236);
+        else
+            terrain->set_wall_color(236, 236, 236);
+    }
+
+    if (spawn_delay > 0)
+        SpriteSheet::find_sprite_by_name("ready")->draw({9 * terrain->get_unit_length(), 15 * terrain->get_unit_length()});
+}
+
+void PacmanGamemode::victory()
+{
+    if (victory_timer > 0)
+        return;
+    INFO("VICTORY");
+    victory_timer = 4;
+    player->pause_animation(true);
+}
+
+void PacmanGamemode::begin_level()
+{
+    victory_timer       = 0;
+    spawn_delay         = 2.5;
+    death_timer         = 0;
+    frightened_timer    = 0;
+    scatter_chase_timer = 0;
+    is_chase            = true;
+    cycle               = 0;
+    lives               = 3;
+
+    terrain->reset();
+
+    for (const auto& entity : entities)
+        entity->reset();
+
+    player->set_look_direction(Direction::RIGHT);
+    player->pause_animation(true);
+
+    terrain->set_wall_color(32, 56, 236);
 }
 
 void PacmanGamemode::death()
@@ -175,5 +246,11 @@ void PacmanGamemode::death()
         death_timer = 3;
         player->pause_animation(true);
     }
+}
+
+void PacmanGamemode::add_points(int32_t added_points)
+{
+    points += added_points;
+    INFO("add {} points; new score is {}", added_points, points);
 }
 }

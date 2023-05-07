@@ -67,6 +67,7 @@ void GhostBase::tick()
             mode = AiMode::GoHome;
             set_look_direction(Direction::NONE);
             on_search_new_dir();
+            Engine::get().get_gamemode<PacmanGamemode>().add_points(200);
         }
         else if (mode == AiMode::Chase || mode == AiMode::Scatter)
         {

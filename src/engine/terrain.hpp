@@ -22,7 +22,7 @@ public:
     {
         return unit_length;
     }
-    
+
     void tick(double delta_time);
     void draw();
 
@@ -56,7 +56,7 @@ private:
     void update_sprite_handles();
     void create_wall_cache_surface();
     void free_wall_cache_surface();
-    
+
     int32_t           unit_length               = 16;
     uint32_t          width                     = 0;
     uint32_t          height                    = 0;
@@ -65,6 +65,6 @@ private:
     SDL_Surface*      wall_cache_surface_handle = nullptr;
     int32_t           gum_count                 = 0;
     int32_t           initial_gum_count         = 0;
-    double item_timer = 0;
+    double            item_timer                = 0;
 };
 }

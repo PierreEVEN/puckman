@@ -47,7 +47,9 @@ public:
     
     int32_t random_int(int32_t min = INT32_MIN, int32_t max = INT32_MAX);
     double random_double(double min = 0.0, double max = 1.0);
-    
+
+    [[nodiscard]] bool is_init() const { return gamemode != nullptr; }
+
 private:
     
     static Engine& init_internal(const std::string& app_name = "SDL_App", uint32_t width = 800, uint32_t height = 600);

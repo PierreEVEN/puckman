@@ -31,11 +31,15 @@ public:
     [[nodiscard]] bool                           is_chase_time() const { return is_chase; }
     [[nodiscard]] int32_t                        current_level() const { return level; }
     [[nodiscard]] double                         frightened_remaining_time() const { return frightened_timer; }
-    [[nodiscard]] bool                           stop_movements() const { return death_timer > 0; }
+    [[nodiscard]] bool                           stop_movements() const { return death_timer > 0 || victory_timer > 0 || spawn_delay > 0; }
 
     void death();
 
-    void add_points(int32_t added_points) { points += added_points; }
+    void add_points(int32_t added_points);
+
+    void victory();
+
+    void begin_level();
 
 private:
     void load_sprites();
@@ -49,8 +53,10 @@ private:
     SDL_Rect                                 tunnel_rect;
     double                                   frightened_timer    = 0;
     double                                   scatter_chase_timer = 0;
+    double                                   victory_timer       = 0;
     bool                                     is_chase            = true;
     int                                      cycle               = 0;
+    double                                   spawn_delay         = 0;
     double                                   death_timer         = 0.0;
     int32_t                                  points              = 0;
 };

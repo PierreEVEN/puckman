@@ -9,7 +9,7 @@
 
 int main(int argc, char** argv)
 {
-    pm::Engine::init<pm::PacmanGamemode>("PuckMan", 16 * 21, 16 * 28);
+    pm::Engine::init<pm::PacmanGamemode>("PuckMan", 16 * 21, 16 * 30);
     
     while (pm::Engine::get().next_frame())
     {

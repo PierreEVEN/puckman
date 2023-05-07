@@ -14,7 +14,7 @@ void SpriteHandle::draw(const Vector2I& pos, double scale_x, double scale_y, SDL
 {
     if (!*this)
         FATAL("invalid handle");
-    owner->render_sprite(*this, pos, scale_x, scale_y, surface_override);
+    owner->render_sprite(*this, pos + Vector2I{0, 32}, scale_x, scale_y, surface_override);
 }
 
 SpriteHandle& SpriteHandle::set_paused(bool paused)
