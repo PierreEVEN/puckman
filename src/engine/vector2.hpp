@@ -3,10 +3,6 @@
 #include <cstdint>
 #include <cmath>
 #include <iosfwd>
-#include <functional>
-
-#define VECTOR_2_IN_PLACE_OPERATOR_VECTOR(OP) Vector2& operator##OP(const Vector2& other) { pos_x OP other.pos_x; pos_y OP other.pos_y; return *this; }
-#define VECTOR_2_IN_PLACE_OPERATOR_SCALAR(OP) Vector2& operator##OP(const T& other) { pos_x OP other; pos_y OP other; return *this; }
 
 namespace pm
 {
@@ -59,10 +55,7 @@ public:
     Vector2& operator/=(const T& other) { pos_x /= other; pos_y /= other; return *this; }
     Vector2& operator%=(const T& other) { pos_x %= other; pos_y %= other; return *this; }
 
-    bool operator==(const Vector2& other) const
-    {
-        return pos_x == other.pos_x && pos_y == other.pos_y;
-    }
+    bool operator==(const Vector2& other) const { return pos_x == other.pos_x && pos_y == other.pos_y; }
 
     // Utilities
     [[nodiscard]] T       length() const { return static_cast<T>(std::sqrt(static_cast<double>(pos_x * pos_x + pos_y * pos_y))); }

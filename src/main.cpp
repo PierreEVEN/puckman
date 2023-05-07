@@ -3,7 +3,7 @@
 #include <filesystem>
 
 #include "engine/engine.hpp"
-#include "engine/entity.hpp"
+#include "game/entity.hpp"
 #include "game/player.hpp"
 #include "game/pacman_gamemode.hpp"
 

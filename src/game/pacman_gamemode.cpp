@@ -3,10 +3,10 @@
 #include "ghosts.hpp"
 #include "ghost_base.hpp"
 #include "player.hpp"
-#include "engine/entity.hpp"
+#include "game/entity.hpp"
 #include "engine/logger.hpp"
 #include "engine/sprite_sheet.hpp"
-#include "engine/terrain.hpp"
+#include "game/terrain.hpp"
 
 #include <cassert>
 #include <SDL.h>

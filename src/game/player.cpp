@@ -3,7 +3,7 @@
 #include "pacman_gamemode.hpp"
 #include "engine/engine.hpp"
 #include "engine/logger.hpp"
-#include "engine/terrain.hpp"
+#include "game/terrain.hpp"
 
 namespace pm
 {

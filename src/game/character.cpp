@@ -2,7 +2,7 @@
 
 #include "pacman_gamemode.hpp"
 #include "engine/engine.hpp"
-#include "engine/terrain.hpp"
+#include "game/terrain.hpp"
 
 namespace std
 {

@@ -1,5 +1,5 @@
 #pragma once
-#include "engine/entity.hpp"
+#include "game/entity.hpp"
 
 namespace pm
 {
