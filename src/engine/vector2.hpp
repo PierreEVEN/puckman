@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <cmath>
 #include <iosfwd>
+#include <functional>
 
 namespace pm
 {
