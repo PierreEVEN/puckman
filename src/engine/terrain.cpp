@@ -94,8 +94,7 @@ void Terrain::eat(const Vector2I& pos)
         return;
 
     auto&     cell          = get_cell(pos);
-    int32_t   points        = 0;
-    EItemType spawned_item = EItemType::Cherry;
+    int32_t   points;
 
     switch (cell.get_type())
     {
@@ -105,9 +104,9 @@ void Terrain::eat(const Vector2I& pos)
         Engine::get().get_gamemode<PacmanGamemode>().add_points(10);
         if (gum_count == 70 || gum_count == 170)
         {
-            const auto level = Engine::get().get_gamemode<PacmanGamemode>().current_level();
-            spawned_item = level_items[level < level_items.size() ? level : 0];
-            item_timer = Engine::get().random_double(9.3333, 10);
+            const auto      level        = Engine::get().get_gamemode<PacmanGamemode>().current_level();
+            const EItemType spawned_item = level_items[static_cast<size_t>(level) < level_items.size() ? level : 0];
+            item_timer                   = Engine::get().random_double(9.3333, 10);
             get_cell({10, 15}).set_item(spawned_item);
         }
         update_sprite_handles();
@@ -126,7 +125,9 @@ void Terrain::eat(const Vector2I& pos)
         Engine::get().get_gamemode<PacmanGamemode>().add_points(100);
         update_sprite_handles();
         break;
-    default:
+    case ECellType::Void:
+    case ECellType::Wall:
+    case ECellType::Door:
         break;
     }
 }

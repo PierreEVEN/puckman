@@ -1,5 +1,4 @@
 #include "pacman_gamemode.hpp"
-#include "engine/logger.hpp"
 #include "engine/sprite_sheet.hpp"
 
 namespace pm

@@ -18,7 +18,7 @@ public:
 protected:
     bool go_through_doors = false;
 private:
-    double velocity;
+    double velocity = 75.0;
     Direction current_direction = Direction::NONE;
 };
 }
