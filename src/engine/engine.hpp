@@ -2,6 +2,7 @@
 #include <string>
 #include <chrono>
 #include <random>
+#include <memory>
 
 struct SDL_Window;
 struct SDL_Surface;

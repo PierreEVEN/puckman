@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <cmath>
 #include <iosfwd>
+#include <functional>
 
 #define VECTOR_2_IN_PLACE_OPERATOR_VECTOR(OP) Vector2& operator##OP(const Vector2& other) { pos_x OP other.pos_x; pos_y OP other.pos_y; return *this; }
 #define VECTOR_2_IN_PLACE_OPERATOR_SCALAR(OP) Vector2& operator##OP(const T& other) { pos_x OP other; pos_y OP other; return *this; }
