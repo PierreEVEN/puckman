@@ -235,7 +235,7 @@ void PacmanGamemode::reset_positions()
     scatter_chase_timer = 0;
     is_chase            = true;
     cycle               = 0;
-    
+
     for (const auto& entity : entities)
         entity->reset();
 
