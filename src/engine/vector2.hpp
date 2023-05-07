@@ -2,7 +2,9 @@
 
 #include <cstdint>
 #include <cmath>
+#include <iosfwd>
 
+// Helper to define vector2 operators
 #define VECTOR_2_LINEAR_OPERATOR_VECTOR(OP) Vector2 operator##OP(const Vector2& other) const { return {pos_x OP other.pos_x, pos_y OP other.pos_y}; }
 #define VECTOR_2_LINEAR_OPERATOR_SCALAR(OP) Vector2 operator##OP(const T& other) const { return {pos_x OP other, pos_y OP other}; }
 
@@ -11,6 +13,7 @@
 
 namespace pm
 {
+// Template class to define a 2 dimension vector of any numeric type.
 template <typename T>
 class Vector2
 {
@@ -27,12 +30,14 @@ public:
     {
     }
 
+    // Accessors
     T& x() { return pos_x; }
     T& y() { return pos_y; }
 
     [[nodiscard]] const T& x() const { return pos_x; }
     [[nodiscard]] const T& y() const { return pos_y; }
 
+    // Operators
     VECTOR_2_LINEAR_OPERATOR_VECTOR(+)
     VECTOR_2_LINEAR_OPERATOR_VECTOR(-)
     VECTOR_2_LINEAR_OPERATOR_VECTOR(/)
@@ -62,6 +67,7 @@ public:
         return pos_x == other.pos_x && pos_y == other.pos_y;
     }
 
+    // Utilities
     [[nodiscard]] T       length() const { return static_cast<T>(std::sqrt(static_cast<double>(pos_x * pos_x + pos_y * pos_y))); }
     [[nodiscard]] T       l1_length() const { return std::max(std::abs(pos_x), std::abs(pos_y)); }
     [[nodiscard]] Vector2 normalized() const { return *this / length(); }
@@ -70,6 +76,7 @@ public:
 
     using InternalType = T;
 
+    // Cast this vector2 into another kind vector2
     template <typename U>
     [[nodiscard]] Vector2<typename U::InternalType> cast() const
     {
@@ -80,10 +87,21 @@ private:
     T pos_x = T(0), pos_y = T(0);
 };
 
+// Common vector2 usages
 using Vector2D = Vector2<double>;
 using Vector2I = Vector2<int32_t>;
+
+// Used for printing and debug purpose
+template<typename T>
+std::stringstream& operator<<(std::stringstream& stream, const Vector2<T>& s)
+{
+    stream << s.x() << ", " << s.y();
+    return stream;
 }
 
+}
+
+// Hash operators
 namespace std
 {
 template <> struct hash<pm::Vector2D>

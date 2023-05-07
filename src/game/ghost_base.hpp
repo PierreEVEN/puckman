@@ -41,7 +41,6 @@ protected:
         return in_dir.is_up() ? Vector2I{-1, -1} : *in_dir;
     }
 
-    const std::shared_ptr<PathFinder> pathfinder;
     std::shared_ptr<Character>        target;
     AiMode                            mode;
     Vector2I                          last_cell = {};

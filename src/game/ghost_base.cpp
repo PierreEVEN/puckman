@@ -4,12 +4,11 @@
 #include "engine/direction.hpp"
 #include "engine/engine.hpp"
 #include "engine/logger.hpp"
-#include "engine/pathfinding.hpp"
 
 namespace pm
 {
 GhostBase::GhostBase(const std::shared_ptr<Terrain>& terrain, std::shared_ptr<Character> in_target)
-    : Character(terrain), pathfinder(std::make_shared<PathFinder>(terrain)), target(std::move(in_target)), mode(AiMode::Spawned)
+    : Character(terrain), target(std::move(in_target)), mode(AiMode::Spawned)
 {
     frightened_sprite       = *SpriteSheet::find_sprite_by_name("frightened_ghost");
     frightened_sprite_flash = *SpriteSheet::find_sprite_by_name("frightened_ghost_flash");

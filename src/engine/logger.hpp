@@ -5,6 +5,13 @@
 #include <optional>
 #include <engine/format.hpp>
 
+// Multiplateform logger utility
+
+// Helper macro - Usages examples :
+// INFO("my log");
+// WARNING("this is a warning of {}", value);
+// FATAL("Program termination");
+
 #if defined(_MSC_VER)
 #define DEBUG(format_str, ...) ::pm::Logger::get().message(::pm::ELogLevel::DEBUG, std::format_2(format_str, __VA_ARGS__), __FILE__, ##__FUNCTION__, __LINE__)
 #define INFO(format_str, ...) ::pm::Logger::get().message(::pm::ELogLevel::INFO, std::format_2(format_str, __VA_ARGS__), __FILE__, ##__FUNCTION__, __LINE__)
@@ -45,9 +52,11 @@ class Logger
 public:
     static Logger& get();
 
+    // Add a new log message
     void message(const ELogLevel level, const std::string& text, const std::optional<std::string>& file= {}, const std::optional<std::string>& function = {}, const std::optional<size_t>& line= {});
 
 private:
+    // Safety for parallel printing
     std::mutex print_lock;
 };
 }
