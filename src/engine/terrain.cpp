@@ -1,7 +1,7 @@
 #include "terrain.hpp"
 #include "engine.hpp"
 #include "logger.hpp"
-#include "game/pacman.hpp"
+#include "game/pacman_gamemode.hpp"
 
 #include <fstream>
 #include <SDL_surface.h>
@@ -85,7 +85,7 @@ int Terrain::eat(const Vector2I& pos)
         update_sprite_handles();
         return 100;
     case ECellType::BiGum:
-        Engine::get().get_gamemode<Pacman>().on_frightened.execute();
+        Engine::get().get_gamemode<PacmanGamemode>().on_frightened.execute();
         cell.update_type(ECellType::Void);
         update_sprite_handles();
         return 10;

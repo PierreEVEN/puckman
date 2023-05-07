@@ -1,7 +1,8 @@
-#include "pacman.hpp"
+#include "pacman_gamemode.hpp"
 
+#include "ghosts.hpp"
 #include "ghost_base.hpp"
-#include "puckman.hpp"
+#include "player.hpp"
 #include "engine/entity.hpp"
 #include "engine/logger.hpp"
 #include "engine/sprite_sheet.hpp"
@@ -11,7 +12,7 @@
 
 namespace pm
 {
-Pacman::Pacman()
+PacmanGamemode::PacmanGamemode()
     : sprite_sheet(std::make_shared<SpriteSheet>("./resources/sprite_sheet.bmp"))
 {
     load_sprites();
@@ -22,7 +23,7 @@ Pacman::Pacman()
     terrain->set_wall_color(33, 33, 222);
     const auto terrain_unit_length = terrain->get_unit_length();
 
-    player = std::make_shared<pm::Puckman>(pm::Puckman(terrain));
+    player = std::make_shared<pm::Player>(pm::Player(terrain));
 
     // Create ghost_a
     auto blinky = std::make_shared<pm::Blinky>(terrain, player);
@@ -47,7 +48,7 @@ Pacman::Pacman()
         entity->reset();
 }
 
-void Pacman::tick(double delta_seconds)
+void PacmanGamemode::tick(double delta_seconds)
 {
     GamemodeBase::tick(delta_seconds);
 
@@ -132,7 +133,7 @@ void Pacman::tick(double delta_seconds)
         entity->tick();
 }
 
-void Pacman::draw()
+void PacmanGamemode::draw()
 {
     GamemodeBase::draw();
     terrain->draw();
@@ -148,7 +149,7 @@ void Pacman::draw()
     SDL_FillRect(pm::Engine::get().get_surface_handle(), &tunnel_rect, 0);
 }
 
-void Pacman::death()
+void PacmanGamemode::death()
 {
     if (death_timer <= 0)
     {

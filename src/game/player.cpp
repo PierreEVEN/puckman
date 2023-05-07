@@ -1,13 +1,13 @@
-#include "puckman.hpp"
+#include "player.hpp"
 
-#include "pacman.hpp"
+#include "pacman_gamemode.hpp"
 #include "engine/engine.hpp"
 #include "engine/logger.hpp"
 #include "engine/terrain.hpp"
 
 namespace pm
 {
-Puckman::Puckman(const std::shared_ptr<Terrain>& terrain)
+Player::Player(const std::shared_ptr<Terrain>& terrain)
     : Character(terrain)
 {
     set_direction_sprite(pm::Direction::NONE, *SpriteSheet::find_sprite_by_name("pacman_default"));
@@ -21,7 +21,7 @@ Puckman::Puckman(const std::shared_ptr<Terrain>& terrain)
     death_sprite = *SpriteSheet::find_sprite_by_name("pacman_die");
 }
 
-void Puckman::tick()
+void Player::tick()
 {
     auto&      terrain             = get_terrain();
     const auto terrain_unit_length = terrain.get_unit_length();
@@ -31,7 +31,7 @@ void Puckman::tick()
     Character::tick();
 }
 
-void Puckman::draw()
+void Player::draw()
 {
     if (hidden)
         return;
@@ -45,13 +45,13 @@ void Puckman::draw()
         Character::draw();
 }
 
-void Puckman::play_death()
+void Player::play_death()
 {
     death_sprite.reset_timer();
     should_play_death = true;
 }
 
-void Puckman::reset()
+void Player::reset()
 {
     Character::reset();
     set_cell_discrete_pos({10, 20});

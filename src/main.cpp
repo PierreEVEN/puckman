@@ -4,12 +4,12 @@
 
 #include "engine/engine.hpp"
 #include "engine/entity.hpp"
-#include "game/puckman.hpp"
-#include "game/pacman.hpp"
+#include "game/player.hpp"
+#include "game/pacman_gamemode.hpp"
 
 int main(int argc, char** argv)
 {
-    pm::Engine::init<pm::Pacman>("PuckMan", 16 * 21, 16 * 28);
+    pm::Engine::init<pm::PacmanGamemode>("PuckMan", 16 * 21, 16 * 28);
     
     while (pm::Engine::get().next_frame())
     {
@@ -29,7 +29,7 @@ int main(int argc, char** argv)
         // Gestion du clavier        
         int          nbk;
         const Uint8* keys = SDL_GetKeyboardState(&nbk);
-        auto& player = pm::Engine::get().get_gamemode<pm::Pacman>().get_player();
+        auto& player = pm::Engine::get().get_gamemode<pm::PacmanGamemode>().get_player();
         if (keys[SDL_SCANCODE_ESCAPE])
             pm::Engine::get().shutdown();
         if (keys[SDL_SCANCODE_LEFT])

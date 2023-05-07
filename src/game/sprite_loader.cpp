@@ -1,9 +1,9 @@
-#include "pacman.hpp"
+#include "pacman_gamemode.hpp"
 #include "engine/sprite_sheet.hpp"
 
 namespace pm
 {
-void Pacman::load_sprites()
+void PacmanGamemode::load_sprites()
 {
     // Load terrain sprites
     sprite_sheet->new_sprite("gum", {128, 32, 16, 16}, 10, {});

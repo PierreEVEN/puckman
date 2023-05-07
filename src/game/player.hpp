@@ -5,10 +5,10 @@ namespace pm
 {
 class Terrain;
 
-class Puckman : public Character
+class Player : public Character
 {
 public:
-    explicit Puckman(const std::shared_ptr<Terrain>& terrain);
+    explicit Player(const std::shared_ptr<Terrain>& terrain);
 
     void tick() override;
 

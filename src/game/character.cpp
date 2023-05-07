@@ -1,6 +1,6 @@
 #include "character.hpp"
 
-#include "pacman.hpp"
+#include "pacman_gamemode.hpp"
 #include "engine/engine.hpp"
 #include "engine/terrain.hpp"
 
@@ -8,7 +8,7 @@ namespace pm
 {
 void Character::tick()
 {
-    if (Engine::get().get_gamemode<Pacman>().stop_movements())
+    if (Engine::get().get_gamemode<PacmanGamemode>().stop_movements())
     {
         Entity::tick();
         return;
