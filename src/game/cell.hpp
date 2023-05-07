@@ -47,11 +47,15 @@ public:
     static constexpr WallMask WALL_MASK_FULL  = 0b1111;
 
 public:
+
+    // Create a cell based on the character that represents it
     [[nodiscard]] static Cell from_char(char chr);
 
     Cell() = default;
 
     void set_pos(const Vector2I& in_pos);
+
+    // Set the cell to be of a certain type, with extra relevant information
     void set_item(EItemType in_item_type);
     void set_wall(WallMask in_wall_mask, WallMask in_wall_mask_neg = -1);
     void set_gum(bool big);
@@ -61,10 +65,14 @@ public:
     [[nodiscard]] EItemType get_item() const;
     void                    update_type(const ECellType new_type);
 
+    // Update the cell's sprite handle based on its nature
+    // from the provided data structures
     void update_sprite_handle(
         const std::unordered_map<ECellType, SpriteHandle>& cell_sprite_handles,
         const std::unordered_map<EItemType, SpriteHandle>& item_sprite_handles,
         const std::array<SpriteHandle, 16>&                wall_sprite_handles);
+
+    // Draw the cell to the default or provided surface
     void draw(int32_t terrain_unit_scale, SDL_Surface* surface_override = nullptr) const;
 
 private:
