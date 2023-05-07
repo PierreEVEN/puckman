@@ -51,6 +51,11 @@ void Cell::update_type(const ECellType new_type)
     type = new_type;
 }
 
+void Cell::update_sprite_handle(SpriteHandle new_sprite_handle)
+{
+    sprite_handle = new_sprite_handle;
+}
+
 void Cell::update_sprite_handle(
     const std::unordered_map<ECellType, SpriteHandle>& cell_sprite_handles,
     const std::unordered_map<EItemType, SpriteHandle>& item_sprite_handles,

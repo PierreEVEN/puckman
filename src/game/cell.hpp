@@ -65,6 +65,10 @@ public:
     [[nodiscard]] EItemType get_item() const;
     void                    update_type(const ECellType new_type);
 
+    // Update the cell's sprite handle to be the provided one
+    // (called update instead of set for consistency with the other overload)
+    void update_sprite_handle(SpriteHandle new_sprite_handle);
+
     // Update the cell's sprite handle based on its nature
     // from the provided data structures
     void update_sprite_handle(

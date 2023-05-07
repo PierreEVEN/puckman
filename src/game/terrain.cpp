@@ -144,12 +144,9 @@ void Terrain::eat(const Vector2I& pos)
 
 void Terrain::clear_fruit()
 {
-    const std::unordered_map<ECellType, SpriteHandle> sprite_handle = {
-        {ECellType::Void, SpriteHandle{}}
-    };
     Cell& fruit_cell = get_cell({10, 15});
     fruit_cell.update_type(ECellType::Void);
-    fruit_cell.update_sprite_handle(sprite_handle, {}, {});
+    fruit_cell.update_sprite_handle(SpriteHandle{});
 }
 
 Vector2I Terrain::closest_free_point(const Vector2I& location) const
