@@ -200,7 +200,7 @@ void PacmanGamemode::draw()
     if (victory_timer > 0 && victory_timer < 3)
     {
         if (static_cast<int32_t>(victory_timer * 5) % 2 == 0)
-            terrain->set_wall_color(32, 56, 236);
+            terrain->set_wall_color(33, 33, 222);
         else
             terrain->set_wall_color(236, 236, 236);
     }
@@ -244,7 +244,7 @@ void PacmanGamemode::reset_positions()
     player->set_look_direction(Direction::NONE);
     player->pause_animation(true);
 
-    terrain->set_wall_color(32, 56, 236);
+    terrain->set_wall_color(33, 33, 222);
 }
 
 void PacmanGamemode::death()
