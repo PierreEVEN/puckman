@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
-// std format replacement
-// #define format format_2
+// std::format replacement
+// As std::format is still not implemented on every compiler, we quickly implemented our own version (format parsing is done at runtime, so performances are not as good as stl's one)
 
 namespace std
 {

@@ -8,6 +8,7 @@
 #include "engine/sprite_sheet.hpp"
 #include "engine/terrain.hpp"
 
+#include <cassert>
 #include <SDL.h>
 #include <SDL_surface.h>
 
