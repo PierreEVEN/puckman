@@ -47,7 +47,7 @@ public:
     static constexpr WallMask WALL_MASK_FULL  = 0b1111;
 
 public:
-    static Cell from_char(char chr);
+    [[nodiscard]] static Cell from_char(char chr);
 
     Cell() = default;
 
