@@ -52,6 +52,9 @@ void PacmanGamemode::tick(double delta_seconds)
 {
     GamemodeBase::tick(delta_seconds);
 
+    if (lives == 0)
+        return;
+
     terrain->tick(delta_seconds);
 
     // Handle AI behaviors. If frightened : don't decrease scatter-chase timer
@@ -121,13 +124,14 @@ void PacmanGamemode::tick(double delta_seconds)
         if (death_timer <= 0 && last_death_timer > 0)
         {
             lives--;
-            reset_positions();
 
             if (lives == 0)
             {
                 INFO("GAME OVER");
-                Engine::get().shutdown();
+                player->hide(true);
             }
+            else
+                reset_positions();
         }
     }
 
@@ -194,7 +198,9 @@ void PacmanGamemode::draw()
             terrain->set_wall_color(236, 236, 236);
     }
 
-    if (spawn_delay > 0)
+    if (lives == 0)
+        SpriteSheet::find_sprite_by_name("game_over")->draw({8 * terrain->get_unit_length(), 15 * terrain->get_unit_length()});
+    else if (spawn_delay > 0)
         SpriteSheet::find_sprite_by_name("ready")->draw({9 * terrain->get_unit_length(), 15 * terrain->get_unit_length()});
 }
 
