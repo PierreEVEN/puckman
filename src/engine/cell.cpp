@@ -44,15 +44,22 @@ ECellType Cell::get_type() const
     return type;
 }
 
+EItemType Cell::get_item() const
+{
+    if (type != ECellType::Item)
+        FATAL("this cell is not an item");
+    return item_type;
+}
+
 void Cell::update_type(const ECellType new_type)
 {
     type = new_type;
 }
 
 void Cell::update_sprite_handle(
-    std::unordered_map<ECellType, SpriteHandle> map_cell_type,
-    std::unordered_map<EItemType, SpriteHandle> map_item_type,
-    std::array<SpriteHandle, 16>&               walls)
+    const std::unordered_map<ECellType, SpriteHandle>& map_cell_type,
+    const std::unordered_map<EItemType, SpriteHandle>& map_item_type,
+    const std::array<SpriteHandle, 16>&                walls)
 {
     switch (type)
     {
@@ -60,10 +67,10 @@ void Cell::update_sprite_handle(
         sprite_handle = walls[wall_masks.pos & ~wall_masks.neg];
         break;
     case ECellType::Item:
-        sprite_handle = map_item_type[item_type];
+        sprite_handle = map_item_type.find(item_type)->second;
         break;
     default:
-        sprite_handle = map_cell_type[type];
+        sprite_handle = map_cell_type.find(type)->second;
         break;
     }
 }

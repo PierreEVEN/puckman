@@ -11,18 +11,19 @@ namespace pm
 class Terrain
 {
 public:
-    Terrain();
+    Terrain() = default;
     ~Terrain();
 
     void load_from_file(const std::filesystem::path& path);
 
-    [[nodiscard]] Cell& get_cell(const uint32_t x, const uint32_t y);
+    [[nodiscard]] Cell& get_cell(const Vector2I& pos);
 
     [[nodiscard]] int32_t get_unit_length() const
     {
         return unit_length;
     }
-
+    
+    void tick(double delta_time);
     void draw();
 
     [[nodiscard]] bool is_free(const Vector2I& pos, bool is_door_free = false) const
@@ -39,26 +40,31 @@ public:
         return (static_cast<uint32_t>(pos.x() + 2) + width) % (width + 2) >= width;
     }
 
-    [[nodiscard]] int eat(const Vector2I& pos);
+    void eat(const Vector2I& pos);
 
     [[nodiscard]] uint32_t get_width() const { return width; }
     [[nodiscard]] uint32_t get_height() const { return height; }
 
     [[nodiscard]] Vector2I closest_free_point(const Vector2I& location) const;
-    
+
     void set_wall_color(const Uint8 r, const Uint8 g, const Uint8 b) const;
+
+    void reset();
 
 private:
     void update_position_and_walls();
     void update_sprite_handles();
     void create_wall_cache_surface();
     void free_wall_cache_surface();
-
-private:
-    int32_t           unit_length = 16;
-    uint32_t          width;
-    uint32_t          height;
-    std::vector<Cell> grid;
-    SDL_Surface* wall_cache_surface_handle = nullptr;
+    
+    int32_t           unit_length               = 16;
+    uint32_t          width                     = 0;
+    uint32_t          height                    = 0;
+    std::vector<Cell> grid                      = {};
+    std::vector<Cell> initial_grid              = {};
+    SDL_Surface*      wall_cache_surface_handle = nullptr;
+    int32_t           gum_count                 = 0;
+    int32_t           initial_gum_count         = 0;
+    double item_timer = 0;
 };
 }

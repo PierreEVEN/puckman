@@ -23,11 +23,14 @@ Player::Player(const std::shared_ptr<Terrain>& terrain)
 
 void Player::tick()
 {
-    auto&      terrain             = get_terrain();
-    const auto terrain_unit_length = terrain.get_unit_length();
-    const auto value               = terrain.eat(get_cell_discrete_pos());
+    const auto level      = Engine::get().get_gamemode<PacmanGamemode>().current_level();
+    const auto frightened = Engine::get().get_gamemode<PacmanGamemode>().current_level() > 0;
 
-    set_velocity(75.75757625 / get_terrain().get_unit_length());
+    const auto speed_multiplier = frightened ? (level == 1 ? 0.9 : level < 5 ? 0.95 : 1) : (level == 1 ? 0.8 : level < 5 ? 0.9 : level < 21 ? 1 : 0.9);
+
+    get_terrain().eat(get_cell_discrete_pos());
+
+    set_velocity(75.75757625 / get_terrain().get_unit_length() * speed_multiplier);
     Character::tick();
 }
 
@@ -55,7 +58,7 @@ void Player::reset()
 {
     Character::reset();
     set_cell_discrete_pos({10, 20});
-    hidden = false;
+    hidden            = false;
     should_play_death = false;
     set_look_direction(Direction::NONE);
     pause_animation(true);

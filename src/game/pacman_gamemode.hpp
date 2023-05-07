@@ -35,6 +35,8 @@ public:
 
     void death();
 
+    void add_points(int32_t added_points) { points += added_points; }
+
 private:
     void load_sprites();
 
@@ -50,5 +52,6 @@ private:
     bool                                     is_chase            = true;
     int                                      cycle               = 0;
     double                                   death_timer         = 0.0;
+    int32_t                                  points              = 0;
 };
 }

@@ -36,7 +36,7 @@ void SpriteHandle::reset_timer() const
 {
     if (!*this)
         FATAL("invalid handle");
-    return owner->reset_timer(*this);
+    owner->reset_timer(*this);
 }
 
 SpriteSheet::SpriteSheet(const std::filesystem::path& sprite_sheet)
@@ -113,6 +113,7 @@ void SpriteSheet::reset_timer(SpriteHandle sprite) const
     {
         ERROR("Failed to find sprite with handle {}", sprite);
     }
+    info->second.last_time = std::chrono::steady_clock::now();
     info->second.internal_time = 0;
 }
 

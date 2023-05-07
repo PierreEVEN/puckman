@@ -5,25 +5,16 @@
 #include <array>
 #include <unordered_map>
 
-namespace pm {
-
-using WallMask = int;
-
-const WallMask WALL_MASK_NORTH = 0b0001;
-const WallMask WALL_MASK_WEST  = 0b0010;
-const WallMask WALL_MASK_EAST  = 0b0100;
-const WallMask WALL_MASK_SOUTH = 0b1000;
-
-const WallMask WALL_MASK_FULL  = 0b1111;
-
+namespace pm
+{
 enum class EItemType
 {
     Cherry,
     Strawberry,
     Abricot,
     Apple,
-    Wtfruit,
-    Axe,
+    Grapes,
+    Galaxian,
     Bell,
     Key
 };
@@ -42,30 +33,36 @@ class Cell
 {
 public:
     static double draw_scale;
+    
+    using WallMask = int32_t;
+    static constexpr WallMask WALL_MASK_NORTH = 0b0001;
+    static constexpr WallMask WALL_MASK_WEST  = 0b0010;
+    static constexpr WallMask WALL_MASK_EAST  = 0b0100;
+    static constexpr WallMask WALL_MASK_SOUTH = 0b1000;
+    static constexpr WallMask WALL_MASK_FULL  = 0b1111;
 
 public:
-
     static Cell from_char(char chr);
 
     Cell();
-    
+
     void set_pos(const Vector2I& in_pos);
     void set_item(EItemType in_item_type);
-    void set_wall(WallMask in_wall_mask, WallMask in_wall_mask_neg=-1);
+    void set_wall(WallMask in_wall_mask, WallMask in_wall_mask_neg = -1);
     void set_gum(bool big);
     void set_door();
 
     [[nodiscard]] ECellType get_type() const;
-    void update_type(const ECellType new_type);
+    [[nodiscard]] EItemType get_item() const;
+    void                    update_type(const ECellType new_type);
 
     void update_sprite_handle(
-        std::unordered_map<ECellType, SpriteHandle> map_cell_type,
-        std::unordered_map<EItemType, SpriteHandle> map_item_type,
-        std::array<SpriteHandle, 16>& walls);
-    void draw(int32_t terrain_unit_scale, SDL_Surface* surface_override=nullptr) const;
+        const std::unordered_map<ECellType, SpriteHandle>& map_cell_type,
+        const std::unordered_map<EItemType, SpriteHandle>& map_item_type,
+        const std::array<SpriteHandle, 16>&                walls);
+    void draw(int32_t terrain_unit_scale, SDL_Surface* surface_override = nullptr) const;
 
 private:
-
     SpriteHandle sprite_handle;
 
     Vector2I pos{0, 0};
@@ -75,10 +72,12 @@ private:
     union
     {
         EItemType item_type;
-        struct {
+
+        struct
+        {
             WallMask pos;
             WallMask neg;
-        } wall_masks;
+        }            wall_masks;
     };
 };
 }
