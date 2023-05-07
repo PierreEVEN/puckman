@@ -26,7 +26,6 @@ PacmanGamemode::PacmanGamemode()
 
     player = std::make_shared<pm::Player>(pm::Player(terrain));
 
-    // Create ghost_a
     auto blinky = std::make_shared<pm::Blinky>(terrain, player);
     auto pinky  = std::make_shared<pm::Pinky>(terrain, player);
     auto inky   = std::make_shared<pm::Inky>(terrain, player, blinky);
