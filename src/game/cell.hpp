@@ -82,13 +82,13 @@ private:
 
     ECellType type = ECellType::Void;
 
-    struct InternalWallMask
+    struct DualWallMask
     {
         WallMask pos;
         WallMask neg;
     };
 
     EItemType        item_type = EItemType::Cherry;
-    InternalWallMask wall_masks;
+    DualWallMask     wall_masks;
 };
 }
