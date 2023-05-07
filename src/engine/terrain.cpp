@@ -25,14 +25,14 @@ std::array<EItemType, 13> Terrain::level_items{
 };
 
 std::unordered_map<EItemType, int> Terrain::item_values = {
-        {EItemType::Cherry,      100},
-        {EItemType::Strawberry,  300},
-        {EItemType::Abricot,     500},
-        {EItemType::Apple,       700},
-        {EItemType::Grapes,     1000},
-        {EItemType::Galaxian,   2000},
-        {EItemType::Bell,       3000},
-        {EItemType::Key,        5000}
+    {EItemType::Cherry,      100},
+    {EItemType::Strawberry,  300},
+    {EItemType::Abricot,     500},
+    {EItemType::Apple,       700},
+    {EItemType::Grapes,     1000},
+    {EItemType::Galaxian,   2000},
+    {EItemType::Bell,       3000},
+    {EItemType::Key,        5000}
 };
 
 void Terrain::load_from_file(const std::filesystem::path& path)
