@@ -60,8 +60,8 @@ private:
     void create_wall_cache_surface();
     void free_wall_cache_surface();
 
-    static std::array<EItemType, 13>          level_items;
-    static std::unordered_map<EItemType, int> item_values;
+    static const std::array<EItemType, 13>          level_items;
+    static const std::unordered_map<EItemType, int> item_values;
 
     std::unordered_map<EItemType, SpriteHandle> item_sprite_handles;
     int32_t                                     unit_length               = 16;

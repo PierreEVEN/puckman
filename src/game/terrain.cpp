@@ -8,7 +8,7 @@
 
 namespace pm
 {
-std::array<EItemType, 13> Terrain::level_items{
+const std::array<EItemType, 13> Terrain::level_items{
     EItemType::Key,        // default
     EItemType::Cherry,     // 1
     EItemType::Strawberry, // 2
@@ -24,7 +24,7 @@ std::array<EItemType, 13> Terrain::level_items{
     EItemType::Bell        // 12
 };
 
-std::unordered_map<EItemType, int> Terrain::item_values = {
+const std::unordered_map<EItemType, int> Terrain::item_values = {
     {EItemType::Cherry,      100},
     {EItemType::Strawberry,  300},
     {EItemType::Abricot,     500},
@@ -124,7 +124,7 @@ void Terrain::eat(const Vector2I& pos)
             Engine::get().get_gamemode<PacmanGamemode>().victory();
         break;
     case ECellType::Item:
-        points = item_values[cell.get_item()];
+        points = item_values.find(cell.get_item())->second;
         Engine::get().get_gamemode<PacmanGamemode>().add_points(points);
         cell.update_type(ECellType::Void);
         update_sprite_handles();
