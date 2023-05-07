@@ -257,6 +257,7 @@ void PacmanGamemode::death()
     {
         death_timer = 3;
         player->pause_animation(true);
+        terrain->clear_fruit();
     }
 }
 

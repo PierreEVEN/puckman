@@ -59,6 +59,9 @@ public:
     // Attempt to eat a collectable that might be at these coordinates
     void eat(const Vector2I& pos);
 
+    // Remove the item a.k.a "fruit" if it's present
+    void clear_fruit();
+
     [[nodiscard]] uint32_t get_width() const { return width; }
     [[nodiscard]] uint32_t get_height() const { return height; }
 

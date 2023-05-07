@@ -142,6 +142,16 @@ void Terrain::eat(const Vector2I& pos)
     }
 }
 
+void Terrain::clear_fruit()
+{
+    const std::unordered_map<ECellType, SpriteHandle> sprite_handle = {
+        {ECellType::Void, SpriteHandle{}}
+    };
+    Cell& fruit_cell = get_cell({10, 15});
+    fruit_cell.update_type(ECellType::Void);
+    fruit_cell.update_sprite_handle(sprite_handle, {}, {});
+}
+
 Vector2I Terrain::closest_free_point(const Vector2I& location) const
 {
     const Vector2I clamped_location = {std::clamp(location.x(), 0, static_cast<int>(width)), std::clamp(location.y(), 0, static_cast<int>(height))};
@@ -180,8 +190,7 @@ void Terrain::reset()
 
     update_sprite_handles();
 
-    // Clear fruit
-    get_cell({10, 15}).update_type(ECellType::Void);
+    clear_fruit();
 
     create_wall_cache_surface();
 }
@@ -295,7 +304,7 @@ void Terrain::tick(double delta_time)
     {
         item_timer -= delta_time;
         if (item_timer <= 0)
-            get_cell({10, 15}).update_type(ECellType::Void);
+            clear_fruit();
     }
 }
 
