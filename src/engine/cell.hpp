@@ -7,6 +7,21 @@
 
 namespace pm
 {
+/*
+ * This is the representation of a cell of pacman game's terrain
+ */
+
+enum class ECellType
+{
+    Void,
+    Wall,
+    Gum,
+    Item,
+    BiGum,
+    Door,
+};
+
+// Specialized item type informations
 enum class EItemType
 {
     Cherry,
@@ -19,21 +34,11 @@ enum class EItemType
     Key
 };
 
-enum class ECellType
-{
-    Void,
-    Wall,
-    Gum,
-    Item,
-    BiGum,
-    Door,
-};
-
 class Cell
 {
 public:
     static double draw_scale;
-    
+
     using WallMask = int32_t;
     static constexpr WallMask WALL_MASK_NORTH = 0b0001;
     static constexpr WallMask WALL_MASK_WEST  = 0b0010;
@@ -44,7 +49,7 @@ public:
 public:
     static Cell from_char(char chr);
 
-    Cell();
+    Cell() = default;
 
     void set_pos(const Vector2I& in_pos);
     void set_item(EItemType in_item_type);
@@ -63,21 +68,20 @@ public:
     void draw(int32_t terrain_unit_scale, SDL_Surface* surface_override = nullptr) const;
 
 private:
-    SpriteHandle sprite_handle;
+    SpriteHandle sprite_handle = {};
 
     Vector2I pos{0, 0};
 
     ECellType type = ECellType::Void;
 
-    union
+    class InternalWallMask
     {
-        EItemType item_type;
-
-        struct
-        {
-            WallMask pos;
-            WallMask neg;
-        }            wall_masks;
+    public:
+        WallMask pos = 0;
+        WallMask neg = 0;
     };
+
+    EItemType        item_type = EItemType::Cherry;
+    InternalWallMask wall_masks;
 };
 }

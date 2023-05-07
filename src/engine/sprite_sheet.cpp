@@ -65,7 +65,6 @@ void SpriteSheet::render_sprite(const SpriteHandle& sprite, Vector2I pos, double
     }
 
     // Chose flip-book index based on world time and animation speed (0 is default offset)
-
     const auto elapsed = std::chrono::steady_clock::now() - info->second.last_time;
     if (!info->second.paused)
         info->second.internal_time += static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count()) / 1000000.0;

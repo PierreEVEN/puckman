@@ -7,11 +7,6 @@ namespace pm
 {
 double Cell::draw_scale = 1.;
 
-Cell::Cell()
-    : type(ECellType::Void)
-{
-}
-
 void Cell::set_pos(const Vector2I& in_pos)
 {
     pos = in_pos;

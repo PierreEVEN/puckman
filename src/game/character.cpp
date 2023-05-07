@@ -4,6 +4,14 @@
 #include "engine/engine.hpp"
 #include "engine/terrain.hpp"
 
+namespace std
+{
+constexpr int sign(auto a)
+{
+    return a < 0 ? -1 : 1;
+}
+} // namespace std
+
 namespace pm
 {
 void Character::tick()

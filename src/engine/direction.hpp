@@ -2,14 +2,13 @@
 #include "vector2.hpp"
 #include <vector>
 
-namespace std
-{
-constexpr int  sign(auto a) { return a < 0 ? -1 : 1; }
-constexpr auto clamp(auto val, auto min, auto max) { return val < min ? min : val > max ? max : val; }
-}
-
 namespace pm
 {
+/*
+ * Represent a direction (left, right, up, down, and None for {0, 0})
+ * We don't use an enum because it's cleaner and we had to convert it to Vector2I anyways during the process.
+ * (C++ is not as practical as Rust for enumerations)
+ */
 struct Direction
 {
 public:
@@ -18,6 +17,7 @@ public:
     {
     }
 
+    // Automatically normalize given vector to the closest direction
     Direction(Vector2I dir)
         : internal_dir(normalize(dir))
     {
@@ -28,8 +28,10 @@ public:
     {
     }
 
+    // Enumerate all the possible 4 directions (excluding NONE)
     [[nodiscard]] static const std::vector<Direction>& enumerate();
 
+    // Give and index for the given direction
     [[nodiscard]] int8_t index() const
     {
         if (internal_dir == NONE.internal_dir)
@@ -45,12 +47,14 @@ public:
         return -1;
     }
 
+    // Main directions
     static const Direction RIGHT;
     static const Direction LEFT;
     static const Direction UP;
     static const Direction DOWN;
     static const Direction NONE;
 
+    // Getter and comparisons
     Direction& operator=(const Vector2I& in_dir)
     {
         internal_dir = normalize(in_dir);
@@ -62,7 +66,13 @@ public:
         internal_dir = normalize(in_dir.rounded().cast<Vector2I>());
         return *this;
     }
+    bool operator==(const Direction& other) const
+    {
+        return internal_dir == other.internal_dir;
+    }
 
+
+    // Get internal vector
     const Vector2I& operator*() const { return internal_dir; }
     const Vector2I* operator->() const { return &internal_dir; }
 
@@ -79,9 +89,8 @@ public:
 
     [[nodiscard]] Direction opposite() const;
 
-    bool operator==(const Direction& other) const { return internal_dir == other.internal_dir; }
-
 private:
+    // we don't use Vector2::normalize() as the behavior for normalizing a direction is quite different (and also way faster)
     static Vector2I normalize(const Vector2I& input)
     {
         if (input.l1_length() == 0)

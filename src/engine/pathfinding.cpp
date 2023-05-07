@@ -49,6 +49,7 @@ bool PathFinder::find_path(const Vector2I& from, Vector2I to)
     const auto index_of    = [width](const Vector2I&         pt) { return pt.x() + pt.y() * width; };
     const auto point_valid = [width, height](const Vector2I& pt) { return pt.x() >= 0 && pt.y() >= 0 && pt.x() < static_cast<int>(width) && pt.y() < static_cast<int>(height); };
 
+    // A* body
     do
     {
         const auto old_sp = study_points;

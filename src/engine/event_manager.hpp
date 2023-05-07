@@ -70,12 +70,12 @@ public:
     {
     }
 
-    Return_T execute(Args_T&...inArgs)
+    Return_T execute(Args_T&... inArgs) override
     {
         return (object_ptr->*function_ptr)(inArgs...);
     }
 
-    bool operator==(const void* objPtr) const
+    bool operator==(const void* objPtr) const override
     {
         return object_ptr == objPtr;
     }
