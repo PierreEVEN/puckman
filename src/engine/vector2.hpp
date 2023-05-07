@@ -4,10 +4,6 @@
 #include <cmath>
 #include <iosfwd>
 
-// Helper to define vector2 operators
-#define VECTOR_2_LINEAR_OPERATOR_VECTOR(OP) Vector2 operator##OP(const Vector2& other) const { return {pos_x OP other.pos_x, pos_y OP other.pos_y}; }
-#define VECTOR_2_LINEAR_OPERATOR_SCALAR(OP) Vector2 operator##OP(const T& other) const { return {pos_x OP other, pos_y OP other}; }
-
 #define VECTOR_2_IN_PLACE_OPERATOR_VECTOR(OP) Vector2& operator##OP(const Vector2& other) { pos_x OP other.pos_x; pos_y OP other.pos_y; return *this; }
 #define VECTOR_2_IN_PLACE_OPERATOR_SCALAR(OP) Vector2& operator##OP(const T& other) { pos_x OP other; pos_y OP other; return *this; }
 
@@ -38,29 +34,29 @@ public:
     [[nodiscard]] const T& y() const { return pos_y; }
 
     // Operators
-    VECTOR_2_LINEAR_OPERATOR_VECTOR(+)
-    VECTOR_2_LINEAR_OPERATOR_VECTOR(-)
-    VECTOR_2_LINEAR_OPERATOR_VECTOR(/)
-    VECTOR_2_LINEAR_OPERATOR_VECTOR(*)
-    VECTOR_2_LINEAR_OPERATOR_VECTOR(%)
+    Vector2 operator+(const Vector2& other) const { return {pos_x + other.pos_x, pos_y + other.pos_y}; }
+    Vector2 operator-(const Vector2& other) const { return {pos_x - other.pos_x, pos_y - other.pos_y}; }
+    Vector2 operator*(const Vector2& other) const { return {pos_x * other.pos_x, pos_y * other.pos_y}; }
+    Vector2 operator/(const Vector2& other) const { return {pos_x / other.pos_x, pos_y / other.pos_y}; }
+    Vector2 operator%(const Vector2& other) const { return {pos_x % other.pos_x, pos_y % other.pos_y}; }
 
-    VECTOR_2_LINEAR_OPERATOR_SCALAR(+)
-    VECTOR_2_LINEAR_OPERATOR_SCALAR(-)
-    VECTOR_2_LINEAR_OPERATOR_SCALAR(/)
-    VECTOR_2_LINEAR_OPERATOR_SCALAR(*)
-    VECTOR_2_LINEAR_OPERATOR_SCALAR(%)
+    Vector2 operator+(const T& other) const { return {pos_x + other, pos_y + other}; }
+    Vector2 operator-(const T& other) const { return {pos_x - other, pos_y - other}; }
+    Vector2 operator*(const T& other) const { return {pos_x * other, pos_y * other}; }
+    Vector2 operator/(const T& other) const { return {pos_x / other, pos_y / other}; }
+    Vector2 operator%(const T& other) const { return {pos_x % other, pos_y % other}; }
 
-    VECTOR_2_IN_PLACE_OPERATOR_VECTOR(+=)
-    VECTOR_2_IN_PLACE_OPERATOR_VECTOR(-=)
-    VECTOR_2_IN_PLACE_OPERATOR_VECTOR(*=)
-    VECTOR_2_IN_PLACE_OPERATOR_VECTOR(/=)
-    VECTOR_2_IN_PLACE_OPERATOR_VECTOR(%=)
+    Vector2& operator+=(const Vector2& other) { pos_x += other.pos_x; pos_y += other.pos_y; return *this; }
+    Vector2& operator-=(const Vector2& other) { pos_x -= other.pos_x; pos_y -= other.pos_y; return *this; }
+    Vector2& operator*=(const Vector2& other) { pos_x *= other.pos_x; pos_y *= other.pos_y; return *this; }
+    Vector2& operator/=(const Vector2& other) { pos_x /= other.pos_x; pos_y /= other.pos_y; return *this; }
+    Vector2& operator%=(const Vector2& other) { pos_x %= other.pos_x; pos_y %= other.pos_y; return *this; }
 
-    VECTOR_2_IN_PLACE_OPERATOR_SCALAR(+=)
-    VECTOR_2_IN_PLACE_OPERATOR_SCALAR(-=)
-    VECTOR_2_IN_PLACE_OPERATOR_SCALAR(*=)
-    VECTOR_2_IN_PLACE_OPERATOR_SCALAR(/=)
-    VECTOR_2_IN_PLACE_OPERATOR_SCALAR(%=)
+    Vector2& operator+=(const T& other) { pos_x += other; pos_y += other; return *this; }
+    Vector2& operator-=(const T& other) { pos_x -= other; pos_y -= other; return *this; }
+    Vector2& operator*=(const T& other) { pos_x *= other; pos_y *= other; return *this; }
+    Vector2& operator/=(const T& other) { pos_x /= other; pos_y /= other; return *this; }
+    Vector2& operator%=(const T& other) { pos_x %= other; pos_y %= other; return *this; }
 
     bool operator==(const Vector2& other) const
     {
