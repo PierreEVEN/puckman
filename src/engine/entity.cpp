@@ -16,6 +16,8 @@ void pm::Entity::set_direction_sprite(const Direction direction, const SpriteHan
 void pm::Entity::set_look_direction(const Direction new_direction)
 {
     looking_direction = new_direction;
+    if (looking_direction == Direction::NONE)
+        direction_sprite[Direction::NONE.index()]->reset_timer();
 }
 
 void pm::Entity::draw()

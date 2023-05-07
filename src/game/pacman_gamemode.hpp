@@ -40,6 +40,7 @@ public:
     void victory();
 
     void begin_level();
+    void reset_positions();
 
 private:
     void load_sprites();

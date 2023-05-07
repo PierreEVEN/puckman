@@ -8,6 +8,7 @@
 #include "engine/sprite_sheet.hpp"
 #include "engine/terrain.hpp"
 
+#include <SDL.h>
 #include <SDL_surface.h>
 
 namespace pm
@@ -118,13 +119,13 @@ void PacmanGamemode::tick(double delta_seconds)
         }
         if (death_timer <= 0 && last_death_timer > 0)
         {
-            player->hide(true);
-            for (const auto& entity : entities)
-                entity->reset();
             lives--;
+            reset_positions();
+
             if (lives == 0)
             {
-                exit(EXIT_SUCCESS);
+                INFO("GAME OVER");
+                Engine::get().shutdown();
             }
         }
     }
@@ -219,6 +220,14 @@ void PacmanGamemode::victory()
 
 void PacmanGamemode::begin_level()
 {
+    terrain->reset();
+    lives = 3;
+
+    reset_positions();
+}
+
+void PacmanGamemode::reset_positions()
+{
     victory_timer       = 0;
     spawn_delay         = 2.5;
     death_timer         = 0;
@@ -226,14 +235,13 @@ void PacmanGamemode::begin_level()
     scatter_chase_timer = 0;
     is_chase            = true;
     cycle               = 0;
-    lives               = 3;
 
     terrain->reset();
 
     for (const auto& entity : entities)
         entity->reset();
 
-    player->set_look_direction(Direction::RIGHT);
+    player->set_look_direction(Direction::NONE);
     player->pause_animation(true);
 
     terrain->set_wall_color(32, 56, 236);
