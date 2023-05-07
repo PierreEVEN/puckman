@@ -19,7 +19,7 @@ Pacman::Pacman()
 
     terrain = std::make_shared<pm::Terrain>();
     terrain->load_from_file("./resources/level.map");
-    terrain->set_wall_color(0, 0, 255);
+    terrain->set_wall_color(33, 33, 222);
     const auto terrain_unit_length = terrain->get_unit_length();
 
     player = std::make_shared<pm::Puckman>(pm::Puckman(terrain));
