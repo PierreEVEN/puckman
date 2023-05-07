@@ -193,7 +193,7 @@ void Terrain::update_position_and_walls()
         {
             Cell& cell = grid[y * width + x];
 
-            cell.set_pos({int(x), int(y)});
+            cell.set_pos({static_cast<int>(x), static_cast<int>(y)});
 
             if (cell.get_type() == ECellType::Wall)
             {
