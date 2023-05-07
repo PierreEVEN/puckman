@@ -24,7 +24,7 @@ public:
     // Change the character velocity (in pixel / second)
     void set_velocity(double new_velocity) { velocity = new_velocity; }
 protected:
-    // is this character allowed to pass through doors
+    // Is this character allowed to pass through doors
     bool go_through_doors = false;
 private:
     double velocity = 75.0;
