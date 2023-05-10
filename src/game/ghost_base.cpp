@@ -4,6 +4,7 @@
 #include "engine/direction.hpp"
 #include "engine/engine.hpp"
 #include "engine/logger.hpp"
+#include <limits>
 
 namespace pm
 {
