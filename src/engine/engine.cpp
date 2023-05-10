@@ -49,7 +49,6 @@ Engine::Engine(const std::string& app_name, uint32_t width, uint32_t height)
 
     if (SDL_Init(SDL_INIT_VIDEO) != 0)
     {
-        char error_msg[512];
         FATAL("Failed to initialize SDL ({})", SDL_GetError());
     }
 
