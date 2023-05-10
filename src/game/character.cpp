@@ -6,7 +6,8 @@
 
 namespace std
 {
-constexpr int sign(auto a)
+template <typename T>
+constexpr int sign(T a)
 {
     return a < 0 ? -1 : 1;
 }
