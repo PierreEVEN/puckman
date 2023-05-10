@@ -11,7 +11,7 @@
 #include <cassert>
 #include <SDL.h>
 #include <SDL_surface.h>
-#include <limits>
+#include <cfloat>
 
 namespace pm
 {
